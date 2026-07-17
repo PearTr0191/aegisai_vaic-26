@@ -18,9 +18,10 @@ const TREASURES = [
     english: 'Quan họ Folk Singing of Bắc Ninh',
     lat: 21.1861, lng: 106.0763,
     location: 'Bắc Ninh · Vùng Kinh Bắc',
+    provinces: ['Bắc Ninh'],
     year: '2009',
     status: 'inscribed',
-    genre: 'quan_ho',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Quan họ là thể loại dân ca đối đáp đặc trưng của vùng Kinh Bắc, được công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2009. Ca hát diễn ra trong các lễ hội làng, bóng dáng thân thiện, mười câu mười lời trao gửi tình nghĩa trăm năm.',
     desc: 'Quan họ is an antiphonal folk singing genre from the Kinh Bắc region, inscribed on the UNESCO Representative List in 2009. Performed during village festivals, its gracious melodies and ten-verse exchanges express hundred-year bonds of friendship and affection.',
@@ -31,9 +32,10 @@ const TREASURES = [
     english: 'Ca trù (Hát Ả Đào) Chamber Singing',
     lat: 21.0285, lng: 105.8542,
     location: 'Hà Nội · Bách Khoa · Khâm Thiên',
+    provinces: ['Hà Nội'],
     year: '2009',
     status: 'urgent',
-    genre: 'ca_tru',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Ca trù là thể loại nghệ thuật diễn xướng phòng cổ truyền thống, họa tiết phong phú, cách nhả chữ rung luyến tinh tế với đào nương, kép đàn và quan viên. UNESCO đưa vào Danh sách di sản cần bảo vệ khẩn cấp năm 2009.',
     desc: 'Ca trù is a complex form of sung chamber music with refined ornamentation, performed by a female singer (đào nương), lute player (kép đàn) and percussionist (quán viên). UNESCO inscribed it on the Urgent Safeguarding List in 2009.',
@@ -44,9 +46,10 @@ const TREASURES = [
     english: 'Huế Royal Court Music (Nhã nhạc)',
     lat: 16.4637, lng: 107.5909,
     location: 'Thừa Thiên Huế · Kinh đô Huế',
+    provinces: ['Thừa Thiên Huế'],
     year: '2008',
     status: 'inscribed',
-    genre: 'nha_nhac',
+    genre: 'instrumental',
     badge: 'UNESCO',
     desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
     desc: 'Nhã nhạc is Vietnamese court music performed at ceremonies of the Nguyễn dynasty in Huế. Inscribed on the UNESCO Representative List in 2008, it is among the most refined traditional musical art forms of Vietnam.',
@@ -57,9 +60,10 @@ const TREASURES = [
     english: 'Đờn ca tài tử of Southern Vietnam',
     lat: 10.0452, lng: 105.7469,
     location: 'Cần Thơ · Đồng bằng sông Cửu Long',
+    provinces: ['Cần Thơ','Hậu Giang','Sóc Trăng','Bạc Liêu','Cà Mau'],
     year: '2013',
     status: 'inscribed',
-    genre: 'don_ca_tai_tu',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
     desc: 'Đờn ca tài tử is a traditional musical art of southern Vietnam, originating from ritual music and cải lương theatre of the 19th century. Inscribed on the UNESCO Representative List in 2013.',
@@ -70,9 +74,10 @@ const TREASURES = [
     english: 'Xoan Singing of Phú Thọ',
     lat: 21.4092, lng: 105.4012,
     location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
     year: '2017',
     status: 'inscribed',
-    genre: 'xoan',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
     desc: 'Xoan singing is a ritual performance art from the Hùng Kings\' ancestral land, associated with worship at the Hùng temples. UNESCO inscribed it on the Urgent Safeguarding List in 2011 and moved it to the Representative List in 2017.',
@@ -83,9 +88,10 @@ const TREASURES = [
     english: 'Ví & Giặm Folk Songs of Nghệ Tĩnh',
     lat: 18.6796, lng: 105.6927,
     location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
+    provinces: ['Nghệ An','Hà Tĩnh'],
     year: '2014',
     status: 'inscribed',
-    genre: 'ho',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
     desc: 'Ví and Giặm are two distinctive folk song genres of the Nghệ Tĩnh region, performed during labour and daily life to express emotion and community bonds. Inscribed on the UNESCO Representative List in 2014.',
@@ -96,6 +102,7 @@ const TREASURES = [
     english: 'Worship of the Hùng Kings in Phú Thọ',
     lat: 21.3254, lng: 105.2116,
     location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
     year: '2012',
     status: 'inscribed',
     genre: 'belief',
@@ -109,6 +116,7 @@ const TREASURES = [
     english: 'Gióng Festival of Phù Đổng & Sóc Sơn',
     lat: 21.2766, lng: 105.8461,
     location: 'Hà Nội · Gia Lâm · Sóc Sơn',
+    provinces: ['Hà Nội'],
     year: '2010',
     status: 'inscribed',
     genre: 'festival',
@@ -122,9 +130,10 @@ const TREASURES = [
     english: 'Gong Culture of the Central Highlands',
     lat: 12.7149, lng: 108.2436,
     location: 'Đắk Lắk · Gia Lai · Kon Tum',
+    provinces: ['Đắk Lắk','Gia Lai','Kon Tum','Đắk Nông','Lâm Đồng'],
     year: '2008',
     status: 'inscribed',
-    genre: 'gong',
+    genre: 'instrumental',
     badge: 'UNESCO',
     desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008.',
     desc: 'The Gong Culture of the Central Highlands is central to the spiritual life of the Ba Na, Xê Đăng, Cơ Ho, M\'Nông and Ê Đê peoples. Inscribed on the UNESCO Representative List in 2008.',
@@ -135,6 +144,7 @@ const TREASURES = [
     english: 'Viet Belief in Mother Goddesses of Three Realms',
     lat: 20.4195, lng: 106.1667,
     location: 'Nam Định · Đền Bà Chúa Xứ',
+    provinces: ['Nam Định'],
     year: '2016',
     status: 'inscribed',
     genre: 'belief',
@@ -148,9 +158,10 @@ const TREASURES = [
     english: 'Bài Chòi Art of Central Vietnam',
     lat: 15.8801, lng: 108.3380,
     location: 'Quảng Nam · Quảng Ngãi · Bình Định',
+    provinces: ['Quảng Nam','Quảng Ngãi','Bình Định','Phú Yên','Khánh Hòa'],
     year: '2017',
     status: 'inscribed',
-    genre: 'bai_choi',
+    genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Bài Chòi là nghệ thuật diễn xướng kết hợp giữa trò chơi bài và hát Wooden của nông dân miền Trung. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2017.',
     desc: 'Bài Chòi is a performative art combining card play with traditional singing by farmers of central Vietnam. Inscribed on the UNESCO Representative List in 2017.',
@@ -161,9 +172,10 @@ const TREASURES = [
     english: 'Then Singing of the Tày & Nùng',
     lat: 22.6607, lng: 106.2520,
     location: 'Cao Bằng · Hà Giang · Lạng Sơn',
+    provinces: ['Cao Bằng','Hà Giang','Lạng Sơn','Tuyên Quang','Thái Nguyên','Bắc Kạn'],
     year: '2019',
     status: 'national',
-    genre: 'hat_then',
+    genre: 'singings',
     badge: 'Quốc gia',
     desc_vi: 'Hát Then là thể loại dân ca nghi lễ của người Tày, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. Được đưa vào Danh mục di sản văn hóa phi vật thể quốc gia và đang đề cử UNESCO.',
     desc: 'Then singing is a ritual folk music genre of the Tày, Nùng and Thái peoples of the northeast, accompanied by the tính lute. Listed as Vietnamese national intangible heritage; under UNESCO tentative nomination.',
@@ -270,45 +282,15 @@ const STATUS_CONFIG = {
 };
 
 const GENRE_CONFIG = {
-  quan_ho: {
-    color:'#c9943a',
-    vi: { label:'Quan họ · Dân ca đối đáp', short:'Quan họ' },
-    en: { label:'Quan họ · Antiphonal Folk', short:'Quan họ' },
-  },
-  ca_tru: {
-    color:'#c47c5a',
-    vi: { label:'Ca trù · Hát Ả Đào', short:'Ca trù' },
-    en: { label:'Ca trù · Chamber Singing', short:'Ca trù' },
-  },
-  nha_nhac: {
+  instrumental: {
     color:'#4caf84',
-    vi: { label:'Nhã nhạc · Cung đình', short:'Nhã nhạc' },
-    en: { label:'Nhã nhạc · Court Music', short:'Court Music' },
+    vi: { label:'Âm nhạc · Nhạc cụ', short:'Âm nhạc' },
+    en: { label:'Instrumental Music', short:'Instrumental' },
   },
-  don_ca_tai_tu: {
-    color:'#9b7bdf',
-    vi: { label:'Đờn ca tài tử', short:'Đờn ca' },
-    en: { label:'Đờn ca tài tử', short:'Đờn ca' },
-  },
-  ho: {
-    color:'#5a8a9f',
-    vi: { label:'Hò · Ví · Giặm', short:'Hò & Ví' },
-    en: { label:'Work Songs · Ví/Giặm', short:'Work Songs' },
-  },
-  xoan: {
-    color:'#e8a83c',
-    vi: { label:'Hát Xoan · Cửa đình', short:'Hát Xoan' },
-    en: { label:'Xoan Singing', short:'Xoan' },
-  },
-  hat_then: {
-    color:'#d9b46a',
-    vi: { label:'Hát Then · Đàn tính', short:'Hát Then' },
-    en: { label:'Then Singing · Tính Lute', short:'Then' },
-  },
-  bai_choi: {
-    color:'#b87c50',
-    vi: { label:'Bài Chòi · Hát Bài', short:'Bài Chòi' },
-    en: { label:'Bài Chòi', short:'Bài Chòi' },
+  singings: {
+    color:'#c9943a',
+    vi: { label:'Hát · Dân ca', short:'Hát' },
+    en: { label:'Singing · Folk Songs', short:'Singings' },
   },
   belief: {
     color:'#9b6fbf',
@@ -319,11 +301,6 @@ const GENRE_CONFIG = {
     color:'#c45c4a',
     vi: { label:'Lễ hội dân gian', short:'Lễ hội' },
     en: { label:'Folk Festival', short:'Festival' },
-  },
-  gong: {
-    color:'#cd7f32',
-    vi: { label:'Cồng Chiêng · Sắc nhạc', short:'Cồng Chiêng' },
-    en: { label:'Gong Culture', short:'Gongs' },
   },
 };
 
@@ -493,7 +470,11 @@ function pointInMultiPolygon(lng, lat, coordinates) {
   return false;
 }
 
-/* Province → heritage index */
+/* Province → heritage index
+   Attribution uses the explicit `provinces` array on each heritage item when
+   available, guaranteeing correct province assignment regardless of how the
+   province polygons are drawn. For items lacking a `provinces` array, we fall
+   back to a geometric point-in-polygon test. */
 let provinceIndex = {};
 
 function buildProvinceIndex(geo) {
@@ -502,12 +483,30 @@ function buildProvinceIndex(geo) {
     const name = feature.properties?.name || 'Unknown';
     if (!provinceIndex[name]) provinceIndex[name] = [];
   });
+
+  /* Precompute the polygon geometry for each province name for fallback. */
+  const geoByName = {};
+  geo.features.forEach(feature => {
+    const name = feature.properties?.name || 'Unknown';
+    geoByName[name] = feature.geometry;
+  });
+
   TREASURES.forEach(t => {
-    for (const feature of geo.features) {
-      const name = feature.properties?.name || 'Unknown';
-      const geom = feature.geometry;
-      if (geom.type === 'MultiPolygon') {
-        if (pointInMultiPolygon(t.lng, t.lat, geom.coordinates)) {
+    if (Array.isArray(t.provinces) && t.provinces.length) {
+      /* explicit mapping — preferred */
+      t.provinces.forEach(name => {
+        if (provinceIndex[name]) {
+          if (!provinceIndex[name].some(h => h.id === t.id)) {
+            provinceIndex[name].push(t);
+          }
+        }
+      });
+    } else {
+      /* geometric fallback */
+      for (const name in geoByName) {
+        const geom = geoByName[name];
+        if (geom.type === 'MultiPolygon' &&
+            pointInMultiPolygon(t.lng, t.lat, geom.coordinates)) {
           provinceIndex[name].push(t);
           break;
         }
