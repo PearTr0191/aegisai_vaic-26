@@ -20,10 +20,15 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./vietheritage.db"
     DATABASE_URL_PROD: str = "sqlite+aiosqlite:///./vietheritage.db"
 
-    # Ollama
+    # Ollama (local)
     OLLAMA_HOST: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "phi3.5:3.8b-mini-instruct-q4_k_m"
     OLLAMA_EMBED_MODEL: str = "nomic-embed-text:latest"
+
+    # OpenRouter (for $0-cost cloud LLM)
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "microsoft/phi-3-mini-128k-instruct:free"
+    OPENROUTER_EMBED_MODEL: str = "nomic/nomic-embed-text-v1:0"
 
     # MinIO
     MINIO_ENDPOINT: str = "localhost:9000"
@@ -40,11 +45,16 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://localhost:3000",
         "https://vietheritage.netlify.app",
+        "https://aegisai-vaic-26.onrender.com",
+        "http://localhost:5000",  # Flask dev
     ]
 
     # Render / Production
     RENDER_EXTERNAL_URL: str = ""
     IS_PRODUCTION: bool = False
+
+    # Whisper (for voice transcription)
+    WHISPER_MODEL_PATH: str = "openai/whisper-base"
 
     # Sentry
     SENTRY_DSN: str = ""
@@ -58,6 +68,5 @@ class Settings(BaseSettings):
         if self.IS_PRODUCTION:
             return self.DATABASE_URL_PROD
         return self.DATABASE_URL
-
 
 settings = Settings()

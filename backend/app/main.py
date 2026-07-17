@@ -12,7 +12,7 @@ except ImportError:
 from app.core.config import settings
 from app.core.database import init_db
 from app.core.monitoring import init_sentry, ModelHealthChecker
-from app.api.v1 import sites, artisan, audio, monitoring
+from app.api.v1 import sites, artisan, audio, monitoring, chat
 
 # Configure logging
 logging.basicConfig(
@@ -71,6 +71,7 @@ app.include_router(sites.router, prefix=settings.API_V1_PREFIX)
 app.include_router(artisan.router, prefix=settings.API_V1_PREFIX)
 app.include_router(audio.router, prefix=settings.API_V1_PREFIX)
 app.include_router(monitoring.router, prefix=settings.API_V1_PREFIX)
+app.include_router(chat.router, prefix=settings.API_V1_PREFIX)
 
 
 # --- Error Handlers ---

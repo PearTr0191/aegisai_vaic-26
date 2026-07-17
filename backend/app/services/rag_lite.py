@@ -4,21 +4,72 @@ from uuid import UUID
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 import ollama
+import httpx
 from app.core.config import settings
 from app.models.artisan import KnowledgeChunk, ArtisanPersona, ArtisanResponse
 from app.schemas.chat import ArtisanResponse as ArtisanResponseSchema, Citation
+from app.services.embedding_service import EmbeddingService
+from app.services.openrouter_service import OpenRouterService
 
 
 class HeritageRAGLite:
     """
-    Lightweight RAG: Keyword search + Few-shot prompting
-    No vector search in production (uses pre-recorded responses)
+    Lightweight RAG: Keyword search + Few-shot prompting with vector fallback
     """
 
-    def __init__(self, db: AsyncSession, ollama_client: ollama.AsyncClient):
+    def __init__(
+        self,
+        db: AsyncSession,
+        ollama_client: Optional[ollama.AsyncClient] = None,
+        openrouter_client: Optional[OpenRouterService] = None,
+    ):
         self.db = db
         self.ollama = ollama_client
+        self.openrouter = openrouter_client or OpenRouterService()
         self.persona_prompts = self._load_persona_prompts()
+        self.embedding_service = EmbeddingService(ollama_client)
+
+    async def _generate_with_fallback(self, prompt: str) -> Optional[str]:
+        """Generate text using Ollama with OpenRouter fallback"""
+        # Try Ollama first
+        if self.ollama:
+            try:
+                response = await self.ollama.generate(
+                    model=settings.OLLAMA_MODEL,
+                    prompt=prompt,
+                    options={"temperature": 0.3, "top_p": 0.9},
+                )
+                return response.get("response", "").strip()
+            except Exception:
+                pass
+
+        # Fall back to OpenRouter
+        try:
+            return await self.openrouter.generate(prompt)
+        except Exception:
+            return None
+
+    async def _vector_search(
+        self, question: str, persona_id: Optional[UUID], limit: int = 5
+    ) -> List[KnowledgeChunk]:
+        """Search knowledge chunks using vector similarity fallback"""
+        try:
+            results = await self.embedding_service.vector_search(
+                self.db, question, persona_id=str(persona_id) if persona_id else None, limit=limit, threshold=0.5
+            )
+            chunks = []
+            for r in results:
+                chunk = KnowledgeChunk(
+                    id=r["id"],
+                    content_vi=r["content_vi"],
+                    content_en=r.get("content_en"),
+                    source_type=r["source_type"],
+                    category=r.get("category", "general"),
+                )
+                chunks.append(chunk)
+            return chunks
+        except Exception:
+            return []
 
     def _load_persona_prompts(self) -> dict:
         """Load few-shot prompts for each persona"""
@@ -36,7 +87,7 @@ NGUYÊN TẮC:
 NGỮ CẢNH:
 {context}
 
-VÍ DỤ:
+VÍ DỰ:
 Hỏi: "Tại sao hát Quan họ phải trao trầu?"
 Trả lời: "Theo lời các bậc tiền bối, trầu trân là lễ nghĩa, biểu tượng trăm năm..."
 
@@ -46,7 +97,6 @@ TRẢ LỜI:"""
 
     def _extract_keywords(self, question: str) -> List[str]:
         """Extract Vietnamese keywords from question"""
-        # Simple keyword extraction - can be enhanced with underthesea
         stopwords = {"là", "của", "có", "và", "có", "được", "cho", "với", "tại", "sao", "thế", "nào", "như", "khi", "nơi", "đâu", "ai", "gì"}
         words = re.findall(r"\b\w+\b", question.lower())
         keywords = [w for w in words if len(w) > 2 and w not in stopwords]
@@ -59,7 +109,6 @@ TRẢ LỜI:"""
         if not keywords:
             return []
 
-        # Build ILIKE conditions for each keyword
         conditions = []
         for kw in keywords:
             conditions.append(KnowledgeChunk.content_vi.ilike(f"%{kw}%"))
@@ -81,7 +130,6 @@ TRẢ LỜI:"""
         self, question: str, persona_id: UUID, lang: str
     ) -> Optional[ArtisanResponseSchema]:
         """Check for pre-recorded responses matching question intent"""
-        # Simple intent matching - can be enhanced with embeddings
         query = select(ArtisanResponse).where(
             ArtisanResponse.persona_id == str(persona_id)
         )
@@ -97,7 +145,7 @@ TRẢ LỜI:"""
                     text=text or "",
                     lang=cast(Literal["vi", "en"], lang),
                     confidence=resp.confidence,
-                    citations=[],  # Pre-recorded responses have no dynamic citations
+                    citations=[],
                     audio_url=audio_url,
                 )
         return None
@@ -133,10 +181,8 @@ TRẢ LỜI:"""
         if not chunks:
             return 0.0
         
-        # Base confidence on number of relevant chunks
         base = min(0.3 + 0.15 * len(chunks), 0.9)
         
-        # Penalize very short answers (likely "I don't know")
         if len(answer.strip()) < 50:
             base *= 0.5
             
@@ -179,34 +225,36 @@ TRẢ LỜI:"""
         keywords = self._extract_keywords(question)
         chunks = await self._keyword_search(keywords, persona_id, limit=5)
 
-        # 4. If no chunks, return unknown
+        # 4. Vector search fallback if keyword search returns < 3 chunks
+        if len(chunks) < 3:
+            vec_chunks = await self._vector_search(question, persona_id, limit=5)
+            existing_ids = {c.id for c in chunks}
+            for chunk in vec_chunks:
+                if chunk.id not in existing_ids:
+                    chunks.append(chunk)
+        
+        # 5. If no chunks after fallback, return unknown
         if not chunks:
             return self._unknown_response(lang)
 
-        # 5. Few-shot prompt
+        # 6. Few-shot prompt
         prompt = self._build_few_shot_prompt(question, chunks, persona, lang)
 
-        # 6. Generate with Ollama
-        try:
-            response = await self.ollama.generate(
-                model=settings.OLLAMA_MODEL,
-                prompt=prompt,
-                options={"temperature": 0.3, "top_p": 0.9},
-            )
-            answer = response.get("response", "").strip()
-        except Exception:
+        # 7. Generate with Ollama/OpenRouter fallback
+        answer = await self._generate_with_fallback(prompt)
+        if not answer:
             return self._unknown_response(lang, chunks)
 
-        # 7. Confidence check
+        # 8. Confidence check
         confidence = self._calculate_confidence(chunks, answer)
         if confidence < 0.6:
             return self._unknown_response(lang, chunks)
 
-        # 8. Return response
+        # 9. Return response
         return ArtisanResponseSchema(
             text=answer,
             lang=cast(Literal["vi", "en"], lang),
             confidence=confidence,
             citations=[self._chunk_to_citation(c) for c in chunks],
-            audio_url=None,  # No real-time TTS
+            audio_url=None,
         )

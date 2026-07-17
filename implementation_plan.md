@@ -14,7 +14,7 @@ Build a **working deployed demo** of VietHeritage Map featuring:
 3. **EthnoMusic Analyzer** — Upload audio → real-time genre/instrument/ornament detection (trained model)
 4. **Artifact Viewer** — `<model-viewer>` 3D models on site detail pages
 
-**Demo Flow (5 min)**: Map → Click site → Hear audio + see 3D → Ask Artisan → Upload clip → See AI analysis
+**Demo Flow (5 min)**: Map → Click site → Hear audio → Ask Artisan → Upload clip → See AI analysis
 
 ---
 
@@ -49,7 +49,7 @@ Build a **working deployed demo** of VietHeritage Map featuring:
 ```
 
 **Data Layer**: SQLite + sqlite-vec (embedded, no separate server)
-**Assets**: Netlify static (audio .mp3, 3D .glb) + Render ephemeral storage
+**Assets**: Netlify static (audio .mp3) + Render ephemeral storage
 
 ---
 
