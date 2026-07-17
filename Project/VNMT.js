@@ -4562,13 +4562,163 @@ const borderLayer = L.geoJSON(null, {
     layer.on('mouseout', () => {
       borderLayer.resetStyle(layer);
     });
+    layer.on('click', () => {
+      const name = feature.properties?.name || 'Unknown';
+      showProvinceModal(name);
+    });
   },
 }).addTo(map);
 
 fetch('vn_geo.json')
   .then(r => r.json())
-  .then(geo => borderLayer.addData(geo))
+  .then(geo => {
+    borderLayer.addData(geo);
+    buildProvinceIndex(geo);
+  })
   .catch(err => console.warn('vn_geo.json load failed:', err));
+
+/* ═══════════════════════════════════════
+   PROVINCE CLICK → PIE CHART MODAL
+═══════════════════════════════════════ */
+/* Point-in-polygon test (ray-casting) */
+function pointInPolygon(lng, lat, coords) {
+  let inside = false;
+  for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+    const xi = coords[i][0], yi = coords[i][1];
+    const xj = coords[j][0], yj = coords[j][1];
+    const intersect = ((yi > lat) !== (yj > lat)) &&
+      (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/* Check if a point is inside a MultiPolygon geometry */
+function pointInMultiPolygon(lng, lat, coordinates) {
+  for (const polygon of coordinates) {
+    for (const ring of polygon) {
+      if (pointInPolygon(lng, lat, ring)) return true;
+    }
+  }
+  return false;
+}
+
+/* Province → artifacts index */
+let provinceIndex = {};
+
+function buildProvinceIndex(geo) {
+  provinceIndex = {};
+  geo.features.forEach(feature => {
+    const name = feature.properties?.name || 'Unknown';
+    if (!provinceIndex[name]) provinceIndex[name] = [];
+  });
+  TREASURES.forEach(t => {
+    for (const feature of geo.features) {
+      const name = feature.properties?.name || 'Unknown';
+      const geom = feature.geometry;
+      if (geom.type === 'MultiPolygon') {
+        if (pointInMultiPolygon(t.lng, t.lat, geom.coordinates)) {
+          provinceIndex[name].push(t);
+          break;
+        }
+      }
+    }
+  });
+}
+
+/* Generate SVG pie chart for a province's artifacts */
+function buildProvincePieSVG(counts, total) {
+  const sz = 100, cx = sz/2, r = cx - 6, ir = cx * 0.42;
+  const CONFIG = viewMode === 'era' ? ERA_CONFIG : TYPE_CONFIG;
+  const slices = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+
+  let paths = '', dividers = '', angle = -90;
+  for (const [key, count] of slices) {
+    const color = CONFIG[key]?.color || '#8a7c5e';
+    const sweep = (count / total) * 360;
+    if (sweep >= 359.9) {
+      paths = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="${color}"/>`;
+      break;
+    }
+    const a1 = angle * Math.PI / 180;
+    const a2 = (angle + sweep) * Math.PI / 180;
+    const x1 = (cx + r * Math.cos(a1)).toFixed(2);
+    const y1 = (cx + r * Math.sin(a1)).toFixed(2);
+    const x2 = (cx + r * Math.cos(a2)).toFixed(2);
+    const y2 = (cx + r * Math.sin(a2)).toFixed(2);
+    paths += `<path d="M${cx},${cx} L${x1},${y1} A${r},${r} 0 ${sweep>180?1:0},1 ${x2},${y2} Z" fill="${color}"/>`;
+    dividers += `<line x1="${cx}" y1="${cx}" x2="${x1}" y2="${y1}" stroke="rgba(10,9,0,0.5)" stroke-width="1"/>`;
+    angle += sweep;
+  }
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="${cx}" cy="${cx}" r="${r+1}" fill="rgba(10,9,0,0.3)"/>
+    ${paths}
+    ${slices.length > 1 ? dividers : ''}
+    <circle cx="${cx}" cy="${cx}" r="${ir}" fill="rgba(10,9,0,0.85)"/>
+    <text x="${cx}" y="${cx}" text-anchor="middle" dominant-baseline="central"
+          fill="#e8c96a" font-family="DM Sans,sans-serif" font-weight="700"
+          font-size="18px">${total}</text>
+  </svg>`;
+}
+
+/* Show province pie-chart modal */
+function showProvinceModal(provinceName) {
+  const artifacts = provinceIndex[provinceName] || [];
+  const total = artifacts.length;
+  const CONFIG = viewMode === 'era' ? ERA_CONFIG : TYPE_CONFIG;
+
+  const counts = {};
+  artifacts.forEach(t => {
+    const key = viewMode === 'era' ? getEra(t) : getType(t);
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  const pieSVG = total > 0 ? buildProvincePieSVG(counts, total) : '';
+  const legendRows = Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([key, count]) => {
+    const cfg = CONFIG[key];
+    const label = viewMode === 'era' ? eraLabel(key, 'short') : typeLabel(key, 'short');
+    return `<div class="province-pie-row">
+      <span class="province-pie-dot" style="background:${cfg?.color || '#8a7c5e'}"></span>
+      <span class="province-pie-label">${label}</span>
+      <span class="province-pie-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  const dimLabel = viewMode === 'era'
+    ? (lang === 'vi' ? 'Phân bố thời kỳ' : 'Era distribution')
+    : (lang === 'vi' ? 'Phân bố loại hình' : 'Category distribution');
+
+  const html = total > 0 ? `
+    <div class="province-modal-title">${provinceName}</div>
+    <div class="province-modal-sub">${dimLabel}</div>
+    <div class="province-pie-wrap">
+      <div class="province-pie">${pieSVG}</div>
+      <div class="province-pie-legend">${legendRows}</div>
+    </div>
+    <div class="province-pie-total">
+      ${lang === 'vi' ? 'Tổng hiện vật' : 'Total artifacts'}: <strong>${total}</strong>
+    </div>
+  ` : `
+    <div class="province-modal-title">${provinceName}</div>
+    <div class="province-modal-sub">${dimLabel}</div>
+    <div class="province-pie-empty">
+      ${lang === 'vi' ? 'Không có hiện vật trong tỉnh này' : 'No artifacts in this province'}
+    </div>
+  `;
+
+  const modal = document.getElementById('province-modal');
+  document.getElementById('province-modal-content').innerHTML = html;
+  modal.classList.add('visible');
+}
+
+function closeProvinceModal() {
+  document.getElementById('province-modal').classList.remove('visible');
+}
+
+document.getElementById('province-modal-close').addEventListener('click', closeProvinceModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProvinceModal();
+});
 
 /* ═══════════════════════════════════════
    CLUSTER PIE CHART ICON
