@@ -1,7 +1,11 @@
 # VietHeritage Map - 48-Hour Hackathon Implementation Plan (Revised)
 
-> **Team**: 5 multirole developers | **GPU**: 15h via FPT AI Factory | **Deploy**: Netlify + Render (free) | **Cost**: $0
+> **Team**: 5 multirole developers | **GPU**: 15h via FPT AI Factory | **Deploy**: Render (unified) | **Cost**: $0
 > **Philosophy**: Radical simplicity in architecture, 5% radical innovation in features
+
+> **UNIFIED ARCHITECTURE**: Merge Option A (tangible artifacts demo) + intangible heritage data.
+> Keep existing vanilla JS Leaflet map UI, extend with intangible heritage data + chatbot.
+> Remove 3D model requirements for MVP.
 
 ---
 
@@ -12,7 +16,6 @@ Build a **working deployed demo** of VietHeritage Map featuring:
 1. **Interactive Map** (Leaflet + OSM) — 5 hero heritage sites, story-based layers
 2. **Virtual Artisan** (RAG-lite) — Keyword search + few-shot LLM, cultural grounding with "I don't know"
 3. **EthnoMusic Analyzer** — Upload audio → real-time genre/instrument/ornament detection (trained model)
-4. **Artifact Viewer** — `<model-viewer>` 3D models on site detail pages
 
 **Demo Flow (5 min)**: Map → Click site → Hear audio → Ask Artisan → Upload clip → See AI analysis
 
@@ -228,13 +231,12 @@ Build a **working deployed demo** of VietHeritage Map featuring:
 ## ✅ Definition of Done (Demo-Ready Checklist)
 
 ### Must Have (P0)
-- [ ] Map loads <2s, 5 sites clickable with custom markers
-- [ ] SiteDetail: audio plays, waveform animates, 3D model rotates
+- [ ] Map loads <2s, 5 intangible heritage sites clickable with custom markers
+- [ ] SiteDetail: audio plays, waveform animates
 - [ ] Artisan: Answers 5 cultural questions (VI/EN), cites sources
 - [ ] Artisan: Says "I don't know" for 2 trick questions with citation
 - [ ] Analyzer: Upload audio → genre + instruments + ornaments + confidence
 - [ ] Deployed URLs work on mobile (iOS Safari, Chrome Android)
-- [ ] Backup video recorded (5-min walkthrough)
 
 ### Should Have (P1)
 - [ ] VI/EN language toggle persists in localStorage

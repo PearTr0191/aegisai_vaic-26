@@ -5,6 +5,8 @@ Supports both text and voice input for heritage queries.
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
+import tempfile
+import os
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -20,6 +22,37 @@ class ChatResponse(BaseModel):
     sources: List[str] = []
 
 
+def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
+    """Transcribe audio using faster-whisper (CPU-optimized)."""
+    try:
+        from faster_whisper import WhisperModel
+        from app.core.config import settings
+        
+        # Use cached model or download
+        model_path = settings.WHISPER_MODEL_PATH
+        if model_path.startswith("openai/"):
+            model_name = model_path.replace("openai/", "")
+        else:
+            model_name = "base"
+        
+        model = WhisperModel(model_name, device="cpu", compute_type="int8")
+        
+        # Write to temp file for processing
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            tmp.write(audio_bytes)
+            tmp_path = tmp.name
+        
+        try:
+            segments, _ = model.transcribe(tmp_path, language="vi")
+            transcript = " ".join([s.text for s in segments])
+            return transcript
+        finally:
+            os.unlink(tmp_path)
+    except Exception:
+        # Fallback: return empty string to trigger text fallback
+        return ""
+
+
 # Voice transcription via Whisper (requires faster-whisper)
 @router.post("/voice", response_model=ChatResponse)
 async def transcribe_and_chat(file: UploadFile = File(...)):
@@ -31,19 +64,16 @@ async def transcribe_and_chat(file: UploadFile = File(...)):
 
     audio_bytes = await file.read()
 
-    # Placeholder: In production, use faster-whisper
-    # For now, simulate transcription
-    # Example with faster-whisper:
-    #
-    # from faster_whisper import WhisperModel
-    # model = WhisperModel("base", device="cpu")
-    # segments, _ = model.transcribe(audio_bytes)
-    # transcript = " ".join([s.text for s in segments])
-    #
-    # Then call the chat endpoint below...
-
+    # Transcribe with faster-whisper
+    transcript = _transcribe_audio_faster_whisper(audio_bytes)
+    
+    if transcript:
+        # Forward to text chat endpoint
+        return await chat(ChatRequest(message=transcript, lang="vi"))
+    
+    # Fallback if transcription fails
     return ChatResponse(
-        response="Voice transcription: Please implement Whisper integration with faster-whisper package.",
+        response="Xin lỗi, tôi chưa thể xử lý âm thanh. Vui lòng viết tin nhắn.",
         confidence=0.0,
     )
 
@@ -53,26 +83,23 @@ async def transcribe_and_chat(file: UploadFile = File(...)):
 async def chat(request: ChatRequest):
     """
     Chat endpoint for heritage queries.
-    Uses RAG-lite for intangible heritage, ArtifactBot data for tangible artifacts.
+    Uses RAG-lite for intangible heritage, searchable heritage sites.
     """
     message = request.message.strip()
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
 
-    # Try intangible heritage first via RAG-lite
+    # Try heritage knowledge search via RAG-lite
     try:
         from app.services.rag_lite import HeritageRAGLite
         from app.core.database import async_session_maker
 
         async with async_session_maker() as db:
-            # Use default persona for intangible heritage
             rag = HeritageRAGLite(db)
-            # Search without persona constraint
             keywords = rag._extract_keywords(message)
             chunks = await rag._keyword_search(keywords, persona_id=None, limit=3)
 
             if chunks:
-                # Build context and generate response
                 context = "\n\n".join([c.content_vi for c in chunks[:3]])
                 prompt = f"""Bạn là nghệ nhân gạo cội về di sản văn hóa Việt Nam.
 Trả lời ngắn gọn, tôn trọng, dựa trên ngữ cảnh sau:

@@ -5048,11 +5048,125 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   }
 })();
 
-/* ═══════════════════════════════════════
+  /* ═══════════════════════════════════════
+     INTANGIBLE HERITAGE INTEGRATION
+   ═══════════════════════════════════════ */
+  const INTANGIBLE_HERITAGE = [
+    {
+      id: "int-001",
+      name: "Lễ hội Quan họ Bắc Ninh",
+      english: "Quan Ho Bac Ninh Festival",
+      location: "Bắc Ninh",
+      lat: 21.1861, lng: 106.0763,
+      category: "intangible",
+      badge: "UNESCO",
+      type: "folk_singing",
+      year: "2009",
+      desc: "Traditional folk singing with call-and-response between male and female singers.",
+      desc_vi: "Quan họ là dân ca đối đáp truyền thống của Bắc Ninh.",
+      audio_preview: "/audio/quanho-preview.mp3"
+    },
+    {
+      id: "int-002",
+      name: "Ca trù Hà Nội",
+      english: "Traditional Ca tru Music",
+      location: "Hà Nội",
+      lat: 21.0285, lng: 105.8542,
+      category: "intangible",
+      badge: "UNESCO",
+      type: "chamber_music",
+      year: "2009",
+      desc: "Vietnamese chamber music with traditional instruments.",
+      desc_vi: "Ca trù là nghệ thuật diễn xướng truyền thống kết hợp ca nhảy và nhạc cụ.",
+      audio_preview: "/audio/catru-preview.mp3"
+    },
+    {
+      id: "int-003",
+      name: "Nhã nhạc cung đình Huế",
+      english: "Hue Royal Court Music",
+      location: "Thừa Thiên Huế",
+      lat: 16.4637, lng: 107.5909,
+      category: "intangible",
+      badge: "UNESCO",
+      type: "court_music",
+      year: "2003",
+      desc: "Musical traditions of the Nguyen Dynasty court.",
+      desc_vi: "Nhã nhạc cung đình Huế là di sản tinh túy của triều đại nhà Nguyễn.",
+      audio_preview: "/audio/nhuanhac-preview.mp3"
+    },
+    {
+      id: "int-004",
+      name: "Đờn ca tài tử Nam Bộ",
+      english: "Southern Don Ca Tai Tu Music",
+      location: "Cần Thơ",
+      lat: 10.0452, lng: 105.7469,
+      category: "intangible",
+      badge: "UNESCO",
+      type: "chamber_music",
+      year: "2014",
+      desc: "Traditional music form of southern Vietnam.",
+      desc_vi: "Đờn ca tài tử là nghệ thuật âm nhạc truyền thống miền Tây Nam Bộ.",
+      audio_preview: "/audio/donantutu-preview.mp3"
+    },
+    {
+      id: "int-005",
+      name: "Hò ca Nghệ An",
+      english: "Nghe An Work Songs",
+      location: "Nghệ An",
+      lat: 18.6796, lng: 105.6927,
+      category: "intangible",
+      badge: "National",
+      type: "work_songs",
+      year: "2015",
+      desc: "Traditional work songs sung by farmers.",
+      desc_vi: "Hò làng là dân ca lao động truyền thống của người nông dân.",
+      audio_preview: "/audio/ho-nghean-preview.mp3"
+    }
+  ];
+
+  // Merge tangible and intangible data
+  const ALL_TREASURES = [...TREASURES, ...INTANGIBLE_HERITAGE];
+
+  // Add intangible to type config for filtering
+  const INTANGIBLE_TYPE_CONFIG = {
+    ...TYPE_CONFIG,
+    intangible: { label_vi: "Di sản vô hình", label_en: "Intangible Heritage", icon: "🎵" },
+    folk_singing: { label_vi: "Hát dân ca", label_en: "Folk Singing", icon: "🎤" },
+    chamber_music: { label_vi: "Nhạc cung đình", label_en: "Chamber Music", icon: "🎼" },
+    court_music: { label_vi: "Nhạc triều đại", label_en: "Court Music", icon: "👑" },
+    work_songs: { label_vi: "Hò ca", label_en: "Work Songs", icon: "🌾" }
+  };
+
+  /* ═══════════════════════════════════════
+     CHAT API INTEGRATION
+   ═══════════════════════════════════════ */
+  async function callArtisanAPI(message, lang = "vi") {
+    try {
+      const resp = await fetch("/api/v1/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, lang })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        return data.response || "Xin lỗi, tôi chưa có câu trả lời.";
+      }
+    } catch (e) {
+      console.error("Chat API error:", e);
+    }
+    return "Xin lỗi, dịch vụ đang tạm ngưng. Vui lòng thử lại sau.";
+  }
+
+  // Expose for global use
+  window.INTANGIBLE_HERITAGE = INTANGIBLE_HERITAGE;
+  window.ALL_TREASURES = ALL_TREASURES;
+  window.callArtisanAPI = callArtisanAPI;
+
+  /* ═══════════════════════════════════════
    INIT
-═══════════════════════════════════════ */
-applyStaticI18n();
-renderFilterBar();
-renderLegend();
-renderCards();
-setTimeout(() => map.invalidateSize(), 50);
+   ═══════════════════════════════════════ */
+  applyStaticI18n();
+  renderFilterBar();
+  renderLegend();
+  renderCards();
+  setTimeout(() => map.invalidateSize(), 50);

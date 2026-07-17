@@ -9,7 +9,7 @@ from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import async_session_maker, init_db
-from app.models.site import HeritageSite, HeritageType, UNESCOStatus
+from app.models.site import HeritageSite
 
 
 INTANGIBLE_SITES = [
