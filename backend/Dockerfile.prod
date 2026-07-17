@@ -20,13 +20,13 @@ COPY pyproject.toml uv.lock* ./
 # Install dependencies
 RUN uv sync --frozen --no-dev
 
-# Stage 2: Ollama with Qwen model
+# Stage 2: Ollama with Phi-3.5-Mini model
 FROM ollama/ollama:latest AS ollama-builder
 
-# Pull Qwen3.5-9B Q4_K_M model (will be baked into image)
+# Pull Phi-3.5-Mini Q4_K_M model (will be baked into image)
 RUN ollama serve & \
     sleep 5 && \
-    ollama pull qwen2.5:7b-instruct-q4_k_m && \
+    ollama pull phi3.5:3.8b-mini-instruct-q4_k_m && \
     ollama pull nomic-embed-text:latest && \
     pkill ollama
 

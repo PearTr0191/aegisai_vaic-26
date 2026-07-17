@@ -12,7 +12,7 @@ class Citation(BaseModel):
 
 class ArtisanAskRequest(BaseModel):
     question: str = Field(..., max_length=500)
-    persona_id: UUID
+    persona_id: str
     lang: Literal["vi", "en"] = "vi"
 
 

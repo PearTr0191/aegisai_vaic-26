@@ -96,7 +96,7 @@ async def value_error_handler(request: Request, exc: ValueError):
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.exception(f"Unhandled error on {request.url.path}: {exc}")
-    if settings.SENTRY_DSN:
+    if settings.SENTRY_DSN and sentry_sdk:
         sentry_sdk.capture_exception(exc)
     if settings.DEBUG:
         raise

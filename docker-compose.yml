@@ -29,7 +29,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 3G
     healthcheck:
       test: ["CMD", "ollama", "list"]
       interval: 10s

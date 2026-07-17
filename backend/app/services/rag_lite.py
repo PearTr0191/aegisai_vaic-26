@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 import ollama
+from app.core.config import settings
 from app.models.artisan import KnowledgeChunk, ArtisanPersona, ArtisanResponse
 from app.schemas.chat import ArtisanResponse as ArtisanResponseSchema, Citation
 
@@ -103,8 +104,8 @@ TRẢ LỜI:"""
 
     def _chunk_to_citation(self, chunk: KnowledgeChunk) -> Citation:
         return Citation(
-            chunk_id=chunk.id,
-            source_type=chunk.source_type,
+            chunk_id=UUID(chunk.id) if isinstance(chunk.id, str) else chunk.id,
+            source_type=cast(Literal["interview", "document", "recording", "unesco", "academic"], chunk.source_type),
             excerpt_vi=chunk.content_vi[:200] + "..." if len(chunk.content_vi) > 200 else chunk.content_vi,
             excerpt_en=chunk.content_en[:200] + "..." if chunk.content_en and len(chunk.content_en) > 200 else chunk.content_en or "",
         )
@@ -188,7 +189,7 @@ TRẢ LỜI:"""
         # 6. Generate with Ollama
         try:
             response = await self.ollama.generate(
-                model="qwen2.5:7b-instruct-q4_k_m",
+                model=settings.OLLAMA_MODEL,
                 prompt=prompt,
                 options={"temperature": 0.3, "top_p": 0.9},
             )

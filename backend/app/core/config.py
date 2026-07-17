@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     # Ollama
     OLLAMA_HOST: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "qwen2.5:7b-instruct-q4_k_m"
+    OLLAMA_MODEL: str = "phi3.5:3.8b-mini-instruct-q4_k_m"
     OLLAMA_EMBED_MODEL: str = "nomic-embed-text:latest"
 
     # MinIO

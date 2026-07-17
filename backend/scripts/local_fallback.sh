@@ -48,7 +48,7 @@ done
 
 # Pull models if needed
 echo "3. Ensuring Ollama models are available..."
-docker exec vietheritage-ollama ollama pull qwen2.5:7b-instruct-q4_k_m &> /dev/null || true
+docker exec vietheritage-ollama ollama pull phi3.5:3.8b-mini-instruct-q4_k_m &> /dev/null || true
 docker exec vietheritage-ollama ollama pull nomic-embed-text:latest &> /dev/null || true
 
 echo "4. Initializing database..."

@@ -38,9 +38,9 @@ async def model_health():
             resp = await client.get(f"{settings.OLLAMA_HOST}/api/tags")
             if resp.status_code == 200:
                 models = resp.json().get("models", [])
-                qwen_available = any("qwen" in m.get("name", "") for m in models)
+                phi_available = any("phi" in m.get("name", "") for m in models)
                 nomic_available = any("nomic" in m.get("name", "") for m in models)
-                ollama_status = "healthy" if qwen_available and nomic_available else "degraded"
+                ollama_status = "healthy" if phi_available and nomic_available else "degraded"
             else:
                 ollama_status = "unhealthy"
     except Exception:
@@ -56,7 +56,7 @@ async def model_health():
         "ollama": {
             "host": settings.OLLAMA_HOST,
             "status": ollama_status,
-            "models": ["qwen2.5:7b-instruct-q4_k_m", "nomic-embed-text:latest"],
+            "models": [settings.OLLAMA_MODEL, settings.OLLAMA_EMBED_MODEL],
         },
     }
 

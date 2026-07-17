@@ -195,7 +195,7 @@ class EthnoMusicAnalyzer:
                 all_scores={label: float(score) for label, score in zip(self.TECHNIQUE_LABELS, technique_scores)},
                 ornament_timeline=ornament_timeline,
             ),
-            confidence=float(confidence.item()) if hasattr(confidence, "item") else float(confidence),
+            confidence=float(np.asarray(confidence).item()) if hasattr(confidence, "item") else float(confidence),
             processing_time_ms=processing_time,
             waveform_url=f"data:application/json;base64,{self._encode_waveform(waveform_peaks)}",
         )
@@ -219,8 +219,8 @@ class EthnoMusicAnalyzer:
             # Pitch tracking with PYIN
             f0, voiced_flag, voiced_probs = librosa.pyin(
                 y,
-                fmin=librosa.note_to_hz("C2"),
-                fmax=librosa.note_to_hz("C7"),
+                fmin=float(librosa.note_to_hz("C2")),
+                fmax=float(librosa.note_to_hz("C7")),
                 sr=sr,
                 hop_length=self.preprocessor.hop_length,
             )

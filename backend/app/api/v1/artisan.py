@@ -27,5 +27,5 @@ async def ask_artisan(
     # Use RAG-lite service with Ollama client
     ollama_client = ollama.AsyncClient(host=settings.OLLAMA_HOST)
     rag = HeritageRAGLite(db, ollama_client)
-    response = await rag.ask(request.question, request.persona_id, request.lang)
+    response = await rag.ask(request.question, UUID(request.persona_id), request.lang)
     return response
