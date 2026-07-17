@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kho lưu trữ Bảo vật — Vietnam Treasures Database</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --page-bg:    #f7f3ec;
+      --card-bg:    #fdfaf5;
+      --border:     #d9cfc0;
+      --text:       #2a1f0f;
+      --muted:      #7a6a52;
+      --heading:    #1a1008;
+      --red:        #7a1f1f;
+      --red-soft:   rgba(122,31,31,0.08);
+      --gold:       #8a6a20;
+      --gold-light: #b8922c;
+      --nav-bg:     #0a0900;
+      --nav-border: rgba(201,168,76,0.14);
+      --nav-gold:   #c9a84c;
+      --nav-text:   #e8dfc8;
+      --nav-muted:  #8a7c5e;
+      --font-body: 'DM Sans', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+    }
+
+    html.lang-vi { --font-body: 'Merriweather', serif; }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--page-bg); color:var(--text);
+      font-family:var(--font-body); min-height:100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:sticky; top:0; z-index:200;
+      height:62px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 48px;
+      background:var(--nav-bg); backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--nav-border);
+    }
+    .nav-logo {
+      display:flex; align-items:center; gap:10px; text-decoration:none;
+      color:var(--nav-text); font-family:'Playfair Display',serif;
+      font-size:1.05rem; font-weight:700;
+    }
+    .nav-logo svg { color:var(--nav-gold); }
+    .nav-links {
+      display:flex; gap:32px; list-style:none;
+      position:absolute; left:50%; transform:translateX(-50%);
+    }
+    .nav-links a {
+      text-decoration:none; font-size:11px; font-weight:500;
+      letter-spacing:0.18em; text-transform:uppercase;
+      color:var(--nav-muted); transition:color .2s;
+    }
+    .nav-links a:hover  { color:var(--nav-gold); }
+    .nav-links a.active { color:var(--nav-gold); }
+    .nav-right { display:flex; align-items:center; gap:10px; }
+    .lang-toggle {
+      display:flex; gap:3px;
+      background:rgba(255,255,255,0.04); border:1px solid #2c2507;
+      border-radius:20px; padding:3px;
+    }
+    .lang-btn {
+      background:transparent; border:none; color:var(--nav-muted);
+      padding:4px 12px; border-radius:16px; font-size:11px; font-weight:500;
+      font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s;
+    }
+    .lang-btn:hover  { color:var(--nav-gold); }
+    .lang-btn.active { background:var(--nav-gold); color:#1a1400; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background:var(--nav-bg);
+      border-bottom:2px solid var(--nav-gold);
+      padding:40px 48px 36px;
+    }
+    .page-header-eyebrow {
+      font-size:9.5px; font-weight:500; letter-spacing:0.3em; text-transform:uppercase;
+      color:var(--nav-gold); margin-bottom:10px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .page-header-eyebrow::before { content:''; width:24px; height:1px; background:var(--nav-gold); }
+    .page-header h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.8rem,3vw,2.6rem); font-weight:700;
+      color:#f5f0e6; letter-spacing:-0.01em;
+    }
+    .page-header h1 em { font-style:italic; color:var(--nav-gold); }
+
+    /* ── MAIN CONTENT WRAPPER ── */
+    .content { max-width:1300px; margin:0 auto; padding:36px 48px 64px; }
+
+    /* ── SEARCH PANEL ── */
+    .search-panel {
+      background:var(--card-bg); border:1px solid var(--border); border-radius:8px;
+      padding:28px 32px; margin-bottom:28px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.06);
+    }
+    .search-grid {
+      display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px 28px;
+      align-items:end;
+    }
+    .search-field { display:flex; flex-direction:column; gap:7px; }
+    .search-label {
+      font-size:10.5px; font-weight:600; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--muted);
+    }
+    .search-input, .search-select {
+      background:#fff; border:1.5px solid var(--border); border-radius:5px;
+      padding:9px 13px; color:var(--text); font-size:13.5px;
+      font-family:var(--font-body); outline:none; transition:border-color .2s;
+      width:100%;
+    }
+    .search-input::placeholder { color:#b0a090; }
+    .search-input:focus, .search-select:focus { border-color:var(--red); }
+
+    /* Century range row */
+    .century-row { display:flex; gap:10px; align-items:center; }
+    .century-row input[type=number] {
+      background:#fff; border:1.5px solid var(--border); border-radius:5px;
+      padding:9px 11px; color:var(--text); font-size:13.5px;
+      font-family:var(--font-body); outline:none; transition:border-color .2s;
+      width:100%;
+    }
+    .century-row input[type=number]:focus { border-color:var(--red); }
+    .century-row input[type=number]::placeholder { color:#b0a090; font-size:12px; }
+    .century-sep { color:var(--muted); font-size:13px; white-space:nowrap; flex-shrink:0; }
+    .century-hint { font-size:10px; color:var(--muted); margin-top:4px; }
+
+    /* Action row */
+    .search-actions {
+      display:flex; align-items:center; gap:12px; margin-top:20px;
+      padding-top:18px; border-top:1px solid var(--border);
+    }
+    .btn-search {
+      background:var(--red); color:#fff; border:none; border-radius:5px;
+      padding:10px 26px; font-size:12px; font-weight:600; letter-spacing:0.1em;
+      text-transform:uppercase; font-family:var(--font-body);
+      cursor:pointer; transition:background .2s;
+    }
+    .btn-search:hover { background:#9b2828; }
+    .btn-reset {
+      background:transparent; color:var(--muted); border:1.5px solid var(--border);
+      border-radius:5px; padding:10px 20px; font-size:12px; font-weight:500;
+      font-family:var(--font-body); cursor:pointer; transition:all .2s;
+    }
+    .btn-reset:hover { border-color:var(--red); color:var(--red); }
+    .result-summary {
+      margin-left:auto; font-size:12.5px; color:var(--muted);
+    }
+    .result-summary strong { color:var(--text); font-weight:600; }
+
+    /* ── RESULTS TABLE ── */
+    .table-wrap {
+      background:var(--card-bg); border:1px solid var(--border); border-radius:8px;
+      overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06);
+    }
+    table { width:100%; border-collapse:collapse; }
+    thead tr {
+      background:#ede7db; border-bottom:2px solid var(--border);
+    }
+    thead th {
+      padding:13px 20px; text-align:left;
+      font-size:10px; font-weight:700; letter-spacing:0.2em;
+      text-transform:uppercase; color:var(--muted);
+    }
+    thead th.col-no  { width:56px; }
+    thead th.col-era { width:130px; }
+    thead th.col-loc { width:30%; }
+
+    tbody tr {
+      border-bottom:1px solid #e8e0d4;
+      transition:background .15s;
+    }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover { background:#f0ebe2; }
+
+    td { padding:16px 20px; vertical-align:top; }
+    .td-no {
+      font-size:12px; color:var(--muted); font-weight:500;
+      padding-top:19px;
+    }
+    .td-name-en {
+      font-family:'Playfair Display',serif; font-size:15px;
+      font-weight:700; color:var(--heading); margin-bottom:3px;
+    }
+    .td-name-vi {
+      font-family:'Playfair Display',serif; font-style:italic;
+      font-size:12.5px; color:var(--muted);
+    }
+    .td-era-badge {
+      display:inline-block; margin-top:2px;
+      font-size:9.5px; font-weight:600; letter-spacing:0.08em;
+      text-transform:uppercase; padding:3px 9px; border-radius:3px;
+      border:1px solid;
+    }
+    .td-loc  { font-size:13px; color:var(--muted); padding-top:19px; line-height:1.5; }
+    .td-century { font-size:12px; color:var(--muted); padding-top:19px; }
+
+    /* Pagination */
+    .pagination {
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      padding:28px 0 0; flex-wrap:wrap;
+    }
+    .page-btn {
+      background:#fff; border:1.5px solid var(--border); border-radius:4px;
+      padding:7px 13px; font-size:12.5px; color:var(--muted);
+      cursor:pointer; transition:all .18s; font-family:var(--font-body);
+      min-width:36px; text-align:center;
+    }
+    .page-btn:hover    { border-color:var(--red); color:var(--red); }
+    .page-btn.active   { background:var(--red); border-color:var(--red); color:#fff; }
+    .page-btn:disabled { opacity:.35; cursor:not-allowed; }
+
+    /* Empty state */
+    .empty-state {
+      text-align:center; padding:64px 32px;
+      color:var(--muted); font-size:14px;
+    }
+    .empty-state svg { margin-bottom:16px; opacity:.3; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:900px) {
+      .content { padding:24px 20px 48px; }
+      .page-header { padding:28px 20px; }
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .search-grid { grid-template-columns:1fr; }
+      thead th.col-era, td:nth-child(4) { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="20" height="20" viewBox="0 0 22 22" fill="currentColor">
+      <polygon points="11,1 13,8 20,8 14.5,12.5 16.5,20 11,15.5 5.5,20 7.5,12.5 2,8 9,8"/>
+    </svg>
+    <span>Bảo Vật Việt</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"   id="nav-home">Trang chủ</a></li>
+    <li><a href="VNMT.html"    id="nav-map">Bản đồ</a></li>
+    <li><a href="database.html" class="active" id="nav-db">Kho lưu trữ</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn" data-lang="vi">VI</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-eyebrow" id="ph-eyebrow">Cơ sở dữ liệu</div>
+  <h1><span id="ph-h1a">Kho Lưu Trữ</span> <em id="ph-h1b">Bảo Vật Quốc Gia</em></h1>
+</div>
+
+<div class="content">
+
+  <!-- SEARCH PANEL -->
+  <div class="search-panel">
+    <div class="search-grid">
+
+      <!-- Name search -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-name">Tìm theo tên</label>
+        <input class="search-input" id="q-name"
+               type="text" autocomplete="off" />
+      </div>
+
+      <!-- Century range -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-century">Thế kỷ</label>
+        <div class="century-row">
+          <input type="number" id="q-from" min="-40" max="21" step="1" />
+          <span class="century-sep" id="lbl-to">đến</span>
+          <input type="number" id="q-to"   min="-40" max="21" step="1" />
+        </div>
+        <div class="century-hint" id="lbl-century-hint">
+          Số âm = TCN (vd: -3 = III TCN). Để trống = tất cả.
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-loc">Địa điểm</label>
+        <input class="search-input" id="q-loc" type="text" autocomplete="off" />
+      </div>
+
+      <!-- Type -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-type">Loại hình</label>
+        <select class="search-select" id="q-type">
+          <option value="">-- Tất cả --</option>
+          <option value="tools"    id="opt-tools">Công cụ &amp; Vũ khí</option>
+          <option value="religious" id="opt-rel">Tôn giáo</option>
+          <option value="art"      id="opt-art">Nghệ thuật &amp; Trang trí</option>
+          <option value="academic" id="opt-acad">Học thuật &amp; Văn bản</option>
+        </select>
+      </div>
+
+      <!-- Era -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-era">Thời kỳ</label>
+        <select class="search-select" id="q-era">
+          <option value="">-- Tất cả --</option>
+          <option value="prehistoric"   id="opt-era1">Tiền sử · Đông Sơn</option>
+          <option value="century_1_10"  id="opt-era2">Thế kỷ I – X</option>
+          <option value="century_10_20" id="opt-era3">Thế kỷ X – XIX</option>
+          <option value="modern_1945"   id="opt-era4">1900 – Nay</option>
+        </select>
+      </div>
+
+      <!-- Keyword -->
+      <div class="search-field">
+        <label class="search-label" id="lbl-kw">Từ khóa</label>
+        <input class="search-input" id="q-kw" type="text" autocomplete="off" />
+      </div>
+
+    </div><!-- /search-grid -->
+
+    <div class="search-actions">
+      <button class="btn-search" id="btn-search" onclick="doSearch()">
+        <span id="lbl-btn-search">Tìm kiếm</span>
+      </button>
+      <button class="btn-reset" onclick="resetSearch()">
+        <span id="lbl-btn-reset">Đặt lại</span>
+      </button>
+      <span class="result-summary" id="result-summary"></span>
+    </div>
+  </div><!-- /search-panel -->
+
+  <!-- RESULTS TABLE -->
+  <div class="table-wrap">
+    <table id="results-table">
+      <thead>
+        <tr>
+          <th class="col-no"  id="th-no">STT</th>
+          <th                 id="th-name">Tên Bảo Vật</th>
+          <th class="col-era" id="th-era">Thế kỷ</th>
+          <th class="col-loc" id="th-loc">Địa Điểm Lưu Giữ</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <p id="empty-msg">Không tìm thấy hiện vật phù hợp.</p>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+</div><!-- /content -->
+
+<script src="data.js"></script>
+<script>
+/* ═══════════════════════════════════════
+   CONFIG & STATE
+═══════════════════════════════════════ */
+const PAGE_SIZE = 30;
+let lang        = localStorage.getItem('vnmt_lang') || 'vi';
+let filtered    = [];
+let currentPage = 1;
+
+/* ── ERA / TYPE config (minimal, no Leaflet dependency) ── */
+const ERA_CONFIG = {
+  prehistoric:   { color:'#c9943a', vi:'Tiền sử · Đông Sơn', en:'Prehistoric · Đông Sơn' },
+  century_1_10:  { color:'#c47c5a', vi:'Thế kỷ I–X',         en:'1st–10th c.' },
+  century_10_20: { color:'#4caf84', vi:'Thế kỷ X–XIX',        en:'10th–19th c.' },
+  modern_1945:   { color:'#5a8a9f', vi:'1900–Nay',            en:'1900–Now' },
+};
+const ERA_OVERRIDES = { 82:'century_10_20', 87:'century_10_20',
+                        88:'century_10_20', 91:'century_10_20' };
+
+function getEra(t) {
+  if (ERA_OVERRIDES[t.id]) return ERA_OVERRIDES[t.id];
+  const y = String(t.year || '');
+  if (['Đông Sơn','Phùng Nguyên','Đồng Nai','Tiền sử'].some(k => y.includes(k)))
+    return 'prehistoric';
+  if (['Óc Eo','Chăm Pa'].some(k => y.includes(k))) return 'century_1_10';
+  if (/20th|19\d{2}|1945|1946/.test(y)) return 'modern_1945';
+  const yr = parseInt((y.match(/\d{3,4}/) || [])[0]);
+  if (!isNaN(yr)) {
+    if (yr >= 1900) return 'modern_1945';
+    if (yr < 939)   return 'century_1_10';
+  }
+  return 'century_10_20';
+}
+
+/* ── Century derivation ── */
+function getCentury(t) {
+  /* Returns approximate integer century (negative = BCE) */
+  const y = String(t.year || '');
+  if (['Tiền sử','Phùng Nguyên'].some(k => y.includes(k))) return -30;
+  if (y.includes('Đồng Nai')) return -5;
+  if (y.includes('Đông Sơn')) return -3;
+  if (y.includes('Óc Eo'))    return 5;
+  if (y.includes('Chăm Pa'))  return 8;  // mid-range default
+  if (/20th|1900–Present|1900–Nay/.test(y)) return 20;
+  const yr = parseInt((y.match(/\d{4}/) || y.match(/\d{3}/) || [])[0]);
+  if (!isNaN(yr)) {
+    if (yr < 0)   return Math.floor(yr / 100);
+    if (yr === 0) return 1;
+    return Math.ceil(yr / 100);
+  }
+  /* dynasty defaults */
+  const d = { 'Lý':11, 'Trần':13, 'Lê sơ':15, 'Mạc':16,
+              'Lê Trung Hưng':17, 'Tây Sơn':18, 'Nguyễn':19,
+              'Đinh':10, 'Tiền Lê':10 };
+  for (const [k,v] of Object.entries(d)) if (y.includes(k)) return v;
+  return null;
+}
+
+function formatCentury(c, short = false) {
+  if (c === null || c === undefined) return '—';
+  if (c < 0) {
+    const abs = Math.abs(c);
+    const bce = lang === 'vi' ? 'TCN' : 'BCE';
+    const pfx = lang === 'vi' ? 'Thế kỷ' : 'c.';
+    return short ? `${toRoman(abs)} ${bce}` : `${pfx} ${toRoman(abs)} ${bce}`;
+  }
+  const pfx = lang === 'vi' ? 'Thế kỷ' : 'c.';
+  return short ? `${toRoman(c)}` : `${pfx} ${toRoman(c)}`;
+}
+
+function toRoman(n) {
+  const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const r = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let s = ''; let x = n;
+  for (let i=0; i<v.length; i++) while (x >= v[i]) { s += r[i]; x -= v[i]; }
+  return s;
+}
+
+/* ═══════════════════════════════════════
+   I18N
+═══════════════════════════════════════ */
+const DB_STRINGS = {
+  vi: {
+    navHome:'Trang chủ', navMap:'Bản đồ', navDb:'Kho lưu trữ',
+    phEyebrow:'Cơ sở dữ liệu',
+    phH1a:'Kho Lưu Trữ', phH1b:'Bảo Vật Quốc Gia',
+    lblName:'Tìm theo tên', lblCentury:'Thế kỷ',
+    lblTo:'đến', lblCenturyHint:'Số âm = TCN (vd: -3 = III TCN). Để trống = tất cả.',
+    lblLoc:'Địa điểm', lblType:'Loại hình', lblEra:'Thời kỳ', lblKw:'Từ khóa',
+    optAll:'-- Tất cả --',
+    optTools:'Công cụ & Vũ khí', optRel:'Tôn giáo',
+    optArt:'Nghệ thuật & Trang trí', optAcad:'Học thuật & Văn bản',
+    optEra1:'Tiền sử · Đông Sơn', optEra2:'Thế kỷ I–X',
+    optEra3:'Thế kỷ X–XIX', optEra4:'1900–Nay',
+    btnSearch:'Tìm kiếm', btnReset:'Đặt lại',
+    resultSummary: n => `Hiển thị <strong>${n}</strong> hiện vật`,
+    thNo:'STT', thName:'Tên Bảo Vật', thEra:'Thế kỷ', thLoc:'Địa Điểm Lưu Giữ',
+    emptyMsg:'Không tìm thấy hiện vật phù hợp.',
+    namePlaceholder:'Nhập tên bảo vật…',
+    locPlaceholder:'Nhập địa điểm…',
+    kwPlaceholder:'Nhập từ khóa…',
+    fromPlaceholder:'Từ TK', toPlaceholder:'Đến TK',
+  },
+  en: {
+    navHome:'Home', navMap:'Map', navDb:'Database',
+    phEyebrow:'Database',
+    phH1a:'National Treasures', phH1b:'Archive',
+    lblName:'Search by name', lblCentury:'Century',
+    lblTo:'to', lblCenturyHint:'Negative = BCE (e.g. -3 = III BCE). Leave blank = all.',
+    lblLoc:'Location', lblType:'Category', lblEra:'Era', lblKw:'Keyword',
+    optAll:'-- All --',
+    optTools:'Tools & Weapons', optRel:'Religious',
+    optArt:'Art & Decoration', optAcad:'Academic & Documents',
+    optEra1:'Prehistoric · Đông Sơn', optEra2:'1st–10th c.',
+    optEra3:'10th–19th c.', optEra4:'1900–Now',
+    btnSearch:'Search', btnReset:'Reset',
+    resultSummary: n => `Showing <strong>${n}</strong> artifacts`,
+    thNo:'No.', thName:'Treasure Name', thEra:'Century', thLoc:'Location',
+    emptyMsg:'No artifacts match your search.',
+    namePlaceholder:'Search by name…',
+    locPlaceholder:'Enter location…',
+    kwPlaceholder:'Enter keyword…',
+    fromPlaceholder:'From c.', toPlaceholder:'To c.',
+  },
+};
+
+function S(key) { return DB_STRINGS[lang][key]; }
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.documentElement.classList.toggle('lang-vi', lang === 'vi');
+  const s = DB_STRINGS[lang];
+  document.getElementById('nav-home').textContent  = s.navHome;
+  document.getElementById('nav-map').textContent   = s.navMap;
+  document.getElementById('nav-db').textContent    = s.navDb;
+  document.getElementById('ph-eyebrow').textContent = s.phEyebrow;
+  document.getElementById('ph-h1a').textContent    = s.phH1a;
+  document.getElementById('ph-h1b').textContent    = s.phH1b;
+  document.getElementById('lbl-name').textContent  = s.lblName;
+  document.getElementById('lbl-century').textContent = s.lblCentury;
+  document.getElementById('lbl-to').textContent    = s.lblTo;
+  document.getElementById('lbl-century-hint').textContent = s.lblCenturyHint;
+  document.getElementById('lbl-loc').textContent   = s.lblLoc;
+  document.getElementById('lbl-type').textContent  = s.lblType;
+  document.getElementById('lbl-era').textContent   = s.lblEra;
+  document.getElementById('lbl-kw').textContent    = s.lblKw;
+  document.getElementById('lbl-btn-search').textContent = s.btnSearch;
+  document.getElementById('lbl-btn-reset').textContent  = s.btnReset;
+  document.getElementById('th-no').textContent   = s.thNo;
+  document.getElementById('th-name').textContent = s.thName;
+  document.getElementById('th-era').textContent  = s.thEra;
+  document.getElementById('th-loc').textContent  = s.thLoc;
+  document.getElementById('empty-msg').textContent = s.emptyMsg;
+  document.getElementById('q-name').placeholder = s.namePlaceholder;
+  document.getElementById('q-loc').placeholder  = s.locPlaceholder;
+  document.getElementById('q-kw').placeholder   = s.kwPlaceholder;
+  document.getElementById('q-from').placeholder = s.fromPlaceholder;
+  document.getElementById('q-to').placeholder   = s.toPlaceholder;
+  /* update select options */
+  const selType = document.getElementById('q-type');
+  selType.options[0].text = s.optAll;
+  document.getElementById('opt-tools').text = s.optTools;
+  document.getElementById('opt-rel').text   = s.optRel;
+  document.getElementById('opt-art').text   = s.optArt;
+  document.getElementById('opt-acad').text  = s.optAcad;
+  const selEra = document.getElementById('q-era');
+  selEra.options[0].text = s.optAll;
+  document.getElementById('opt-era1').text = s.optEra1;
+  document.getElementById('opt-era2').text = s.optEra2;
+  document.getElementById('opt-era3').text = s.optEra3;
+  document.getElementById('opt-era4').text = s.optEra4;
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === lang)
+  );
+  /* re-render table in new language */
+  renderPage(currentPage);
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    localStorage.setItem('vnmt_lang', lang);
+    applyLang();
+  });
+});
+
+/* ═══════════════════════════════════════
+   SEARCH & FILTER
+═══════════════════════════════════════ */
+function doSearch() {
+  const name  = document.getElementById('q-name').value.trim().toLowerCase();
+  const loc   = document.getElementById('q-loc').value.trim().toLowerCase();
+  const kw    = document.getElementById('q-kw').value.trim().toLowerCase();
+  const type  = document.getElementById('q-type').value;
+  const era   = document.getElementById('q-era').value;
+  const fromC = document.getElementById('q-from').value !== ''
+                  ? parseInt(document.getElementById('q-from').value) : null;
+  const toC   = document.getElementById('q-to').value !== ''
+                  ? parseInt(document.getElementById('q-to').value) : null;
+
+  filtered = TREASURES.filter(t => {
+    const eName = (t.english || '').toLowerCase();
+    const vName = (t.name    || '').toLowerCase();
+    const tLoc  = (t.location|| '').toLowerCase();
+    const tDesc = (t.desc    || '').toLowerCase();
+    const tBadge= (t.badge   || '').toLowerCase();
+
+    if (name && !eName.includes(name) && !vName.includes(name)) return false;
+    if (loc  && !tLoc.includes(loc))                             return false;
+    if (kw   && !eName.includes(kw) && !vName.includes(kw)
+             && !tDesc.includes(kw) && !tBadge.includes(kw)
+             && !tLoc.includes(kw))                              return false;
+    if (type && t.type !== type)          return false;
+    if (era  && getEra(t) !== era)        return false;
+
+    if (fromC !== null || toC !== null) {
+      const c = getCentury(t);
+      if (c === null) return false;
+      if (fromC !== null && c < fromC) return false;
+      if (toC   !== null && c > toC)   return false;
+    }
+    return true;
+  });
+
+  currentPage = 1;
+  renderPage(1);
+}
+
+function resetSearch() {
+  ['q-name','q-loc','q-kw','q-from','q-to'].forEach(id =>
+    { document.getElementById(id).value = ''; });
+  document.getElementById('q-type').value = '';
+  document.getElementById('q-era').value  = '';
+  filtered = [...TREASURES];
+  currentPage = 1;
+  renderPage(1);
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function renderPage(page) {
+  currentPage = page;
+  const total  = filtered.length;
+  const start  = (page - 1) * PAGE_SIZE;
+  const slice  = filtered.slice(start, start + PAGE_SIZE);
+
+  /* result summary */
+  document.getElementById('result-summary').innerHTML = S('resultSummary')(total);
+
+  /* table body */
+  const tbody = document.getElementById('results-body');
+  const empty = document.getElementById('empty-state');
+
+  if (slice.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = slice.map((t, i) => {
+      const era   = getEra(t);
+      const eraC  = ERA_CONFIG[era]?.color || '#8a7c5e';
+      const eraLbl= ERA_CONFIG[era]?.[lang === 'vi' ? 'vi' : 'en'] || '';
+      const cent  = getCentury(t);
+      const centStr = formatCentury(cent, true);
+      const nameMain = lang === 'vi' ? t.name : t.english;
+      const nameSub  = lang === 'vi' ? t.english : t.name;
+      return `
+        <tr onclick="window.open('artifact.html?id=${t.id}','_blank')"
+            style="cursor:pointer"
+            title="${nameMain}">
+          <td class="td-no">${start + i + 1}</td>
+          <td>
+            <div class="td-name-en">${nameMain}</div>
+            <div class="td-name-vi">${nameSub}</div>
+            <span class="td-era-badge"
+                  style="color:${eraC};border-color:${eraC}55;background:${eraC}11">
+              ${eraLbl}
+            </span>
+          </td>
+          <td class="td-century">${centStr}</td>
+          <td class="td-loc">${t.location}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  /* pagination */
+  renderPagination(total, page);
+}
+
+function renderPagination(total, current) {
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const pg    = document.getElementById('pagination');
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="renderPage(${current-1})"
+               ${current===1?'disabled':''}>‹</button>`;
+
+  for (let p = 1; p <= pages; p++) {
+    if (p === 1 || p === pages || Math.abs(p - current) <= 2) {
+      html += `<button class="page-btn ${p===current?'active':''}"
+                onclick="renderPage(${p})">${p}</button>`;
+    } else if (Math.abs(p - current) === 3) {
+      html += `<span class="page-btn" style="cursor:default;pointer-events:none">…</span>`;
+    }
+  }
+
+  html += `<button class="page-btn" onclick="renderPage(${current+1})"
+            ${current===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* Enter key in any search field triggers search */
+document.querySelectorAll('.search-input, .search-select, .century-row input').forEach(el => {
+  el.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+});
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+filtered = [...TREASURES];
+applyLang();
+doSearch();
+</script>
+</body>
+</html>

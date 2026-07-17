@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Các Nền Văn Minh — Vietnam National Treasures</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --page-bg:  #f7f3ec;
+      --card-bg:  #fdfaf5;
+      --border:   #d9cfc0;
+      --text:     #2a1f0f;
+      --muted:    #7a6a52;
+      --heading:  #1a1008;
+      --red:      #7a1f1f;
+      --gold:     #8a6a20;
+      --nav-bg:   #0a0900;
+      --nav-gold: #c9a84c;
+      --nav-muted:#8a7c5e;
+      --nav-text: #e8dfc8;
+      --nav-brd:  rgba(201,168,76,0.14);
+      --font-body: 'DM Sans', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+    }
+    html.lang-vi { --font-body: 'Merriweather', serif; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--page-bg);color:var(--text);font-family:var(--font-body);min-height:100vh;}
+
+    /* ── NAV ── */
+    nav{position:sticky;top:0;z-index:200;height:62px;display:flex;align-items:center;
+        justify-content:space-between;padding:0 48px;
+        background:var(--nav-bg);border-bottom:1px solid var(--nav-brd);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;
+              color:var(--nav-text);font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;}
+    .nav-logo svg{color:var(--nav-gold);}
+    .nav-links{display:flex;gap:32px;list-style:none;position:absolute;left:50%;transform:translateX(-50%);}
+    .nav-links a{text-decoration:none;font-size:11px;font-weight:500;letter-spacing:0.18em;
+                 text-transform:uppercase;color:var(--nav-muted);transition:color .2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--nav-gold);}
+    .nav-right{display:flex;align-items:center;gap:10px;}
+    .lang-toggle{display:flex;gap:3px;background:rgba(255,255,255,0.04);
+                 border:1px solid #2c2507;border-radius:20px;padding:3px;}
+    .lang-btn{background:transparent;border:none;color:var(--nav-muted);padding:4px 12px;
+              border-radius:16px;font-size:11px;font-weight:500;font-family:var(--font-body);
+              cursor:pointer;transition:all .2s;}
+    .lang-btn:hover{color:var(--nav-gold);}
+    .lang-btn.active{background:var(--nav-gold);color:#1a1400;}
+
+    /* ── PAGE HERO ── */
+    .page-hero{
+      background:linear-gradient(160deg,#1c1400 0%,#0a0900 70%);
+      border-bottom:2px solid var(--nav-gold);
+      padding:52px 48px 48px; position:relative; overflow:hidden;
+    }
+    .page-hero::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--nav-gold) 30%,#c42b2b 50%,var(--nav-gold) 70%,transparent);
+    }
+    .page-hero-inner{max-width:720px;}
+    .page-eyebrow{font-size:9.5px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;
+                  color:var(--nav-gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+    .page-eyebrow::before{content:'';width:24px;height:1px;background:var(--nav-gold);}
+    .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);
+                  font-weight:700;color:#f5f0e6;line-height:1.1;margin-bottom:16px;}
+    .page-hero h1 em{font-style:italic;color:var(--nav-gold);}
+    .page-hero p{font-size:14.5px;color:#8a7c5e;line-height:1.75;max-width:600px;}
+
+    /* ── CONTENT ── */
+    .content{max-width:1280px;margin:0 auto;padding:52px 48px 80px;}
+
+    /* section label */
+    .sec-label{font-size:9.5px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;
+                color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+    .sec-label::before{content:'';width:22px;height:1px;background:var(--gold);}
+    .sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);
+               font-weight:700;color:var(--heading);margin-bottom:36px;line-height:1.2;}
+
+    /* ── CIVILISATION CARDS ── */
+    .civ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:64px;}
+
+    .civ-card{
+      background:var(--card-bg);border:1px solid var(--border);border-radius:10px;
+      overflow:hidden;text-decoration:none;color:var(--text);display:flex;flex-direction:column;
+      border-top:5px solid var(--civ-color);
+      transition:transform .22s,box-shadow .22s;
+      position:relative;
+    }
+    .civ-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.12);}
+
+    .civ-card-header{padding:28px 28px 0;}
+    .civ-number{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+                color:var(--civ-color);margin-bottom:8px;}
+    .civ-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;
+              color:var(--heading);line-height:1.2;margin-bottom:4px;}
+    .civ-dates{font-size:11.5px;color:var(--muted);margin-bottom:16px;letter-spacing:.04em;}
+
+    .civ-divider{height:1px;background:var(--border);margin:0 28px 20px;}
+
+    .civ-card-body{padding:0 28px 28px;flex:1;display:flex;flex-direction:column;}
+    .civ-desc{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:20px;flex:1;}
+
+    .civ-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
+    .civ-tag{font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+             padding:3px 9px;border-radius:3px;border:1px solid var(--civ-color);
+             color:var(--civ-color);background:transparent;}
+
+    .civ-footer{display:flex;align-items:center;justify-content:space-between;}
+    .civ-count{font-size:11px;color:var(--muted);}
+    .civ-count strong{color:var(--text);font-size:13px;}
+    .civ-cta{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+             color:var(--civ-color);display:flex;align-items:center;gap:5px;transition:gap .2s;}
+    .civ-card:hover .civ-cta{gap:9px;}
+
+    /* ── INTRO NOTE ── */
+    .intro-note{
+      background:var(--card-bg);border:1px solid var(--border);border-radius:8px;
+      padding:32px 36px;max-width:800px;margin:0 auto;text-align:center;
+    }
+    .intro-note p{font-size:14px;color:var(--muted);line-height:1.8;}
+    .intro-note strong{color:var(--text);}
+
+    /* ── TIMELINE STRIP ── */
+    .timeline-wrap{margin-bottom:56px;}
+    .timeline{
+      background:var(--card-bg);border:1px solid var(--border);border-radius:8px;
+      padding:24px 28px 20px;overflow-x:auto;
+    }
+    .tl-inner{ min-width:700px; }
+    /* axis tick header */
+    .tl-axis-row{
+      display:flex; margin-left:120px; margin-bottom:6px;
+      position:relative; height:20px;
+    }
+    .tl-tick-lbl{
+      position:absolute; transform:translateX(-50%);
+      font-size:9px; color:var(--muted); white-space:nowrap;
+    }
+    /* one row per civilisation */
+    .tl-rows{ display:flex; flex-direction:column; gap:5px; }
+    .tl-row { display:flex; align-items:center; gap:0; }
+    .tl-row-label{
+      width:120px; flex-shrink:0; font-size:11px; font-weight:600;
+      color:var(--muted); text-align:right; padding-right:12px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .tl-row-track{
+      flex:1; position:relative; height:28px;
+      border-left:1px solid var(--border);
+    }
+    /* gridlines */
+    .tl-gridline{
+      position:absolute; top:0; bottom:0; width:1px;
+      background:var(--border); opacity:.5; pointer-events:none;
+    }
+    .tl-bar{
+      position:absolute; top:4px; bottom:4px;
+      border-radius:5px; cursor:pointer;
+      display:flex; align-items:center; padding:0 8px;
+      font-size:9.5px; font-weight:700; color:rgba(255,255,255,0.92);
+      white-space:nowrap; overflow:hidden;
+      transition:top .18s, bottom .18s, opacity .18s;
+    }
+    .tl-bar:hover{ top:2px; bottom:2px; opacity:.88; }
+    /* label shown outside the bar when bar is too narrow */
+    .tl-ext-label{
+      position:absolute; top:50%; transform:translateY(-50%);
+      font-size:9.5px; font-weight:700; white-space:nowrap;
+      pointer-events:none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .civ-grid{grid-template-columns:1fr;}
+      .content{padding:32px 20px 60px;}
+      .page-hero{padding:32px 20px 36px;}
+      nav{padding:0 20px;}
+      .nav-links{display:none;}
+    }
+    @media(max-width:1100px){
+      .civ-grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="20" height="20" viewBox="0 0 22 22" fill="currentColor">
+      <polygon points="11,1 13,8 20,8 14.5,12.5 16.5,20 11,15.5 5.5,20 7.5,12.5 2,8 9,8"/>
+    </svg>
+    <span>Bảo Vật Việt</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"        id="nav-home">Trang chủ</a></li>
+    <li><a href="VNMT.html"         id="nav-map">Bản đồ</a></li>
+    <li><a href="database.html"     id="nav-db">Kho lưu trữ</a></li>
+    <li><a href="civilisations.html" class="active" id="nav-civs">Nền Văn Minh</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn" data-lang="vi">VI</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow" id="ph-eyebrow">Khám phá chuyên sâu</div>
+    <h1><span id="ph-h1a">Các Nền</span> <em id="ph-h1b">Văn Minh</em></h1>
+    <p id="ph-desc">357 bảo vật quốc gia không chỉ là những đồ vật đẹp — chúng là di tích của sáu nền văn minh đã định hình văn hóa, tín ngưỡng và bản sắc Việt Nam qua hơn 4.000 năm lịch sử.</p>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- TIMELINE -->
+  <div class="timeline-wrap">
+    <div class="sec-label" id="tl-label">Dòng thời gian</div>
+    <div class="timeline">
+      <div id="tl-title" style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+        Các nền văn minh qua thời gian
+      </div>
+      <div class="tl-inner" id="tl-inner">
+        <!-- axis labels row -->
+        <div class="tl-axis-row" id="tl-axis"></div>
+        <!-- one row per civilisation -->
+        <div class="tl-rows" id="tl-rows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="sec-label" id="grid-label">Sáu nền văn minh</div>
+  <h2 class="sec-title" id="grid-title">Những người tạo ra bảo vật</h2>
+
+  <div class="civ-grid" id="civ-grid">
+    <!-- Built by JS -->
+  </div>
+
+  <!-- INTRO NOTE -->
+  <div class="intro-note">
+    <p id="note-text"><strong>Lưu ý về phân loại:</strong> Các ranh giới giữa các nền văn minh không bao giờ tuyệt đối — Chăm Pa và Đại Việt cùng tồn tại trong nhiều thế kỷ; văn hóa Óc Eo phát triển trước khi Chăm Pa đạt đỉnh cao ở miền Trung. Cách phân loại ở đây phản ánh truyền thống học thuật phổ biến nhất, nhằm giúp người dùng dễ khám phá bộ sưu tập.</p>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   CIVILISATION DATA
+═══════════════════════════════════════ */
+const CIVS = [
+  {
+    slug:'dong-son', color:'#c9943a',
+    number:{ vi:'Nền văn minh 1', en:'Civilisation 1' },
+    name:{ vi:'Đông Sơn', en:'Đông Sơn' },
+    dates:{ vi:'~700 TCN – 200 CN', en:'c. 700 BCE – 200 CE' },
+    desc:{
+      vi:'Đỉnh cao của thời đại đồ đồng Đông Nam Á, văn hóa Đông Sơn đã tạo ra những trống đồng nổi tiếng nhất thế giới — vừa là nhạc cụ nghi lễ, vừa là bản đồ vũ trụ, vừa là biểu tượng quyền lực của các thủ lĩnh.',
+      en:'The apex of Southeast Asian Bronze Age civilization, the Đông Sơn culture produced the world\'s most celebrated bronze drums — simultaneously ritual instruments, cosmological maps, and symbols of chiefly authority.'
+    },
+    tags:{ vi:['Đồng thau','Nông nghiệp lúa nước','Tín ngưỡng vật linh'], en:['Bronze','Wet-rice farming','Animism'] },
+    count: 40,
+    page:'dong-son.html',
+    tlStart: -700, tlEnd: 200,
+  },
+  {
+    slug:'oc-eo', color:'#c47c5a',
+    number:{ vi:'Nền văn minh 2', en:'Civilisation 2' },
+    name:{ vi:'Phù Nam · Óc Eo', en:'Funan · Óc Eo' },
+    dates:{ vi:'Thế kỷ I – VII CN', en:'1st – 7th Century CE' },
+    desc:{
+      vi:'Đế quốc thương mại hàng hải hùng mạnh ở đồng bằng sông Mê Kông, Phù Nam đã kết nối Ấn Độ, Trung Quốc và thế giới Địa Trung Hải, để lại vô số tượng Phật, thần Hindu và đồ vàng bạc đặc sắc.',
+      en:'A powerful maritime trading empire of the Mekong Delta, Funan connected India, China and the Mediterranean world, leaving behind exquisite Buddha statues, Hindu deities and gold ritual objects.'
+    },
+    tags:{ vi:['Thương mại hàng hải','Hindu-Phật giáo','Ấn Độ hóa'], en:['Maritime trade','Hindu-Buddhism','Indianisation'] },
+    count: 28,
+    page:'oc-eo.html',
+    tlStart: 100, tlEnd: 700,
+  },
+  {
+    slug:'champa', color:'#b87c50',
+    number:{ vi:'Nền văn minh 3', en:'Civilisation 3' },
+    name:{ vi:'Chăm Pa', en:'Champa' },
+    dates:{ vi:'Thế kỷ II – XVII CN', en:'2nd – 17th Century CE' },
+    desc:{
+      vi:'Vương quốc Hindu-Phật giáo ven biển miền Trung Việt Nam, Chăm Pa để lại hệ thống tháp gạch và điêu khắc đá tuyệt vời — đặc biệt là những tác phẩm tại Mỹ Sơn và Bảo tàng Điêu khắc Chăm Đà Nẵng.',
+      en:'A coastal Hindu-Buddhist kingdom of central Vietnam, Champa left behind extraordinary brick towers and stone sculptures — especially the masterworks at Mỹ Sơn and the Da Nang Museum of Cham Sculpture.'
+    },
+    tags:{ vi:['Kiến trúc tháp','Điêu khắc đá','Phạn ngữ'], en:['Tower architecture','Stone sculpture','Sanskrit'] },
+    count: 28,
+    page:'champa.html',
+    tlStart: 200, tlEnd: 1700,
+  },
+  {
+    slug:'dai-viet', color:'#4caf84',
+    number:{ vi:'Nền văn minh 4', en:'Civilisation 4' },
+    name:{ vi:'Đại Việt', en:'Đại Việt' },
+    dates:{ vi:'Thế kỷ X – XIX CN', en:'10th – 19th Century CE' },
+    desc:{
+      vi:'Nhà nước Việt Nam độc lập trải qua các triều đại Lý, Trần, Lê, Mạc — tạo ra bia tiến sĩ Văn Miếu, chuông đền chùa, tượng Phật sơn son thếp vàng, và nền gốm sứ Bát Tràng độc đáo.',
+      en:'The independent Vietnamese state across the Lý, Trần, Lê and Mạc dynasties — producing the Temple of Literature doctoral steles, pagoda bells, gilded Buddhist statues, and the unique Bát Tràng ceramic tradition.'
+    },
+    tags:{ vi:['Phật giáo','Nho học','Gốm sứ'], en:['Buddhism','Confucianism','Ceramics'] },
+    count: 180,
+    page:'dai-viet.html',
+    tlStart: 939, tlEnd: 1802,
+  },
+  {
+    slug:'nguyen', color:'#9b7bdf',
+    number:{ vi:'Nền văn minh 5', en:'Civilisation 5' },
+    name:{ vi:'Triều Nguyễn', en:'Nguyễn Dynasty' },
+    dates:{ vi:'1802 – 1945', en:'1802 – 1945' },
+    desc:{
+      vi:'Triều đại phong kiến cuối cùng của Việt Nam, với kinh đô Huế là trung tâm quyền lực và văn hóa. Di sản để lại gồm ấn vàng hoàng đế, ngai vàng, trang phục cung đình và hệ thống lăng tẩm hoàn chỉnh.',
+      en:"Vietnam's last imperial dynasty, with Huế as its cultural and political center. Its legacy includes gold imperial seals, the royal throne, court ceremonial robes and a complete system of imperial mausoleums."
+    },
+    tags:{ vi:['Phong kiến','Kinh đô Huế','Giao tiếp phương Tây'], en:['Imperial','Huế Citadel','Western contact'] },
+    count: 45,
+    page:'nguyen.html',
+    tlStart: 1802, tlEnd: 1945,
+  },
+  {
+    slug:'hien-dai', color:'#5a8a9f',
+    number:{ vi:'Nền văn minh 6', en:'Civilisation 6' },
+    name:{ vi:'Cận Hiện Đại', en:'Modern Era' },
+    dates:{ vi:'1900 – Nay', en:'1900 – Present' },
+    desc:{
+      vi:'Từ cuộc kháng chiến giành độc lập đến thống nhất đất nước — những hiện vật thế kỷ XX ghi lại hành trình Việt Nam trở thành quốc gia độc lập hiện đại: sắc lệnh lập quốc, xe tăng T-59, bản đồ chiến dịch lịch sử.',
+      en:"From the independence struggle to national reunification — 20th-century artifacts document Vietnam's journey to modern statehood: founding decrees, the T-59 tank, historic military campaign maps."
+    },
+    tags:{ vi:['Độc lập','Kháng chiến','Hiện đại hóa'], en:['Independence','Resistance war','Modernisation'] },
+    count: 36,
+    page:'hien-dai.html',
+    tlStart: 1900, tlEnd: 2026,
+  },
+];
+
+/* ═══════════════════════════════════════
+   LANGUAGE
+═══════════════════════════════════════ */
+let lang = localStorage.getItem('vnmt_lang') || 'vi';
+
+const S = {
+  vi:{
+    navHome:'Trang chủ', navMap:'Bản đồ', navDb:'Kho lưu trữ', navCivs:'Nền Văn Minh',
+    phEyebrow:'Khám phá chuyên sâu', phH1a:'Các Nền', phH1b:'Văn Minh',
+    phDesc:'357 bảo vật quốc gia không chỉ là những đồ vật đẹp — chúng là di tích của sáu nền văn minh đã định hình văn hóa, tín ngưỡng và bản sắc Việt Nam qua hơn 4.000 năm lịch sử.',
+    tlLabel:'Dòng thời gian', tlTitle:'Các nền văn minh qua thời gian',
+    gridLabel:'Sáu nền văn minh', gridTitle:'Những người tạo ra bảo vật',
+    artifacts:'hiện vật', explore:'Khám phá →',
+    noteText:'<strong>Lưu ý về phân loại:</strong> Các ranh giới giữa các nền văn minh không bao giờ tuyệt đối — Chăm Pa và Đại Việt cùng tồn tại trong nhiều thế kỷ; văn hóa Óc Eo phát triển trước khi Chăm Pa đạt đỉnh cao ở miền Trung. Cách phân loại ở đây phản ánh truyền thống học thuật phổ biến nhất.',
+  },
+  en:{
+    navHome:'Home', navMap:'Map', navDb:'Database', navCivs:'Civilisations',
+    phEyebrow:'In-depth exploration', phH1a:'The', phH1b:'Civilisations',
+    phDesc:'Vietnam\'s 357 national treasures are not merely beautiful objects — they are the material remains of six civilisations that shaped Vietnamese culture, belief and identity across more than 4,000 years of history.',
+    tlLabel:'Timeline', tlTitle:'Civilisations across time',
+    gridLabel:'Six civilisations', gridTitle:'The makers behind the treasures',
+    artifacts:'artifacts', explore:'Explore →',
+    noteText:'<strong>A note on classification:</strong> The boundaries between civilisations were never absolute — Champa and Đại Việt coexisted for centuries; the Óc Eo culture flourished before Champa reached its zenith in central Vietnam. The classification here follows the most widely accepted academic convention to make the collection easier to navigate.',
+  },
+};
+const t = k => S[lang][k];
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.documentElement.classList.toggle('lang-vi', lang === 'vi');
+  const set = (id,v,html=false) => { const e=document.getElementById(id); if(e) html?e.innerHTML=v:e.textContent=v; };
+  set('nav-home',t('navHome')); set('nav-map',t('navMap'));
+  set('nav-db',t('navDb')); set('nav-civs',t('navCivs'));
+  set('ph-eyebrow',t('phEyebrow')); set('ph-h1a',t('phH1a')); set('ph-h1b',t('phH1b'));
+  set('ph-desc',t('phDesc'));
+  set('tl-label',t('tlLabel')); set('tl-title',t('tlTitle'));
+  set('grid-label',t('gridLabel')); set('grid-title',t('gridTitle'));
+  set('note-text',t('noteText'),true);
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  buildGrid();
+  buildTimeline();
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ lang=btn.dataset.lang; localStorage.setItem('vnmt_lang',lang); applyLang(); });
+});
+
+/* ── TIMELINE — one row per civilisation ── */
+function buildTimeline() {
+  const axisEl = document.getElementById('tl-axis');
+  const rowsEl = document.getElementById('tl-rows');
+  if (!axisEl || !rowsEl) return;
+
+  const TL_MIN = -700, TL_MAX = 2050, TL_RANGE = TL_MAX - TL_MIN;
+  const ticks  = [-700,-500,-300,-100,0,200,500,800,1000,1200,1400,1600,1800,2000];
+  const pct    = yr => ((yr - TL_MIN) / TL_RANGE * 100).toFixed(2);
+
+  /* ── axis label row ── */
+  axisEl.innerHTML = '';
+  ticks.forEach(yr => {
+    const lbl = document.createElement('span');
+    lbl.className   = 'tl-tick-lbl';
+    lbl.style.left  = `${pct(yr)}%`;
+    lbl.textContent = yr === 0 ? '0' : yr > 0 ? String(yr) : `${yr} ${lang === 'vi' ? 'TCN' : 'BCE'}`;
+    axisEl.appendChild(lbl);
+  });
+
+  /* ── one row per civilisation ── */
+  rowsEl.innerHTML = '';
+  CIVS.forEach(c => {
+    const left  = pct(c.tlStart);
+    const width = ((c.tlEnd - c.tlStart) / TL_RANGE * 100).toFixed(2);
+
+    const row = document.createElement('div');
+    row.className = 'tl-row';
+
+    /* left label */
+    const label = document.createElement('div');
+    label.className   = 'tl-row-label';
+    label.textContent = c.name[lang];
+    label.title       = c.dates[lang];
+
+    /* track with gridlines + bar */
+    const track = document.createElement('div');
+    track.className = 'tl-row-track';
+
+    /* gridlines aligned to ticks */
+    ticks.forEach(yr => {
+      const gl = document.createElement('div');
+      gl.className  = 'tl-gridline';
+      gl.style.left = `${pct(yr)}%`;
+      track.appendChild(gl);
+    });
+
+    /* the bar itself */
+    const widthNum = parseFloat(width);
+    const leftNum  = parseFloat(left);
+
+    const bar = document.createElement('div');
+    bar.className  = 'tl-bar';
+    bar.style.cssText = `left:${left}%;width:${width}%;background:${c.color};`;
+    bar.title      = `${c.name[lang]}  (${c.dates[lang]})`;
+    bar.addEventListener('click', () => { window.location.href = c.page; });
+
+    if (widthNum < 7) {
+      /* bar is too narrow — float the label outside in the bar's colour */
+      const ext = document.createElement('span');
+      ext.className = 'tl-ext-label';
+      ext.textContent = c.name[lang];
+      if (leftNum > 85) {
+        /* near right edge → label to the LEFT of the bar, right-aligned */
+        ext.style.cssText = `right:${(100 - leftNum).toFixed(2)}%;
+                             color:${c.color}; text-align:right;
+                             padding-right:5px;`;
+      } else {
+        /* otherwise → label to the RIGHT of the bar */
+        ext.style.cssText = `left:calc(${(leftNum + widthNum).toFixed(2)}% + 5px);
+                             color:${c.color};`;
+      }
+      track.appendChild(ext);
+    } else {
+      /* bar is wide enough — text sits inside */
+      bar.textContent = c.name[lang];
+    }
+
+    track.appendChild(bar);
+
+    row.appendChild(label);
+    row.appendChild(track);
+    rowsEl.appendChild(row);
+  });
+}
+
+/* ── CARD GRID ── */
+function buildGrid() {
+  const grid = document.getElementById('civ-grid');
+  grid.innerHTML = CIVS.map(c => `
+    <a class="civ-card" href="${c.page}" style="--civ-color:${c.color}">
+      <div class="civ-card-header">
+        <div class="civ-number">${c.number[lang]}</div>
+        <div class="civ-name">${c.name[lang]}</div>
+        <div class="civ-dates">${c.dates[lang]}</div>
+      </div>
+      <div class="civ-divider"></div>
+      <div class="civ-card-body">
+        <p class="civ-desc">${c.desc[lang]}</p>
+        <div class="civ-tags">${c.tags[lang].map(tag=>`<span class="civ-tag">${tag}</span>`).join('')}</div>
+        <div class="civ-footer">
+          <div class="civ-count"><strong>${c.count}</strong> ${t('artifacts')}</div>
+          <span class="civ-cta">${t('explore')}</span>
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+buildTimeline();
+applyLang();
+</script>
+</body>
+</html>
