@@ -73,7 +73,8 @@ class AudioPreprocessor:
         mel_spec = (mel_spec - mel_spec.mean()) / (mel_spec.std() + 1e-8)
 
         # Add batch and channel dims: (1, 1, n_mels, time)
-        mel_spec = mel_spec.unsqueeze(0).unsqueeze(0)
+        # mel_spec is (1, n_mels, time) after transform
+        mel_spec = mel_spec.unsqueeze(0)
 
         return mel_spec
 
@@ -129,13 +130,19 @@ class EthnoMusicAnalyzer:
         self.input_name = self.session.get_inputs()[0].name
         self.output_names = [o.name for o in self.session.get_outputs()]
 
-    async def analyze(self, audio_bytes: bytes, filename: str) -> AudioAnalysisResponse:
+    async def analyze(
+        self,
+        audio_bytes: bytes,
+        filename: str,
+        audio_loader = None,
+    ) -> AudioAnalysisResponse:
         """Main analysis pipeline"""
         import time
         start_time = time.time()
 
         # 1. Load audio
-        waveform, sr = torchaudio.load(io.BytesIO(audio_bytes))
+        loader = audio_loader or torchaudio.load
+        waveform, sr = loader(io.BytesIO(audio_bytes))
 
         # 2. Preprocess
         mel_spec = self.preprocessor.process(waveform, sr)

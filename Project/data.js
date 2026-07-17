@@ -1,28 +1,40 @@
 /* ═══════════════════════════════════════
    UNESCO INTANGIBLE CULTURAL HERITAGE OF VIETNAM
-   Shared dataset for the database / search page
-   (data.js). Sourced from VNMT.js — keep in sync
-   with the map page, which still inlines its own
-   copy so VNMT.html keeps working standalone.
-
-   Each entry describes one heritage item with:
-     id, name (vi), english, lat, lng,
-     location (display string), provinces (array),
-     year (UNESCO recognition year, e.g. '2009'),
-     status (inscribed | urgent | national | tentative),
-     genre  (singings | instrumental | belief | festival),
-     badge, desc_vi, desc.
-
-   NOTE: There are NO individual markers and NO
-   clusters on the map. Heritage is discovered by
-   clicking a province, which opens a pie-chart
-   modal listing the heritage it contains.
-   Provinces are coloured by their heritage's
-   dominant colour (status or genre dimension).
+   Data covers entries inscribed on the UNESCO
+   Representative List, Urgent Safeguarding List,
+   and Vietnam national intangible heritage.
 ═══════════════════════════════════════ */
 const TREASURES = [
   {
     id: 1,
+    name: 'Nhã nhạc cung đình Huế',
+    english: 'Huế Royal Court Music (Nhã nhạc)',
+    lat: 16.4637, lng: 107.5909,
+    location: 'Thừa Thiên Huế · Kinh đô Huế',
+    provinces: ['Thừa Thiên Huế'],
+    year: '2003',
+    status: 'inscribed',
+    genre: 'instrumental',
+    badge: 'UNESCO',
+    desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2003, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
+    desc: 'Nhã nhạc is Vietnamese court music performed at ceremonies of the Nguyễn dynasty in Huế. Inscribed on the UNESCO Representative List in 2003, it is among the most refined traditional musical art forms of Vietnam.',
+  },
+  {
+    id: 2,
+    name: 'Không gian văn hóa Cồng Chiêng Tây Nguyên',
+    english: 'Gong Culture of the Central Highlands',
+    lat: 12.7149, lng: 108.2436,
+    location: 'Đắk Lắk · Gia Lai · Kon Tum',
+    provinces: ['Đắk Lắk','Gia Lai','Kon Tum','Đắk Nông','Lâm Đồng'],
+    year: '2005',
+    status: 'inscribed',
+    genre: 'instrumental',
+    badge: 'UNESCO',
+    desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2005.',
+    desc: 'The Gong Culture of the Central Highlands is central to the spiritual life of the Ba Na, Xê Đăng, Cơ Ho, M\'Nông and Ê Đê peoples. Inscribed on the UNESCO Representative List in 2005.',
+  },
+  {
+    id: 3,
     name: 'Quan họ Bắc Ninh',
     english: 'Quan họ Folk Singing of Bắc Ninh',
     lat: 21.1861, lng: 106.0763,
@@ -36,7 +48,7 @@ const TREASURES = [
     desc: 'Quan họ is an antiphonal folk singing genre from the Kinh Bắc region, inscribed on the UNESCO Representative List in 2009. Performed during village festivals, its gracious melodies and ten-verse exchanges express hundred-year bonds of friendship and affection.',
   },
   {
-    id: 2,
+    id: 4,
     name: 'Ca trù',
     english: 'Ca trù (Hát Ả Đào) Chamber Singing',
     lat: 21.0285, lng: 105.8542,
@@ -50,77 +62,7 @@ const TREASURES = [
     desc: 'Ca trù is a complex form of sung chamber music with refined ornamentation, performed by a female singer (đào nương), lute player (kép đàn) and percussionist (quán viên). UNESCO inscribed it on the Urgent Safeguarding List in 2009.',
   },
   {
-    id: 3,
-    name: 'Nhã nhạc cung đình Huế',
-    english: 'Huế Royal Court Music (Nhã nhạc)',
-    lat: 16.4637, lng: 107.5909,
-    location: 'Thừa Thiên Huế · Kinh đô Huế',
-    provinces: ['Thừa Thiên Huế'],
-    year: '2008',
-    status: 'inscribed',
-    genre: 'instrumental',
-    badge: 'UNESCO',
-    desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
-    desc: 'Nhã nhạc is Vietnamese court music performed at ceremonies of the Nguyễn dynasty in Huế. Inscribed on the UNESCO Representative List in 2008, it is among the most refined traditional musical art forms of Vietnam.',
-  },
-  {
-    id: 4,
-    name: 'Đờn ca tài tử',
-    english: 'Đờn ca tài tử of Southern Vietnam',
-    lat: 10.0452, lng: 105.7469,
-    location: 'Cần Thơ · Đồng bằng sông Cửu Long',
-    provinces: ['Cần Thơ','Hậu Giang','Sóc Trăng','Bạc Liêu','Cà Mau'],
-    year: '2013',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
-    desc: 'Đờn ca tài tử is a traditional musical art of southern Vietnam, originating from ritual music and cải lương theatre of the 19th century. Inscribed on the UNESCO Representative List in 2013.',
-  },
-  {
     id: 5,
-    name: 'Hát Xoan Phú Thọ',
-    english: 'Xoan Singing of Phú Thọ',
-    lat: 21.4092, lng: 105.4012,
-    location: 'Phú Thọ · Đền Hùng',
-    provinces: ['Phú Thọ'],
-    year: '2017',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
-    desc: 'Xoan singing is a ritual performance art from the Hùng Kings\' ancestral land, associated with worship at the Hùng temples. UNESCO inscribed it on the Urgent Safeguarding List in 2011 and moved it to the Representative List in 2017.',
-  },
-  {
-    id: 6,
-    name: 'Dân ca Ví, Giặm Nghệ Tĩnh',
-    english: 'Ví & Giặm Folk Songs of Nghệ Tĩnh',
-    lat: 18.6796, lng: 105.6927,
-    location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
-    provinces: ['Nghệ An','Hà Tĩnh'],
-    year: '2014',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
-    desc: 'Ví and Giặm are two distinctive folk song genres of the Nghệ Tĩnh region, performed during labour and daily life to express emotion and community bonds. Inscribed on the UNESCO Representative List in 2014.',
-  },
-  {
-    id: 7,
-    name: 'Tín ngưỡng thờ cúng Hùng Vương',
-    english: 'Worship of the Hùng Kings in Phú Thọ',
-    lat: 21.3254, lng: 105.2116,
-    location: 'Phú Thọ · Đền Hùng',
-    provinces: ['Phú Thọ'],
-    year: '2012',
-    status: 'inscribed',
-    genre: 'belief',
-    badge: 'UNESCO',
-    desc_vi: 'Tín ngưỡng thờ cúng Hùng Vương là tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2012.',
-    desc: 'The worship of the Hùng Kings is the most profound ancestor-veneration practice of the Vietnamese, rooted in the legend of the Hùng Kings who founded the nation. Inscribed on the UNESCO Representative List in 2012.',
-  },
-  {
-    id: 8,
     name: 'Hội Gióng Phù Đổng',
     english: 'Gióng Festival of Phù Đổng & Sóc Sơn',
     lat: 21.2766, lng: 105.8461,
@@ -134,25 +76,67 @@ const TREASURES = [
     desc: 'The Gióng Festival commemorates Saint Gióng, who defeated the Ân invaders according to Vietnamese legend. Inscribed on the UNESCO Representative List in 2010.',
   },
   {
-    id: 9,
-    name: 'Không gian văn hóa Cồng Chiêng Tây Nguyên',
-    english: 'Gong Culture of the Central Highlands',
-    lat: 12.7149, lng: 108.2436,
-    location: 'Đắk Lắk · Gia Lai · Kon Tum',
-    provinces: ['Đắk Lắk','Gia Lai','Kon Tum','Đắk Nông','Lâm Đồng'],
-    year: '2008',
+    id: 6,
+    name: 'Tín ngưỡng thờ cúng Hùng Vương',
+    english: 'Worship of the Hùng Kings in Phú Thọ',
+    lat: 21.3254, lng: 105.2116,
+    location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
+    year: '2012',
     status: 'inscribed',
-    genre: 'instrumental',
+    genre: 'belief',
     badge: 'UNESCO',
-    desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008.',
-    desc: 'The Gong Culture of the Central Highlands is central to the spiritual life of the Ba Na, Xê Đăng, Cơ Ho, M\'Nông and Ê Đê peoples. Inscribed on the UNESCO Representative List in 2008.',
+    desc_vi: 'Tín ngưỡng thờ cúng Hùng Vương là tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2012.',
+    desc: 'The worship of the Hùng Kings is the most profound ancestor-veneration practice of the Vietnamese, rooted in the legend of the Hùng Kings who founded the nation. Inscribed on the UNESCO Representative List in 2012.',
+  },
+  {
+    id: 7,
+    name: 'Đờn ca tài tử',
+    english: 'Đờn ca tài tử of Southern Vietnam',
+    lat: 10.0452, lng: 105.7469,
+    location: 'Cần Thơ · Đồng bằng sông Cửu Long',
+    provinces: ['Cần Thơ','Hậu Giang','Sóc Trăng','Bạc Liêu','Cà Mau'],
+    year: '2013',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
+    desc: 'Đờn ca tài tử is a traditional musical art of southern Vietnam, originating from ritual music and cải lương theatre of the 19th century. Inscribed on the UNESCO Representative List in 2013.',
+  },
+  {
+    id: 8,
+    name: 'Dân ca Ví, Giặm Nghệ Tĩnh',
+    english: 'Ví & Giặm Folk Songs of Nghệ Tĩnh',
+    lat: 18.6796, lng: 105.6927,
+    location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
+    provinces: ['Nghệ An','Hà Tĩnh'],
+    year: '2014',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
+    desc: 'Ví and Giặm are two distinctive folk song genres of the Nghệ Tĩnh region, performed during labour and daily life to express emotion and community bonds. Inscribed on the UNESCO Representative List in 2014.',
+  },
+  {
+    id: 9,
+    name: 'Nghi lễ và trò chơi kéo co',
+    english: 'Tugging Rituals and Games',
+    lat: 21.3200, lng: 105.5200,
+    location: 'Hà Nội · Lào Cai · Vĩnh Phúc · Bắc Ninh',
+    provinces: ['Hà Nội','Lào Cai','Vĩnh Phúc','Bắc Ninh'],
+    year: '2015',
+    status: 'inscribed',
+    genre: 'festival',
+    badge: 'UNESCO',
+    desc_vi: 'Nghi lễ và trò chơi kéo co là tập tục văn hóa dân gian phổ biến ở nhiều địa phương, cầu mong mùa màng tươi tốt, thịnh vượng. UNESCO công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2015.',
+    desc: 'Tugging rituals and games are a widespread folk cultural practice in many localities, praying for bountiful harvests and prosperity. Inscribed on the UNESCO Representative List in 2015.',
   },
   {
     id: 10,
     name: 'Tín ngưỡng thờ Mẫu tam tòa',
     english: 'Viet Belief in Mother Goddesses of Three Realms',
     lat: 20.4195, lng: 106.1667,
-    location: 'Nam Định · Đền Bà Chúa Xứ',
+    location: 'Nam Định · Phủ Dày',
     provinces: ['Nam Định'],
     year: '2016',
     status: 'inscribed',
@@ -177,60 +161,103 @@ const TREASURES = [
   },
   {
     id: 12,
-    name: 'Hát Then người Tày, Nùng',
-    english: 'Then Singing of the Tày & Nùng',
+    name: 'Hát Xoan Phú Thọ',
+    english: 'Xoan Singing of Phú Thọ',
+    lat: 21.4092, lng: 105.4012,
+    location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
+    year: '2017',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
+    desc: 'Xoan singing is a ritual performance art from the Hùng Kings\' ancestral land, associated with worship at the Hùng temples. UNESCO inscribed it on the Urgent Safeguarding List in 2011 and moved it to the Representative List in 2017.',
+  },
+  {
+    id: 13,
+    name: 'Thực hành Then của người Tày, Nùng, Thái',
+    english: 'Then Practice of the Tày, Nùng & Thái',
     lat: 22.6607, lng: 106.2520,
     location: 'Cao Bằng · Hà Giang · Lạng Sơn',
     provinces: ['Cao Bằng','Hà Giang','Lạng Sơn','Tuyên Quang','Thái Nguyên','Bắc Kạn'],
     year: '2019',
-    status: 'national',
+    status: 'inscribed',
     genre: 'singings',
-    badge: 'Quốc gia',
-    desc_vi: 'Hát Then là thể loại dân ca nghi lễ của người Tây, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. Được đưa vào Danh mục di sản văn hóa phi vật thể quốc gia và đang đề cử UNESCO.',
-    desc: 'Then singing is a ritual folk music genre of the Tày, Nùng and Thái peoples of the northeast, accompanied by the tính lute. Listed as Vietnamese national intangible heritage; under UNESCO tentative nomination.',
+    badge: 'UNESCO',
+    desc_vi: 'Thực hành Then là loại hình dân ca nghi lễ của người Tày, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2019.',
+    desc: 'Then practice is a ritual folk music genre of the Tày, Nùng and Thái peoples of the northeast, accompanied by the tính lute. Inscribed on the UNESCO Representative List in 2019.',
+  },
+  {
+    id: 14,
+    name: 'Nghệ thuật Xòe Thái',
+    english: 'Xòe Dance Art of the Thái People',
+    lat: 21.4500, lng: 103.9000,
+    location: 'Yên Bái · Sơn La · Lai Châu · Điện Biên',
+    provinces: ['Yên Bái','Sơn La','Lai Châu','Điện Biên'],
+    year: '2021',
+    status: 'inscribed',
+    genre: 'festival',
+    badge: 'UNESCO',
+    desc_vi: 'Xòe Thái là điệu múa truyền thống đặc sắc của người Thái ở Tây Bắc, thể hiện tinh thần cộng đồng, tình yêu quê hương. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2021.',
+    desc: 'Xòe is a distinctive traditional dance of the Thái people in the Northwest, expressing community spirit and love of homeland. Inscribed on the UNESCO Representative List in 2021.',
+  },
+  {
+    id: 15,
+    name: 'Nghệ thuật làm gốm của người Chăm',
+    english: 'Cham Pottery Making Art',
+    lat: 11.5800, lng: 108.9500,
+    location: 'Ninh Thuận · Bình Thuận',
+    provinces: ['Ninh Thuận','Bình Thuận'],
+    year: '2022',
+    status: 'inscribed',
+    genre: 'craft',
+    badge: 'UNESCO',
+    desc_vi: 'Nghệ thuật làm gốm của người Chăm là kỹ thuật làm gốm thủ công truyền thống độc đáo, không dùng bàn xoay, được truyền qua nhiều thế hệ. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2022.',
+    desc: 'Cham pottery making is a unique traditional handcraft technique without a potter\'s wheel, passed down through generations. Inscribed on the UNESCO Representative List in 2022.',
+  },
+  {
+    id: 16,
+    name: 'Lễ hội Vía Bà Chúa Xứ Núi Sam',
+    english: 'Festival of the Bà Chúa Xứ Goddess of Núi Sam',
+    lat: 10.6950, lng: 105.1100,
+    location: 'An Giang · Núi Sam · Châu Đốc',
+    provinces: ['An Giang'],
+    year: '2024',
+    status: 'inscribed',
+    genre: 'belief',
+    badge: 'UNESCO',
+    desc_vi: 'Lễ hội Vía Bà Chúa Xứ Núi Sam là lễ hội dân gian lớn ở miền Tây Nam Bộ, tôn vinh nữ thần bảo hộ vùng đất Châu Đốc. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2024.',
+    desc: 'The Festival of the Bà Chúa Xứ Goddess of Núi Sam is a major folk festival in the Mekong Delta, honoring the protective goddess of the Châu Đốc region. Inscribed on the UNESCO Representative List in 2024.',
   },
 ];
 
 /* ═══════════════════════════════════════
-   UNESCO STATUS CONFIGURATION (bilingual)
+   UNESCO STATUS & GENRE CONFIGURATION  (bilingual)
+   Shared by VNMT.html and database.html
 ═══════════════════════════════════════ */
 const STATUS_CONFIG = {
   urgent: {
     color:'#d4524a',
     vi: { label:'Danh sách cần bảo vệ khẩn cấp', short:'Cấp thiết' },
-    en: { label:'Urgent Safeguarding List',    short:'Urgent' },
+    en: { label:'Urgent Safeguarding List', short:'Urgent' },
   },
   inscribed: {
     color:'#c9a84c',
     vi: { label:'Danh sách đại diện của nhân loại', short:'Đại diện' },
-    en: { label:'Representative List of Humanity',  short:'Representative' },
+    en: { label:'Representative List of Humanity', short:'Representative' },
   },
   national: {
     color:'#5a8a9f',
     vi: { label:'Di sản văn hóa phi vật thể quốc gia', short:'Quốc gia' },
-    en: { label:'National Intangible Heritage',       short:'National' },
+    en: { label:'National Intangible Heritage', short:'National' },
   },
   tentative: {
     color:'#8a7c5e',
-    vi: { label:'Đề cử UNESCO',     short:'Đề cử' },
+    vi: { label:'Đề cử UNESCO', short:'Đề cử' },
     en: { label:'Tentative UNESCO List', short:'Tentative' },
   },
 };
 
-/* — manual status overrides for entries whose status is ambiguous — */
-const STATUS_OVERRIDES = {
-  5: 'inscribed',  // Hát Xoan — moved from Urgent (2011) to Representative (2017)
-};
-
-/* ── STATUS reader — status is a direct field on each heritage item ── */
-function getStatus(item) {
-  if (item && STATUS_OVERRIDES[item.id]) return STATUS_OVERRIDES[item.id];
-  return item.status || 'national';
-}
-
-/* ═══════════════════════════════════════
-   HERITAGE GENRE CONFIGURATION (bilingual)
-═══════════════════════════════════════ */
 const GENRE_CONFIG = {
   instrumental: {
     color:'#4caf84',
@@ -239,22 +266,50 @@ const GENRE_CONFIG = {
   },
   singings: {
     color:'#c9943a',
-    vi: { label:'Hát · Dân ca',        short:'Hát' },
+    vi: { label:'Hát · Dân ca', short:'Hát' },
     en: { label:'Singing · Folk Songs', short:'Singings' },
   },
   belief: {
     color:'#9b6fbf',
     vi: { label:'Tín ngưỡng · Lễ nghi', short:'Tín ngưỡng' },
-    en: { label:'Belief & Ritual',      short:'Belief' },
+    en: { label:'Belief & Ritual', short:'Belief' },
   },
   festival: {
     color:'#c45c4a',
     vi: { label:'Lễ hội dân gian', short:'Lễ hội' },
-    en: { label:'Folk Festival',  short:'Festival' },
+    en: { label:'Folk Festival', short:'Festival' },
+  },
+  craft: {
+    color:'#d4875e',
+    vi: { label:'Nghề thủ công truyền thống', short:'Thủ công' },
+    en: { label:'Traditional Craft', short:'Craft' },
   },
 };
 
-/* ── GENRE reader — genre is a direct field on each heritage item ── */
-function getGenre(item) {
-  return item.genre || '';
+/* ═══════════════════════════════════════
+   HELPER FUNCTIONS
+═══════════════════════════════════════ */
+
+/* Get the effective status for a heritage item */
+function getStatus(t) {
+  return t.status || 'national';
 }
+
+/* Get the effective genre for a heritage item */
+function getGenre(t) {
+  return t.genre || 'belief';
+}
+
+/* Bilingual label readers — form is 'label' or 'short' */
+function statusLabel(key, form) {
+  if (!form) form = 'label';
+  return STATUS_CONFIG[key]?.[lang]?.[form] || key || '';
+}
+function genreLabel(key, form) {
+  if (!form) form = 'label';
+  return GENRE_CONFIG[key]?.[lang]?.[form] || key || '';
+}
+
+/* Colour lookups */
+function statusColor(t) { return STATUS_CONFIG[getStatus(t)]?.color || '#8a7c5e'; }
+function genreColor(t)  { return GENRE_CONFIG[getGenre(t)]?.color   || '#8a7c5e'; }

@@ -148,3 +148,79 @@ TRẢ LỜI:"""
             confidence=0.0,
             sources=[],
         )
+
+
+# Voice grading endpoint - compare user recording to reference sample
+class VoiceGradeRequest(BaseModel):
+    genre: str  # "quan_ho", "ca_tru", etc.
+    lat: float
+    lng: float
+
+
+class VoiceGradeResponse(BaseModel):
+    grade: float  # 0.0 to 1.0 similarity score
+    feedback_vi: str
+    feedback_en: str
+    detected_techniques: List[str] = []
+
+
+@router.post("/grade", response_model=VoiceGradeResponse)
+async def grade_voice_recording(
+    request: VoiceGradeRequest,
+    file: UploadFile = File(...),
+):
+    """
+    Grade user's singing attempt against reference sample.
+    Simple pitch similarity for placeholder implementation.
+    """
+    import numpy as np
+    import librosa
+
+    if not file.content_type or not file.content_type.startswith("audio/"):
+        raise HTTPException(status_code=400, detail="Audio file required")
+
+    audio_bytes = await file.read()
+
+    try:
+        # Load user audio
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            tmp.write(audio_bytes)
+            tmp_path = tmp.name
+
+        y_user, sr_user = librosa.load(tmp_path, sr=None)
+        os.unlink(tmp_path)
+
+        # Get pitch contour (simplified grading)
+        f0_user, voiced_flag, _ = librosa.pyin(
+            y_user,
+            fmin=float(librosa.note_to_hz("C2")),
+            fmax=float(librosa.note_to_hz("C7")),
+            sr=sr_user,
+        )
+
+        # Placeholder: use a simple metric (pitch variance + voiced ratio)
+        voiced_ratio = float(voiced_flag.mean()) if len(voiced_flag) > 0 else 0.0
+        pitch_variance = float(np.var(f0_user[voiced_flag])) if np.any(voiced_flag) else 0.0
+
+        # Normalize to grade (0-1)
+        grade = min(1.0, voiced_ratio * 0.5 + min(pitch_variance / 1000, 0.5))
+
+        # Simple feedback based on grade
+        if grade > 0.7:
+            feedback_vi = "Giọng hát tốt! Bạn đã bắt đầu nắm bắt được bản sắc ca trù."
+            feedback_en = "Good singing! You're beginning to grasp the essence of ca trù."
+        elif grade > 0.4:
+            feedback_vi = "Cần luyện tập thêm. Hãy chú ý vào hòa âm và ngữ cảnh."
+            feedback_en = "Needs practice. Pay attention to ornamentation and context."
+        else:
+            feedback_vi = "Hãy học từ nghệ nhân và luyện tập kỹ hơn. Tôi có thể giúp gì?"
+            feedback_en = "Learn from the artisan and practice more. How can I help?"
+
+        return VoiceGradeResponse(
+            grade=round(grade, 2),
+            feedback_vi=feedback_vi,
+            feedback_en=feedback_en,
+            detected_techniques=["lay_hat"] if grade > 0.5 else [],
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Grading failed: {str(e)}")

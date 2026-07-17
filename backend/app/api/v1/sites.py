@@ -2,6 +2,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from app.core.database import get_db
 from app.models.site import HeritageSite, ArtifactModel
 from app.models.audio_asset import AudioAsset
@@ -26,7 +28,14 @@ async def list_sites(
 
 @router.get("/{site_id}", response_model=SiteDetail)
 async def get_site(site_id: str, db: AsyncSession = Depends(get_db)):
-    query = select(HeritageSite).where(HeritageSite.id == site_id)
+    query = (
+        select(HeritageSite)
+        .options(
+            selectinload(HeritageSite.audio_assets),
+            selectinload(HeritageSite.knowledge_chunks),
+        )
+        .where(HeritageSite.id == site_id)
+    )
     result = await db.execute(query)
     site = result.scalar_one_or_none()
     if not site:
