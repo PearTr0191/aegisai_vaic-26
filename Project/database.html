@@ -294,6 +294,7 @@
           <option value="singings"    id="opt-singings">Hát · Dân ca</option>
           <option value="belief"      id="opt-belief">Tín ngưỡng · Lễ nghi</option>
           <option value="festival"    id="opt-fest">Lễ hội dân gian</option>
+          <option value="craft"       id="opt-craft">Nghề thủ công</option>
         </select>
       </div>
 
@@ -387,6 +388,7 @@ const DB_STRINGS = {
     optAll:'-- Tất cả --',
     optInstr:'Âm nhạc · Nhạc cụ', optSingings:'Hát · Dân ca',
     optBelief:'Tín ngưỡng · Lễ nghi', optFest:'Lễ hội dân gian',
+    optCraft:'Nghề thủ công',
     optInscribed:'Danh sách đại diện', optUrgent:'Cấp thiết',
     optNational:'Quốc gia', optTentative:'Đề cử',
     btnSearch:'Tìm kiếm', btnReset:'Đặt lại',
@@ -406,6 +408,7 @@ const DB_STRINGS = {
     optAll:'-- All --',
     optInstr:'Instrumental Music', optSingings:'Singing · Folk Songs',
     optBelief:'Belief & Ritual', optFest:'Folk Festival',
+    optCraft:'Traditional Craft',
     optInscribed:'Representative List', optUrgent:'Urgent Safeguarding',
     optNational:'National', optTentative:'Tentative',
     btnSearch:'Search', btnReset:'Reset',
@@ -452,6 +455,7 @@ function applyLang() {
   document.getElementById('opt-singings').text = s.optSingings;
   document.getElementById('opt-belief').text   = s.optBelief;
   document.getElementById('opt-fest').text      = s.optFest;
+  document.getElementById('opt-craft').text     = s.optCraft;
   const selStatus = document.getElementById('q-status');
   selStatus.options[0].text = s.optAll;
   document.getElementById('opt-inscribed').text = s.optInscribed;
