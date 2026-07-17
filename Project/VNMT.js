@@ -4531,6 +4531,46 @@ document.querySelectorAll('.tile-option').forEach(btn => {
 });
 
 /* ═══════════════════════════════════════
+   PROVINCE BORDERS (vn_geo.json)
+═══════════════════════════════════════ */
+const borderLayer = L.geoJSON(null, {
+  style: {
+    color: '#e8c96a',
+    weight: 1.8,
+    opacity: 0.95,
+    fillColor: '#c9a84c',
+    fillOpacity: 0.08,
+    smoothFactor: 1,
+  },
+  onEachFeature: (feature, layer) => {
+    if (feature.properties && feature.properties.name) {
+      layer.bindTooltip(feature.properties.name, {
+        sticky: true,
+        direction: 'top',
+        className: 'artifact-tooltip',
+      });
+    }
+    layer.on('mouseover', () => {
+      layer.setStyle({
+        fillColor: '#ffeb3b',
+        fillOpacity: 0.45,
+        color: '#fff200',
+        weight: 2.6,
+      });
+      layer.bringToFront();
+    });
+    layer.on('mouseout', () => {
+      borderLayer.resetStyle(layer);
+    });
+  },
+}).addTo(map);
+
+fetch('vn_geo.json')
+  .then(r => r.json())
+  .then(geo => borderLayer.addData(geo))
+  .catch(err => console.warn('vn_geo.json load failed:', err));
+
+/* ═══════════════════════════════════════
    CLUSTER PIE CHART ICON
 ═══════════════════════════════════════ */
 function clusterIcon(cluster) {
