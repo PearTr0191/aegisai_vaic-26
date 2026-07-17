@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bảo Vật Quốc Gia — Vietnam National Treasures</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS (mirrors VNMT.css) ── */
+    :root {
+      --bg:         #0a0900;
+      --surface:    #110f04;
+      --card:       #181500;
+      --border:     #2c2507;
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --red:        #1c1c1c;
+      --red-bright: #c42b2b;
+      --text:       #e8dfc8;
+      --muted:      #8a7c5e;
+      --white:      #f5f0e6;
+      --font-body: 'DM Sans', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+    }
+
+    html.lang-vi { --font-body: 'Merriweather', serif; }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:var(--font-body);
+      overflow-x:hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      height:62px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 48px;
+      background:rgba(10,9,0,0.82); backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(201,168,76,0.14);
+      transition:background .3s;
+    }
+    .nav-logo {
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none; color:var(--white);
+      font-family:'Playfair Display', serif; font-size:1.05rem; font-weight:700;
+      letter-spacing:-0.01em;
+    }
+    .nav-logo svg { color:var(--gold); flex-shrink:0; }
+    .nav-links {
+      display:flex; gap:36px; list-style:none;
+      position:absolute; left:50%; transform:translateX(-50%);
+    }
+    .nav-links a {
+      text-decoration:none; font-size:11px; font-weight:500; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--muted); transition:color .2s;
+    }
+    .nav-links a:hover  { color:var(--gold-light); }
+    .nav-links a.active { color:var(--gold); }
+    .nav-right { display:flex; align-items:center; gap:10px; }
+    .lang-toggle {
+      display:flex; gap:3px;
+      background:rgba(255,255,255,0.04); border:1px solid var(--border);
+      border-radius:20px; padding:3px;
+    }
+    .lang-btn {
+      background:transparent; border:none; color:var(--muted);
+      padding:4px 12px; border-radius:16px; font-size:11px; font-weight:500;
+      letter-spacing:0.04em; font-family:var(--font-body); cursor:pointer; transition:all .2s;
+    }
+    .lang-btn:hover   { color:var(--gold-light); }
+    .lang-btn.active  { background:var(--gold); color:#1a1400; }
+    .nav-map-btn {
+      display:inline-flex; align-items:center; gap:7px;
+      background:var(--red); color:var(--white); text-decoration:none;
+      padding:8px 18px; border-radius:4px;
+      font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+      transition:background .2s;
+    }
+    .nav-map-btn:hover { background:var(--red-bright); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height:100vh; position:relative;
+      display:flex; align-items:center;
+      overflow:hidden;
+    }
+    /* subtle ambient glow */
+    .hero::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse 55% 80% at 72% 50%, rgba(201,168,76,0.045) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 55% at 18% 55%, rgba(139,28,28,0.055) 0%, transparent 60%);
+    }
+    .hero-drum {
+      position:absolute; right:-6%; top:50%; transform:translateY(-50%);
+      width:min(640px,82vh); height:min(640px,82vh);
+      pointer-events:none; z-index:1;
+    }
+    .hero-content {
+      position:relative; z-index:2;
+      padding: 80px clamp(24px,5vw,80px) 40px clamp(24px,8vw,120px);
+      max-width:640px;
+    }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:10px;
+      font-size:9.5px; font-weight:500; letter-spacing:0.3em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:22px;
+    }
+    .hero-eyebrow::before { content:''; width:26px; height:1px; background:var(--gold); }
+    .eyebrow-diamond {
+      width:5px; height:5px; background:var(--gold);
+      transform:rotate(45deg); flex-shrink:0;
+    }
+    h1.hero-headline {
+      font-family:'Playfair Display', serif;
+      font-size:clamp(3rem,6.2vw,6.2rem);
+      font-weight:700; line-height:1.04; letter-spacing:-0.025em;
+      color:var(--white); margin-bottom:22px; white-space:nowrap;
+    }
+    h1.hero-headline em {
+      font-style:italic; color:var(--gold-light); display:block;
+    }
+    .hero-tagline {
+      font-size:clamp(0.93rem,1.35vw,1.07rem); font-weight:300;
+      color:var(--muted); line-height:1.78; max-width:430px; margin-bottom:42px;
+    }
+    .hero-cta-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .cta-map {
+      display:inline-flex; align-items:center; gap:9px;
+      background:var(--red); color:var(--white); text-decoration:none;
+      padding:15px 30px; border-radius:4px;
+      font-size:11.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+      transition:all .22s;
+    }
+    .cta-map:hover { background:var(--red-bright); transform:translateY(-2px); box-shadow:0 8px 24px rgba(139,28,28,0.35); }
+    .cta-explore {
+      display:inline-flex; align-items:center; gap:9px;
+      background:transparent; color:var(--gold); text-decoration:none;
+      border:1.5px solid rgba(201,168,76,0.4);
+      padding:15px 30px; border-radius:4px;
+      font-size:11.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+      transition:all .22s;
+    }
+    .cta-explore:hover { border-color:var(--gold); background:rgba(201,168,76,0.07); transform:translateY(-2px); }
+
+    /* ── GOLD RULE ── */
+    .gold-rule {
+      height:2px;
+      background:linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--red-bright) 50%, var(--gold) 70%, transparent 100%);
+    }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      background:var(--surface); border-bottom:1px solid var(--border);
+    }
+    .stat-item {
+      padding:38px 28px; text-align:center;
+      border-right:1px solid var(--border);
+    }
+    .stat-item:last-child { border-right:none; }
+    .stat-number {
+      font-family:'Playfair Display', serif;
+      font-size:clamp(2.1rem,3.3vw,3.3rem); font-weight:700;
+      color:var(--gold); line-height:1; display:block; margin-bottom:8px;
+    }
+    .stat-desc {
+      font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted);
+    }
+
+    /* ── ERA SECTION ── */
+    .eras-section {
+      padding:clamp(56px,7vw,100px) clamp(24px,6vw,96px);
+    }
+    .section-header { margin-bottom:52px; }
+    .section-eyebrow {
+      font-size:9.5px; font-weight:500; letter-spacing:0.3em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:14px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .section-eyebrow::before { content:''; width:26px; height:1px; background:var(--gold); }
+    .section-title {
+      font-family:'Playfair Display', serif;
+      font-size:clamp(1.7rem,3.2vw,2.7rem); font-weight:700;
+      color:var(--white); line-height:1.2;
+    }
+    .era-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+    .era-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:8px; padding:34px 30px;
+      text-decoration:none; color:var(--text); display:block;
+      position:relative; overflow:hidden;
+      border-left:4px solid var(--era-color);
+      transition:transform .22s, box-shadow .22s;
+    }
+    .era-card::after {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(ellipse 90% 120% at 0% 50%, var(--era-color), transparent 65%);
+      opacity:0; transition:opacity .3s;
+    }
+    .era-card:hover { transform:translateY(-4px); box-shadow:0 14px 44px rgba(0,0,0,0.38); }
+    .era-card:hover::after { opacity:0.05; }
+    .era-eyebrow {
+      font-size:9px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase;
+      color:var(--era-color); margin-bottom:8px;
+    }
+    .era-title {
+      font-family:'Playfair Display', serif; font-size:1.35rem;
+      color:var(--white); margin-bottom:4px; line-height:1.2;
+    }
+    .era-period { font-size:11px; color:var(--muted); margin-bottom:18px; letter-spacing:0.05em; }
+    .era-desc { font-size:12.5px; color:var(--muted); line-height:1.72; margin-bottom:26px; }
+    .era-footer {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .era-examples {
+      font-size:10.5px; color:var(--muted); font-style:italic;
+      flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .era-cta {
+      font-size:10.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--era-color); white-space:nowrap;
+      display:flex; align-items:center; gap:5px; transition:gap .2s;
+    }
+    .era-card:hover .era-cta { gap:9px; }
+
+    /* ── CIVILISATIONS SECTION ── */
+    .civs-section {
+      padding:clamp(56px,7vw,100px) clamp(24px,6vw,96px);
+      background:var(--surface);
+      border-top:1px solid var(--border);
+    }
+    .civs-header {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:24px; flex-wrap:wrap; margin-bottom:44px;
+    }
+    .civs-sub {
+      font-size:13.5px; color:var(--muted); line-height:1.7;
+      max-width:520px; margin-top:8px;
+    }
+    .civs-all-btn {
+      display:inline-flex; align-items:center; gap:7px;
+      text-decoration:none; font-size:11.5px; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase;
+      color:var(--gold); border:1.5px solid rgba(201,168,76,0.4);
+      padding:10px 22px; border-radius:4px; white-space:nowrap;
+      transition:all .22s; flex-shrink:0;
+    }
+    .civs-all-btn:hover { border-color:var(--gold); background:rgba(201,168,76,0.07); }
+    .civs-row {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+    }
+    .civs-mini-card {
+      background:rgba(255,255,255,0.03); border:1px solid var(--border);
+      border-radius:8px; padding:24px 22px; text-decoration:none; color:var(--text);
+      border-left:4px solid var(--civ-color); display:block;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .civs-mini-card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+    .civs-mini-num  { font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--civ-color); margin-bottom:6px; }
+    .civs-mini-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--white); margin-bottom:3px; }
+    .civs-mini-dates{ font-size:11px; color:var(--muted); margin-bottom:14px; }
+    .civs-mini-desc { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:16px; }
+    .civs-mini-foot { display:flex; align-items:center; justify-content:space-between; }
+    .civs-mini-count{ font-size:11px; color:var(--muted); }
+    .civs-mini-cta  { font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--civ-color); }
+
+    @media(max-width:900px) {
+      .civs-row { grid-template-columns:1fr; }
+      .civs-header { flex-direction:column; align-items:flex-start; }
+    }
+    @media(max-width:1100px) {
+      .civs-row { grid-template-columns:repeat(2,1fr); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top:1px solid var(--border); padding:24px 48px;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:14px;
+      background:var(--surface); font-size:10.5px; color:var(--muted);
+    }
+    footer em { color:var(--gold); font-style:normal; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:900px) {
+      .era-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      .hero-content { padding:80px 20px 40px; max-width:100%; }
+      .hero-drum { opacity:0.08; right:-20%; }
+      h1.hero-headline { white-space:normal; font-size:clamp(2.4rem,10vw,3.8rem); }
+      .stats-strip { grid-template-columns:repeat(2,1fr); }
+      .stat-item:nth-child(2) { border-right:none; }
+      .eras-section { padding:48px 20px; }
+      footer { padding:20px; flex-direction:column; align-items:flex-start; }
+    }
+
+    /* ── DRUM ANIMATION ── */
+    @keyframes drum-spin-fwd { to { transform:rotate(360deg); } }
+    @keyframes drum-spin-rev { to { transform:rotate(-360deg); } }
+    @media (prefers-reduced-motion:no-preference) {
+      .drum-ring-birds { animation:drum-spin-fwd 240s linear infinite; transform-origin:0 0; }
+      .drum-ring-deer  { animation:drum-spin-rev 340s linear infinite; transform-origin:0 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <!-- stylised Đông Sơn star / drum-sun symbol -->
+      <polygon points="11,1 13,8 20,8 14.5,12.5 16.5,20 11,15.5 5.5,20 7.5,12.5 2,8 9,8"
+               fill="currentColor"/>
+    </svg>
+    <span id="nav-logo-text">Bảo Vật Việt</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html" class="active" id="nav-home">Trang chủ</a></li>
+    <li><a href="VNMT.html" id="nav-map-link">Khám phá bản đồ</a></li>
+    <li><a href="database.html"      id="nav-db-link">Kho lưu trữ</a></li>
+    <li><a href="civilisations.html" id="nav-civs-link">Nền Văn Minh</a></li>
+    <li><a href="#about"             id="nav-about">Giới thiệu</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn" data-lang="vi">VI</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <a href="VNMT.html" class="nav-map-btn">
+      <span>⊞</span><span id="nav-map-btn-text">Mở bản đồ</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <!-- Đông Sơn drum tympanum — generated by buildDrum() -->
+  <svg class="hero-drum" id="hero-drum"
+       viewBox="-215 -215 430 430"
+       xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-diamond"></span>
+      <span id="hero-eyebrow">357 Bảo Vật Được Công Nhận</span>
+    </div>
+
+    <h1 class="hero-headline">
+      <span id="hero-h1a">Di Sản</span><br>
+      <em id="hero-h1b">Việt Nam</em>
+    </h1>
+
+    <p class="hero-tagline" id="hero-tagline">
+      Từ những trống đồng 4.000 năm tuổi đến bản thảo thành lập nhà nước —
+      hành trình di sản quốc gia qua 14 đợt công nhận.
+    </p>
+
+    <div class="hero-cta-row">
+      <a href="VNMT.html" class="cta-map">
+        <span>⊞</span><span id="cta-map-text">Bản đồ tương tác</span>
+      </a>
+      <a href="#eras" class="cta-explore">
+        <span id="cta-explore-text">Khám phá</span><span>↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<!-- ── STATS ── -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-number">357</span>
+    <span class="stat-desc" id="stat-a">Hiện Vật</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">165+</span>
+    <span class="stat-desc" id="stat-b">Địa Điểm</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">4</span>
+    <span class="stat-desc" id="stat-c">Thời Kỳ</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">14</span>
+    <span class="stat-desc" id="stat-d">Đợt Công Nhận</span>
+  </div>
+</div>
+
+<!-- ── ERA CARDS ── -->
+<section class="eras-section" id="eras">
+  <div class="section-header">
+    <div class="section-eyebrow" id="sec-eyebrow">Tìm hiểu theo thời kỳ</div>
+    <h2 class="section-title" id="sec-title">Hành trình qua các nền văn minh</h2>
+  </div>
+
+  <div class="era-grid">
+
+    <!-- Prehistoric -->
+    <a class="era-card" href="VNMT.html?era=prehistoric"
+       style="--era-color:#c9943a">
+      <div class="era-eyebrow" id="e1-eyebrow">Thời kỳ 1</div>
+      <div class="era-title"  id="e1-title">Tiền Sử · Đông Sơn</div>
+      <div class="era-period" id="e1-period">Trước Công Nguyên — Thế kỷ I</div>
+      <div class="era-desc"   id="e1-desc">Văn hóa Đông Sơn, Phùng Nguyên, Sa Huỳnh — những nền văn minh đồng thau hàng nghìn năm để lại trống đồng, thạp đồng và đồ trang sức quý giá.</div>
+      <div class="era-footer">
+        <span class="era-examples" id="e1-ex">Trống Ngọc Lũ, Thạp Đào Thịnh, Đàn đá Đắk Sơn</span>
+        <span class="era-cta" id="e1-cta">Khám phá <span>→</span></span>
+      </div>
+    </a>
+
+    <!-- 1st–10th c. -->
+    <a class="era-card" href="VNMT.html?era=century_1_10"
+       style="--era-color:#c47c5a">
+      <div class="era-eyebrow" id="e2-eyebrow">Thời kỳ 2</div>
+      <div class="era-title"  id="e2-title">Phù Nam · Chăm Pa</div>
+      <div class="era-period" id="e2-period">Thế kỷ I — X</div>
+      <div class="era-desc"   id="e2-desc">Văn hóa Óc Eo và Chăm Pa để lại tượng Phật, thần Vishnu, Shiva và bia ký Sanskrit — minh chứng cho sự giao thoa với Ấn Độ và Đông Nam Á cổ đại.</div>
+      <div class="era-footer">
+        <span class="era-examples" id="e2-ex">Tượng Phật Óc Eo, Bia Võ Cạnh, Linga-Yoni</span>
+        <span class="era-cta" id="e2-cta">Khám phá <span>→</span></span>
+      </div>
+    </a>
+
+    <!-- 10th–19th c. -->
+    <a class="era-card" href="VNMT.html?era=century_10_20"
+       style="--era-color:#4caf84">
+      <div class="era-eyebrow" id="e3-eyebrow">Thời kỳ 3</div>
+      <div class="era-title"  id="e3-title">Đại Việt · Triều Nguyễn</div>
+      <div class="era-period" id="e3-period">Thế kỷ X — XIX</div>
+      <div class="era-desc"   id="e3-desc">Bia tiến sĩ Văn Miếu, chuông Thiên Mụ, ấn vàng triều Nguyễn — kho tàng đồ sộ nhất trải qua Lý, Trần, Lê, Mạc, Nguyễn.</div>
+      <div class="era-footer">
+        <span class="era-examples" id="e3-ex">82 Bia Tiến sĩ, Ấn Hoàng đế chi bảo, Chuông Thiên Mụ</span>
+        <span class="era-cta" id="e3-cta">Khám phá <span>→</span></span>
+      </div>
+    </a>
+
+    <!-- 1900–Now -->
+    <a class="era-card" href="VNMT.html?era=modern_1945"
+       style="--era-color:#5a8a9f">
+      <div class="era-eyebrow" id="e4-eyebrow">Thời kỳ 4</div>
+      <div class="era-title"  id="e4-title">Cận Đại · Hiện Đại</div>
+      <div class="era-period" id="e4-period">1900 — Nay</div>
+      <div class="era-desc"   id="e4-desc">Xe ô tô Chủ tịch Hồ Chí Minh, bản đồ chiến dịch lịch sử, tập sắc lệnh lập quốc — những hiện vật thế kỷ XX định hình Việt Nam hiện đại.</div>
+      <div class="era-footer">
+        <span class="era-examples" id="e4-ex">Sổ vàng Nguyễn Ái Quốc, Xe tăng 390, Xe Quốc tế</span>
+        <span class="era-cta" id="e4-cta">Khám phá <span>→</span></span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<!-- ── CIVILISATIONS SECTION ── -->
+<section class="civs-section" id="civilisations">
+  <div class="civs-header">
+    <div>
+      <div class="section-eyebrow" id="civs-eyebrow">Khám phá chuyên sâu</div>
+      <h2 class="section-title" id="civs-title">Các Nền Văn Minh</h2>
+      <p class="civs-sub" id="civs-sub">Đi sâu vào sáu nền văn minh đã tạo ra bộ sưu tập này — từ trống đồng Đông Sơn đến ấn vàng triều Nguyễn.</p>
+    </div>
+    <a href="civilisations.html" class="civs-all-btn" id="civs-explore-all">Khám phá tất cả →</a>
+  </div>
+  <!-- Cards built by buildCivCards() -->
+  <div class="civs-row" id="civs-row"></div>
+</section>
+
+<div class="gold-rule"></div>
+
+<!-- ── FOOTER ── -->
+<footer id="about">
+  <span id="foot-copy">© 2026 Bảo vật Quốc gia Việt Nam</span>
+  <span id="foot-data">Dữ liệu: <em>Thủ tướng Chính phủ</em> · Bản đồ: <em>CartoDB / OpenStreetMap</em></span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   I18N — shares localStorage key with VNMT.js
+═══════════════════════════════════════ */
+const UI = {
+  vi: {
+    navHome:'Trang chủ', navMap:'Khám phá bản đồ', navAbout:'Giới thiệu', navMapBtn:'Mở bản đồ',
+    navDb:'Kho lưu trữ', navCivs:'Nền Văn Minh',
+    civsSectionEyebrow:'Khám phá chuyên sâu',
+    civsSectionTitle:'Các Nền Văn Minh',
+    civsSectionSub:'Đi sâu vào sáu nền văn minh đã tạo ra bộ sưu tập này — từ trống đồng Đông Sơn đến ấn vàng triều Nguyễn.',
+    civsExploreAll:'Khám phá tất cả →',
+    civsExplore:'Khám phá →',
+    civsArtifacts:'hiện vật',
+    eyebrow:'357 Bảo Vật Được Công Nhận',
+    h1a:'Di Sản', h1b:'Việt Nam',
+    tagline:'Từ những trống đồng 4.000 năm tuổi đến bản thảo thành lập nhà nước — hành trình di sản quốc gia qua 14 đợt công nhận.',
+    ctaMap:'Bản đồ tương tác', ctaExplore:'Khám phá',
+    statA:'Hiện Vật', statB:'Địa Điểm', statC:'Thời Kỳ', statD:'Đợt Công Nhận',
+    secEyebrow:'Tìm hiểu theo thời kỳ', secTitle:'Hành trình qua các nền văn minh',
+    e1Ey:'Thời kỳ 1', e1Ti:'Tiền Sử · Đông Sơn', e1Pe:'Trước Công Nguyên — Thế kỷ I',
+    e1De:'Văn hóa Đông Sơn, Phùng Nguyên, Sa Huỳnh — những nền văn minh đồng thau hàng nghìn năm để lại trống đồng, thạp đồng và đồ trang sức quý giá.',
+    e1Ex:'Trống Ngọc Lũ, Thạp Đào Thịnh, Đàn đá Đắk Sơn', e1Ct:'Khám phá →',
+    e2Ey:'Thời kỳ 2', e2Ti:'Phù Nam · Chăm Pa', e2Pe:'Thế kỷ I — X',
+    e2De:'Văn hóa Óc Eo và Chăm Pa để lại tượng Phật, thần Vishnu, Shiva và bia ký Sanskrit — minh chứng cho sự giao thoa với Ấn Độ và Đông Nam Á cổ đại.',
+    e2Ex:'Tượng Phật Óc Eo, Bia Võ Cạnh, Linga-Yoni', e2Ct:'Khám phá →',
+    e3Ey:'Thời kỳ 3', e3Ti:'Đại Việt · Triều Nguyễn', e3Pe:'Thế kỷ X — XIX',
+    e3De:'Bia tiến sĩ Văn Miếu, chuông Thiên Mụ, ấn vàng triều Nguyễn — kho tàng đồ sộ nhất trải qua Lý, Trần, Lê, Mạc, Nguyễn.',
+    e3Ex:'82 Bia Tiến sĩ, Ấn Hoàng đế chi bảo, Chuông Thiên Mụ', e3Ct:'Khám phá →',
+    e4Ey:'Thời kỳ 4', e4Ti:'Cận Đại · Hiện Đại', e4Pe:'1900 — Nay',
+    e4De:'Xe ô tô Chủ tịch Hồ Chí Minh, bản đồ chiến dịch lịch sử, tập sắc lệnh lập quốc — những hiện vật thế kỷ XX định hình Việt Nam hiện đại.',
+    e4Ex:'Sổ vàng Nguyễn Ái Quốc, Xe tăng 390, Xe Quốc tế', e4Ct:'Khám phá →',
+    footCopy:'© 2026 Bảo vật Quốc gia Việt Nam',
+    footData:'Dữ liệu: <em>Thủ tướng Chính phủ</em> · Bản đồ: <em>CartoDB / OpenStreetMap</em>',
+  },
+  en: {
+    navHome:'Home', navMap:'Explore the Map', navAbout:'About', navMapBtn:'Open Map',
+    navDb:'Database', navCivs:'Civilisations',
+    civsSectionEyebrow:'In-depth exploration',
+    civsSectionTitle:'The Civilisations',
+    civsSectionSub:'Dive into the six civilisations behind this collection — from Đông Sơn bronze drums to Nguyễn imperial gold seals.',
+    civsExploreAll:'Explore all →',
+    civsExplore:'Explore →',
+    civsArtifacts:'artifacts',
+    eyebrow:'357 Nationally Recognized Artifacts',
+    h1a:"Vietnam's", h1b:'Heritage',
+    tagline:"From 4,000-year-old bronze drums to the founding decrees of the republic — a journey through 357 national treasures across 14 recognition rounds.",
+    ctaMap:'Interactive Map', ctaExplore:'Explore',
+    statA:'Artifacts', statB:'Locations', statC:'Eras', statD:'Recognition Rounds',
+    secEyebrow:'Explore by era', secTitle:'A journey through civilisations',
+    e1Ey:'Era 1', e1Ti:'Prehistoric · Đông Sơn', e1Pe:'Before Common Era — 1st Century',
+    e1De:"The Đông Sơn, Phùng Nguyên and Sa Huỳnh cultures — Bronze Age civilisations producing the iconic drums, containers and jewellery that define Vietnam's prehistoric heritage.",
+    e1Ex:'Ngoc Lu Drum, Dao Thinh Cauldron, Dak Son Lithophone', e1Ct:'Explore →',
+    e2Ey:'Era 2', e2Ti:'Funan · Champa', e2Pe:'1st — 10th Century',
+    e2De:"The Óc Eo and Champa civilisations left behind stone Buddhas, Vishnu statues and Sanskrit inscriptions — evidence of Vietnam's deep connections with ancient India.",
+    e2Ex:'Oc Eo Buddha, Vo Canh Stele, Linga-Yoni', e2Ct:'Explore →',
+    e3Ey:'Era 3', e3Ti:'Đại Việt · Nguyễn Dynasty', e3Pe:'10th — 19th Century',
+    e3De:"The Temple of Literature doctoral steles, the Thiên Mụ pagoda bell, Nguyễn gold seals — the largest collection spanning the Lý, Trần, Lê, Mạc and Nguyễn dynasties.",
+    e3Ex:'82 Doctoral Steles, Imperial Gold Seal, Thien Mu Bell', e3Ct:'Explore →',
+    e4Ey:'Era 4', e4Ti:'Modern · Contemporary', e4Pe:'1900 — Present',
+    e4De:"Hồ Chí Minh's automobiles, historic military campaign maps, and the founding decrees of the republic — artifacts of the 20th century that shaped modern Vietnam.",
+    e4Ex:"Nguyen Ai Quoc School Book, Tank No. 390, 'Quoc Te' Car", e4Ct:'Explore →',
+    footCopy:'© 2026 Vietnam National Treasures',
+    footData:'Data: <em>Prime Minister of Vietnam</em> · Map: <em>CartoDB / OpenStreetMap</em>',
+  }
+};
+
+let lang = localStorage.getItem('vnmt_lang') || 'vi';
+
+function setEl(id, val, html = false) {
+  const e = document.getElementById(id);
+  if (!e) return;
+  if (html) e.innerHTML = val; else e.textContent = val;
+}
+
+function applyLang() {
+  const s = UI[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.classList.toggle('lang-vi', lang === 'vi');
+  setEl('nav-home', s.navHome);
+  setEl('nav-map-link', s.navMap);
+  setEl('nav-db-link',   s.navDb);
+  setEl('nav-civs-link', s.navCivs);
+  setEl('nav-about',     s.navAbout);
+  setEl('nav-map-btn-text', s.navMapBtn);
+  setEl('hero-eyebrow', s.eyebrow);
+  setEl('hero-h1a', s.h1a);
+  setEl('hero-h1b', s.h1b);
+  setEl('hero-tagline', s.tagline);
+  setEl('cta-map-text', s.ctaMap);
+  setEl('cta-explore-text', s.ctaExplore);
+  setEl('stat-a', s.statA);
+  setEl('stat-b', s.statB);
+  setEl('stat-c', s.statC);
+  setEl('stat-d', s.statD);
+  setEl('sec-eyebrow', s.secEyebrow);
+  setEl('sec-title',   s.secTitle);
+  setEl('civs-eyebrow',   s.civsSectionEyebrow);
+  setEl('civs-title',     s.civsSectionTitle);
+  setEl('civs-sub',       s.civsSectionSub);
+  setEl('civs-explore-all', s.civsExploreAll);
+  buildCivCards(s);
+  [1,2,3,4].forEach(n => {
+    setEl(`e${n}-eyebrow`, s[`e${n}Ey`]);
+    setEl(`e${n}-title`,   s[`e${n}Ti`]);
+    setEl(`e${n}-period`,  s[`e${n}Pe`]);
+    setEl(`e${n}-desc`,    s[`e${n}De`]);
+    setEl(`e${n}-ex`,      s[`e${n}Ex`]);
+    setEl(`e${n}-cta`,     s[`e${n}Ct`]);
+  });
+  setEl('foot-copy', s.footCopy);
+  setEl('foot-data', s.footData, true);
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === lang)
+  );
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    localStorage.setItem('vnmt_lang', lang);
+    applyLang();
+  });
+});
+
+/* ═══════════════════════════════════════
+   NAV SCROLL EFFECT
+═══════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').style.background =
+    window.scrollY > 50 ? 'rgba(10,9,0,0.97)' : 'rgba(10,9,0,0.82)';
+}, { passive:true });
+
+/* ═══════════════════════════════════════
+   ĐÔNG SƠN DRUM TYMPANUM SVG BUILDER
+   Authentic concentric-ring design:
+   central sun-star → bird ring → zigzag →
+   deer ring → outer tick borders
+═══════════════════════════════════════ */
+function buildDrum() {
+  const svg = document.getElementById('hero-drum');
+  if (!svg) return;
+  const ns   = 'http://www.w3.org/2000/svg';
+  const gold = '#c9a84c';
+
+  const el = (tag, attrs = {}) => {
+    const e = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+    return e;
+  };
+  const circle = (r, sw = '0.7') =>
+    base.appendChild(el('circle', { cx:0, cy:0, r, 'stroke-width':sw }));
+  const ticks = (n, r1, r2, sw = '0.75') => {
+    for (let i = 0; i < n; i++) {
+      const a = i * 2 * Math.PI / n;
+      base.appendChild(el('line', {
+        x1:(r1*Math.cos(a)).toFixed(2), y1:(r1*Math.sin(a)).toFixed(2),
+        x2:(r2*Math.cos(a)).toFixed(2), y2:(r2*Math.sin(a)).toFixed(2),
+        'stroke-width':sw
+      }));
+    }
+  };
+  const dots = (n, r, dr = 1.8) => {
+    for (let i = 0; i < n; i++) {
+      const a = i * 2 * Math.PI / n;
+      base.appendChild(el('circle', {
+        cx:(r*Math.cos(a)).toFixed(2), cy:(r*Math.sin(a)).toFixed(2),
+        r:dr, fill:gold, stroke:'none'
+      }));
+    }
+  };
+
+  /* radial glow */
+  const defs = el('defs');
+  const rg = el('radialGradient', { id:'dglow', cx:'50%', cy:'50%', r:'50%' });
+  const s1 = el('stop', { offset:'0%', 'stop-color':gold, 'stop-opacity':'0.1' });
+  const s2 = el('stop', { offset:'100%', 'stop-color':gold, 'stop-opacity':'0' });
+  rg.appendChild(s1); rg.appendChild(s2); defs.appendChild(rg);
+  svg.appendChild(defs);
+
+  const base = el('g', { stroke:gold, fill:'none', opacity:'0.28' });
+  svg.appendChild(base);
+  base.appendChild(el('circle', { cx:0, cy:0, r:210, fill:'url(#dglow)', stroke:'none' }));
+
+  /* ── center: small filled circle ── */
+  base.appendChild(el('circle', { cx:0, cy:0, r:7, fill:gold, opacity:'1', stroke:'none' }));
+
+  /* ── 12-pointed sun-star ── */
+  const pts = [];
+  for (let i = 0; i < 24; i++) {
+    const a = i * Math.PI / 12 - Math.PI / 2;
+    const r = i % 2 === 0 ? 42 : 19;
+    pts.push(`${(r*Math.cos(a)).toFixed(2)},${(r*Math.sin(a)).toFixed(2)}`);
+  }
+  base.appendChild(el('polygon', { points:pts.join(' '), fill:gold, opacity:'0.65', stroke:'none' }));
+
+  /* ── ring 1: double border r=50,55 ── */
+  circle(50); circle(55);
+
+  /* ── ring 2: 18 radial spokes r=58→70 ── */
+  ticks(18, 58, 70);
+  circle(73);
+
+  /* ── ring 3: BIRDS — 12 diamonds flying (slow forward rotation) ── */
+  const birds = el('g', { opacity:'0.32', class:'drum-ring-birds' });
+  for (let i = 0; i < 12; i++) {
+    const a = i * 2 * Math.PI / 12 - Math.PI / 2;
+    const bx = (92 * Math.cos(a)).toFixed(2);
+    const by = (92 * Math.sin(a)).toFixed(2);
+    const deg = (i * 30) + 90;
+    const g = el('g', { transform:`translate(${bx},${by}) rotate(${deg})` });
+    /* simplified flying bird: elongated diamond body */
+    g.appendChild(el('path', {
+      d:'M0,-8 L4,-2 L9,0 L4,2 L0,8 L-4,2 L-9,0 L-4,-2 Z',
+      fill:gold, stroke:'none'
+    }));
+    birds.appendChild(g);
+  }
+  base.appendChild(birds);
+
+  /* ── ring 4: double border r=105,109 ── */
+  circle(105); circle(109);
+
+  /* ── ring 5: zigzag chevron band r=113→127 ── */
+  const zig = [];
+  for (let i = 0; i <= 28; i++) {
+    const a = i * 2 * Math.PI / 28 - Math.PI / 2;
+    const r = i % 2 === 0 ? 113 : 127;
+    zig.push(`${(r*Math.cos(a)).toFixed(2)},${(r*Math.sin(a)).toFixed(2)}`);
+  }
+  base.appendChild(el('polyline', { points:zig.join(' '), 'stroke-width':'0.9' }));
+  circle(130);
+
+  /* ── ring 6: dot band ── */
+  dots(24, 136);
+  circle(142);
+
+  /* ── ring 7: DEER — 8 shapes (slow reverse rotation) ── */
+  const deer = el('g', { opacity:'0.24', class:'drum-ring-deer' });
+  for (let i = 0; i < 8; i++) {
+    const a = i * 2 * Math.PI / 8 - Math.PI / 2;
+    const dx = (156 * Math.cos(a)).toFixed(2);
+    const dy = (156 * Math.sin(a)).toFixed(2);
+    const deg = i * 45 + 90;
+    const g = el('g', { transform:`translate(${dx},${dy}) rotate(${deg})` });
+    g.appendChild(el('path', {
+      d:'M0,-9 L3,-4 L9,0 L6,5 L0,9 L-6,5 L-9,0 L-3,-4 Z',
+      fill:gold, stroke:'none'
+    }));
+    deer.appendChild(g);
+  }
+  base.appendChild(deer);
+
+  /* ── outer borders ── */
+  circle(168); circle(172); circle(178);
+  ticks(24, 181, 193, '0.8');
+  circle(197, '1.4');
+  circle(205, '0.5');
+}
+
+/* ═══════════════════════════════════════
+   CIVILISATIONS MINI CARDS
+═══════════════════════════════════════ */
+const CIVS_DATA = [
+  { color:'#c9943a', num:{ vi:'Nền 1', en:'Civ. 1' }, name:{ vi:'Đông Sơn', en:'Đông Sơn' },
+    dates:{ vi:'~700 TCN – 200 CN', en:'c. 700 BCE – 200 CE' }, count:40, page:'dong-son.html',
+    desc:{ vi:'Đỉnh cao đồ đồng Đông Nam Á — trống đồng, thạp đồng và tín ngưỡng vật linh.',
+           en:'Apex of Southeast Asian Bronze Age — drums, containers and animist belief.' } },
+  { color:'#c47c5a', num:{ vi:'Nền 2', en:'Civ. 2' }, name:{ vi:'Phù Nam · Óc Eo', en:'Funan · Óc Eo' },
+    dates:{ vi:'TK I – VII CN', en:'1st – 7th c. CE' }, count:28, page:'oc-eo.html',
+    desc:{ vi:'Đế quốc thương mại Mê Kông — tượng Phật, thần Hindu và đồ vàng cổ đại.',
+           en:'Mekong maritime empire — Buddha statues, Hindu deities and ancient gold objects.' } },
+  { color:'#b87c50', num:{ vi:'Nền 3', en:'Civ. 3' }, name:{ vi:'Chăm Pa', en:'Champa' },
+    dates:{ vi:'TK II – XVII CN', en:'2nd – 17th c. CE' }, count:28, page:'champa.html',
+    desc:{ vi:'Vương quốc ven biển với tháp Chăm và điêu khắc đá tuyệt vời.',
+           en:'Coastal Hindu kingdom with magnificent brick towers and stone sculptures.' } },
+  { color:'#4caf84', num:{ vi:'Nền 4', en:'Civ. 4' }, name:{ vi:'Đại Việt', en:'Đại Việt' },
+    dates:{ vi:'TK X – XIX CN', en:'10th – 19th c. CE' }, count:180, page:'dai-viet.html',
+    desc:{ vi:'Nhà nước Việt Nam độc lập — bia Văn Miếu, chuông đền, gốm sứ Bát Tràng.',
+           en:'Independent Vietnamese state — Văn Miếu steles, pagoda bells, Bát Tràng ceramics.' } },
+  { color:'#9b7bdf', num:{ vi:'Nền 5', en:'Civ. 5' }, name:{ vi:'Triều Nguyễn', en:'Nguyễn Dynasty' },
+    dates:{ vi:'1802 – 1945', en:'1802 – 1945' }, count:45, page:'nguyen.html',
+    desc:{ vi:'Triều đại phong kiến cuối cùng — ấn vàng, ngai vàng và kinh đô Huế.',
+           en:'Last imperial dynasty — gold seals, the royal throne and the Huế Citadel.' } },
+  { color:'#5a8a9f', num:{ vi:'Nền 6', en:'Civ. 6' }, name:{ vi:'Cận Hiện Đại', en:'Modern Era' },
+    dates:{ vi:'1900 – Nay', en:'1900 – Present' }, count:36, page:'hien-dai.html',
+    desc:{ vi:'Độc lập và thống nhất — sắc lệnh lập quốc, xe tăng T-59, bản đồ chiến dịch.',
+           en:'Independence and reunification — founding decrees, the T-59 tank, campaign maps.' } },
+];
+
+function buildCivCards(s) {
+  const row = document.getElementById('civs-row');
+  if (!row) return;
+  row.innerHTML = CIVS_DATA.map(c => `
+    <a class="civs-mini-card" href="${c.page}" style="--civ-color:${c.color}">
+      <div class="civs-mini-num">${c.num[lang]}</div>
+      <div class="civs-mini-name">${c.name[lang]}</div>
+      <div class="civs-mini-dates">${c.dates[lang]}</div>
+      <div class="civs-mini-desc">${c.desc[lang]}</div>
+      <div class="civs-mini-foot">
+        <span class="civs-mini-count">${c.count} ${s.civsArtifacts}</span>
+        <span class="civs-mini-cta">${s.civsExplore}</span>
+      </div>
+    </a>`).join('');
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+applyLang();
+buildDrum();
+</script>
+<!-- ═══════════════════════════════════════
+     MUSEUM AI CHAT WIDGET
+═══════════════════════════════════════ -->
+
+<!-- Chat toggle button -->
+<button class="chat-fab" id="chat-fab" aria-label="Open Museum AI">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="chat-fab-label" id="chat-fab-label">Bảo tàng AI</span>
+</button>
+
+<!-- Chat panel -->
+<div class="chat-panel" id="chat-panel" aria-hidden="true">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-avatar">
+        <svg width="16" height="16" viewBox="0 0 22 22" fill="currentColor">
+          <polygon points="11,1 13,8 20,8 14.5,12.5 16.5,20 11,15.5 5.5,20 7.5,12.5 2,8 9,8"/>
+        </svg>
+      </div>
+      <div>
+        <div class="chat-title" id="chat-title">Bảo tàng AI</div>
+        <div class="chat-status" id="chat-status">
+          <span class="chat-status-dot" id="chat-status-dot"></span>
+          <span id="chat-status-text">Đang kết nối…</span>
+        </div>
+      </div>
+    </div>
+    <button class="chat-close" id="chat-close" aria-label="Close">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" id="chat-messages"></div>
+
+  <!-- Input -->
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-input"
+           type="text" autocomplete="off" maxlength="300" />
+    <button class="chat-send" id="chat-send">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+/* ── CHAT FAB ── */
+.chat-fab {
+  position:fixed; bottom:28px; right:28px; z-index:300;
+  display:inline-flex; align-items:center; gap:9px;
+  background:var(--red); color:var(--white);
+  border:none; border-radius:28px; padding:13px 20px 13px 16px;
+  font-family:var(--font-body); font-size:12px; font-weight:600;
+  letter-spacing:0.06em; cursor:pointer;
+  box-shadow:0 6px 24px rgba(139,28,28,0.45);
+  transition:all .22s; white-space:nowrap;
+}
+.chat-fab:hover { background:var(--red-bright); transform:translateY(-2px); box-shadow:0 10px 32px rgba(139,28,28,0.5); }
+.chat-fab.open  { background:var(--surface); border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.4); color:var(--muted); }
+
+/* ── CHAT PANEL ── */
+.chat-panel {
+  position:fixed; bottom:90px; right:28px; z-index:299;
+  width:380px; height:520px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  display:flex; flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,0.65);
+  transform:translateY(12px) scale(0.97); opacity:0; pointer-events:none;
+  transition:transform .25s ease, opacity .22s ease;
+  overflow:hidden;
+}
+.chat-panel.visible {
+  transform:translateY(0) scale(1); opacity:1; pointer-events:all;
+}
+
+/* ── HEADER ── */
+.chat-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-bottom:1px solid var(--border);
+  background:var(--card); flex-shrink:0;
+}
+.chat-header-left { display:flex; align-items:center; gap:10px; }
+.chat-avatar {
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.3);
+  display:flex; align-items:center; justify-content:center; color:var(--gold); flex-shrink:0;
+}
+.chat-title { font-family:'Playfair Display',serif; font-size:14px; color:var(--white); line-height:1.2; }
+.chat-status { display:flex; align-items:center; gap:5px; margin-top:2px; }
+.chat-status-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--muted); flex-shrink:0; transition:background .4s;
+}
+.chat-status-dot.online  { background:#4caf84; box-shadow:0 0 6px rgba(76,175,132,0.6); }
+.chat-status-dot.error   { background:var(--red-bright); }
+.chat-status-dot.loading { background:var(--gold); animation:pulse 1.2s infinite; }
+#chat-status-text { font-size:10.5px; color:var(--muted); }
+.chat-close {
+  background:none; border:none; color:var(--muted); font-size:14px;
+  cursor:pointer; padding:4px 6px; border-radius:4px; transition:color .2s;
+  line-height:1;
+}
+.chat-close:hover { color:var(--gold); }
+
+/* ── MESSAGES ── */
+.chat-messages {
+  flex:1; overflow-y:auto; padding:14px 14px 6px;
+  display:flex; flex-direction:column; gap:12px;
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+.chat-messages::-webkit-scrollbar { width:3px; }
+.chat-messages::-webkit-scrollbar-thumb { background:var(--border); }
+
+.msg { display:flex; flex-direction:column; max-width:88%; }
+.msg-ai   { align-self:flex-start; }
+.msg-user { align-self:flex-end; }
+
+.msg-bubble {
+  padding:10px 14px; border-radius:10px; font-size:13px; line-height:1.65;
+}
+.msg-ai   .msg-bubble {
+  background:var(--card); border:1px solid var(--border);
+  color:var(--text); border-top-left-radius:2px;
+  border-left:3px solid var(--gold);
+}
+.msg-user .msg-bubble {
+  background:var(--red); color:var(--white);
+  border-top-right-radius:2px;
+}
+.msg-meta { font-size:9.5px; color:var(--muted); margin-top:3px; }
+.msg-ai   .msg-meta { padding-left:4px; }
+.msg-user .msg-meta { text-align:right; padding-right:4px; }
+
+/* typing indicator */
+.typing-dots {
+  display:flex; gap:4px; padding:10px 14px;
+  background:var(--card); border:1px solid var(--border);
+  border-top-left-radius:2px; border-radius:10px;
+  border-left:3px solid var(--gold);
+}
+.typing-dots span {
+  width:6px; height:6px; border-radius:50%; background:var(--muted);
+  animation:bounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay:.2s; }
+.typing-dots span:nth-child(3) { animation-delay:.4s; }
+
+/* ── INPUT ── */
+.chat-input-row {
+  display:flex; gap:8px; padding:10px 12px;
+  border-top:1px solid var(--border); background:var(--card); flex-shrink:0;
+}
+.chat-input {
+  flex:1; background:var(--surface); border:1px solid var(--border); border-radius:6px;
+  padding:9px 12px; color:var(--text); font-size:13px; font-family:var(--font-body);
+  outline:none; transition:border-color .2s;
+}
+.chat-input:focus { border-color:var(--gold); }
+.chat-input::placeholder { color:var(--muted); }
+.chat-send {
+  background:var(--red); border:none; border-radius:6px;
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  color:var(--white); cursor:pointer; flex-shrink:0; transition:background .2s;
+}
+.chat-send:hover    { background:var(--red-bright); }
+.chat-send:disabled { background:var(--border); cursor:not-allowed; }
+
+/* ── ANIMATIONS ── */
+@keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.4} }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+/* ── RESPONSIVE ── */
+@media (max-width:440px) {
+  .chat-panel { width:calc(100vw - 16px); right:8px; bottom:78px; }
+  .chat-fab   { right:16px; bottom:16px; }
+}
+</style>
+
+<script>
+/* ═══════════════════════════════════════
+   CHAT WIDGET
+═══════════════════════════════════════ */
+(function() {
+  const API   = 'http://localhost:5001';
+  const POLL  = 4000;   // health-check interval ms
+
+  const fab    = document.getElementById('chat-fab');
+  const panel  = document.getElementById('chat-panel');
+  const input  = document.getElementById('chat-input');
+  const send   = document.getElementById('chat-send');
+  const msgs   = document.getElementById('chat-messages');
+  const dot    = document.getElementById('chat-status-dot');
+  const stText = document.getElementById('chat-status-text');
+  const title  = document.getElementById('chat-title');
+  const fabLbl = document.getElementById('chat-fab-label');
+
+  let open        = false;
+  let botStatus   = 'loading';
+  let welcomeSent = false;
+
+  /* ── i18n ── (piggybacks on the page's `lang` variable & `UI` object) */
+  const CW = {
+    vi: {
+      fab:'Bảo tàng AI', title:'Người hướng dẫn AI', send:'Gửi',
+      placeholder:'Hỏi về hiện vật bảo tàng…',
+      welcome:'Xin chào! Tôi là người hướng dẫn AI của bảo tàng. Hãy hỏi tôi về bất kỳ bảo vật quốc gia nào trong 357 hiện vật.',
+      statusLoading:'Đang kết nối…', statusOnline:'Sẵn sàng', statusError:'Ngoại tuyến',
+      errConn:'Không thể kết nối máy chủ. Hãy đảm bảo app.py đang chạy.',
+      errServer:'Lỗi máy chủ. Vui lòng thử lại.',
+      youLabel:'Bạn', aiLabel:'Curator AI', nowLabel:'vừa xong',
+    },
+    en: {
+      fab:'Museum AI', title:'AI Curator', send:'Send',
+      placeholder:'Ask about a national treasure…',
+      welcome:"Hello! I'm your AI museum curator. Ask me about any of Vietnam's 357 national treasures.",
+      statusLoading:'Connecting…', statusOnline:'Ready', statusError:'Offline',
+      errConn:'Cannot reach the server. Make sure app.py is running.',
+      errServer:'Server error. Please try again.',
+      youLabel:'You', aiLabel:'Curator AI', nowLabel:'just now',
+    },
+  };
+
+  function cw() { return CW[typeof lang !== 'undefined' ? lang : 'vi']; }
+
+  function applyWidgetLang() {
+    const s = cw();
+    fabLbl.textContent    = s.fab;
+    title.textContent     = s.title;
+    input.placeholder     = s.placeholder;
+    const statusMap = { loading:s.statusLoading, online:s.statusOnline, error:s.statusError };
+    stText.textContent = statusMap[botStatus] || s.statusLoading;
+  }
+
+  /* Re-apply when the page language toggles */
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.addEventListener('click', applyWidgetLang);
+  });
+
+  /* ── panel open/close ── */
+  function openChat() {
+    open = true;
+    panel.classList.add('visible');
+    panel.setAttribute('aria-hidden', 'false');
+    fab.classList.add('open');
+    input.focus();
+    if (!welcomeSent && botStatus === 'online') { pushWelcome(); welcomeSent = true; }
+  }
+
+  function closeChat() {
+    open = false;
+    panel.classList.remove('visible');
+    panel.setAttribute('aria-hidden', 'true');
+    fab.classList.remove('open');
+  }
+
+  fab.addEventListener('click', () => open ? closeChat() : openChat());
+  document.getElementById('chat-close').addEventListener('click', closeChat);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && open) closeChat(); });
+
+  /* ── message renderer ── */
+  function pushMsg(text, role) {
+    const s    = cw();
+    const wrap = document.createElement('div');
+    wrap.className = `msg msg-${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = text;
+    const meta = document.createElement('div');
+    meta.className = 'msg-meta';
+    meta.textContent = role === 'user'
+      ? `${s.youLabel} · ${s.nowLabel}`
+      : `${s.aiLabel} · ${s.nowLabel}`;
+    wrap.appendChild(bubble);
+    wrap.appendChild(meta);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return wrap;
+  }
+
+  function pushTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg msg-ai'; div.id = 'typing-indicator';
+    div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    document.getElementById('typing-indicator')?.remove();
+  }
+
+  function pushWelcome() { pushMsg(cw().welcome, 'ai'); }
+
+  /* ── health poller ── */
+  function checkHealth() {
+    fetch(`${API}/health`, { signal: AbortSignal.timeout(3000) })
+      .then(r => r.json())
+      .then(data => {
+        const s = cw();
+        if (data.status === 'online') {
+          botStatus = 'online';
+          dot.className = 'chat-status-dot online';
+          stText.textContent = s.statusOnline;
+          send.disabled = false;
+          if (open && !welcomeSent) { pushWelcome(); welcomeSent = true; }
+        } else if (data.status === 'initializing') {
+          botStatus = 'loading';
+          dot.className = 'chat-status-dot loading';
+          stText.textContent = s.statusLoading;
+          send.disabled = true;
+        } else {
+          botStatus = 'error';
+          dot.className = 'chat-status-dot error';
+          stText.textContent = s.statusError;
+          send.disabled = true;
+        }
+      })
+      .catch(() => {
+        botStatus = 'error';
+        dot.className = 'chat-status-dot error';
+        stText.textContent = cw().statusError;
+        send.disabled = true;
+      });
+  }
+
+  checkHealth();
+  setInterval(checkHealth, POLL);
+
+  /* ── send message ── */
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text || botStatus !== 'online') return;
+
+    input.value = '';
+    send.disabled = true;
+    pushMsg(text, 'user');
+    pushTyping();
+
+    try {
+      const res = await fetch(`${API}/chat`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ message: text }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const data = await res.json();
+      removeTyping();
+      pushMsg(data.response || cw().errServer, 'ai');
+    } catch {
+      removeTyping();
+      pushMsg(cw().errConn, 'ai');
+    } finally {
+      send.disabled = (botStatus !== 'online');
+      input.focus();
+    }
+  }
+
+  send.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+  /* ── init ── */
+  applyWidgetLang();
+  send.disabled = true;
+})();
+</script>
+</body>
+</html>
