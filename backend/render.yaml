@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: vietheritage-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.prod
+    dockerContext: .
+    plan: free
+    region: singapore
+    envVars:
+      - key: IS_PRODUCTION
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vietheritage-db
+          property: connectionString
+      - key: OLLAMA_HOST
+        value: "http://localhost:11434"
+      - key: OLLAMA_MODEL
+        value: "qwen2.5:7b-instruct-q4_k_m"
+      - key: OLLAMA_EMBED_MODEL
+        value: "nomic-embed-text:latest"
+      - key: MINIO_ENDPOINT
+        value: "localhost:9000"
+      - key: MINIO_ACCESS_KEY
+        value: "vietheritage"
+      - key: MINIO_SECRET_KEY
+        value: "vietheritage_prod"
+      - key: MINIO_BUCKET
+        value: "vietheritage-assets"
+      - key: MINIO_SECURE
+        value: "false"
+      - key: ETHNOMUSIC_MODEL_PATH
+        value: "/app/models/ethnomusic_net_int8.onnx"
+      - key: CORS_ORIGINS
+        value: "https://vietheritage.netlify.app,https://vietheritage.vercel.app"
+      - key: SENTRY_DSN
+        sync: false
+      - key: SENTRY_TRACES_SAMPLE_RATE
+        value: "0.1"
+      - key: LOG_LEVEL
+        value: "INFO"
+    healthCheckPath: /health
+    autoDeploy: true
+
+databases:
+  - name: vietheritage-db
+    plan: free
+    region: singapore

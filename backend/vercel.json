@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app/main.py"
+    }
+  ],
+  "env": {
+    "IS_PRODUCTION": "true",
+    "OLLAMA_HOST": "http://localhost:11434",
+    "OLLAMA_MODEL": "qwen2.5:7b-instruct-q4_k_m",
+    "OLLAMA_EMBED_MODEL": "nomic-embed-text:latest",
+    "ETHNOMUSIC_MODEL_PATH": "./models/ethnomusic_net_int8.onnx",
+    "DATABASE_URL_PROD": "sqlite+aiosqlite:///./vietheritage.db",
+    "CORS_ORIGINS": "https://vietheritage.netlify.app",
+    "LOG_LEVEL": "INFO"
+  },
+  "functions": {
+    "app/main.py": {
+      "maxDuration": 60
+    }
+  }
+}

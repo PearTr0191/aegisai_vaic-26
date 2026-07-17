@@ -1,1 +1,1 @@
-# -VAIC-26-AegisAI
+# [VAIC'26] AegisAI
