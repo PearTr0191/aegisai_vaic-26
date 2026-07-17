@@ -1,0 +1,63 @@
+from typing import List
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
+
+    # App
+    APP_NAME: str = "VietHeritage Map API"
+    APP_VERSION: str = "0.1.0"
+    DEBUG: bool = True
+    API_V1_PREFIX: str = "/api/v1"
+
+    # Database - use SQLite for local testing
+    DATABASE_URL: str = "sqlite+aiosqlite:///./vietheritage.db"
+    DATABASE_URL_PROD: str = "sqlite+aiosqlite:///./vietheritage.db"
+
+    # Ollama
+    OLLAMA_HOST: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "phi3.5:3.8b-mini-instruct-q4_k_m"
+    OLLAMA_EMBED_MODEL: str = "nomic-embed-text:latest"
+
+    # MinIO
+    MINIO_ENDPOINT: str = "localhost:9000"
+    MINIO_ACCESS_KEY: str = "vietheritage"
+    MINIO_SECRET_KEY: str = "vietheritage_dev"
+    MINIO_BUCKET: str = "vietheritage-assets"
+    MINIO_SECURE: bool = False
+
+    # ONNX Model
+    ETHNOMUSIC_MODEL_PATH: str = "./models/ethnomusic_net_int8.onnx"
+
+    # CORS
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://vietheritage.netlify.app",
+    ]
+
+    # Render / Production
+    RENDER_EXTERNAL_URL: str = ""
+    IS_PRODUCTION: bool = False
+
+    # Sentry
+    SENTRY_DSN: str = ""
+    SENTRY_TRACES_SAMPLE_RATE: float = 0.1
+
+    # Logging
+    LOG_LEVEL: str = "INFO"
+
+    @property
+    def database_url(self) -> str:
+        if self.IS_PRODUCTION:
+            return self.DATABASE_URL_PROD
+        return self.DATABASE_URL
+
+
+settings = Settings()
