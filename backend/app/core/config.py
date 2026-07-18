@@ -25,9 +25,6 @@ class Settings(BaseSettings):
     OLLAMA_MODEL: str = "phi3.5:3.8b-mini-instruct-q4_k_m"
     OLLAMA_EMBED_MODEL: str = "nomic-embed-text:latest"
 
-    # Small talk model (lightweight, for off-topic chat only)
-    SMALL_TALK_MODEL: str = "gemma3:270m"
-
     # OpenRouter (for $0-cost cloud LLM)
     OPENROUTER_API_KEY: str = ""
     OPENROUTER_MODEL: str = "microsoft/phi-3-mini-128k-instruct:free"
