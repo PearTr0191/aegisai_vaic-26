@@ -227,19 +227,10 @@
     }
     .era-card:hover .era-cta { gap:9px; }
 
-    /* ── CIVILISATIONS SECTION ── */
-    .civs-section {
-      padding:clamp(56px,7vw,100px) clamp(24px,6vw,96px);
-      background:var(--surface);
-      border-top:1px solid var(--border);
-    }
+    /* ── DISTRIBUTED HEADER ROW ── */
     .civs-header {
       display:flex; align-items:flex-end; justify-content:space-between;
-      gap:24px; flex-wrap:wrap; margin-bottom:44px;
-    }
-    .civs-sub {
-      font-size:13.5px; color:var(--muted); line-height:1.7;
-      max-width:520px; margin-top:8px;
+      gap:24px; flex-wrap:wrap; margin-bottom:0;
     }
     .civs-all-btn {
       display:inline-flex; align-items:center; gap:7px;
@@ -250,31 +241,6 @@
       transition:all .22s; flex-shrink:0;
     }
     .civs-all-btn:hover { border-color:var(--gold); background:rgba(201,168,76,0.07); }
-    .civs-row {
-      display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
-    }
-    .civs-mini-card {
-      background:rgba(255,255,255,0.03); border:1px solid var(--border);
-      border-radius:8px; padding:24px 22px; text-decoration:none; color:var(--text);
-      border-left:4px solid var(--civ-color); display:block;
-      transition:transform .2s, box-shadow .2s;
-    }
-    .civs-mini-card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
-    .civs-mini-num  { font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--civ-color); margin-bottom:6px; }
-    .civs-mini-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--white); margin-bottom:3px; }
-    .civs-mini-dates{ font-size:11px; color:var(--muted); margin-bottom:14px; }
-    .civs-mini-desc { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:16px; }
-    .civs-mini-foot { display:flex; align-items:center; justify-content:space-between; }
-    .civs-mini-count{ font-size:11px; color:var(--muted); }
-    .civs-mini-cta  { font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--civ-color); }
-
-    @media(max-width:900px) {
-      .civs-row { grid-template-columns:1fr; }
-      .civs-header { flex-direction:column; align-items:flex-start; }
-    }
-    @media(max-width:1100px) {
-      .civs-row { grid-template-columns:repeat(2,1fr); }
-    }
 
     /* ── FOOTER ── */
     footer {
@@ -327,7 +293,6 @@
     <li><a href="index.html" class="active" id="nav-home">Trang chủ</a></li>
     <li><a href="VNMT.html" id="nav-map-link">Khám phá bản đồ</a></li>
     <li><a href="database.html"      id="nav-db-link">Kho lưu trữ</a></li>
-    <li><a href="civilisations.html" id="nav-civs-link">Nền Văn Minh</a></li>
     <li><a href="about.html" id="nav-about">Giới thiệu</a></li>
   </ul>
 
@@ -401,8 +366,13 @@
 <!-- ── ERA CARDS ── -->
 <section class="eras-section" id="eras">
   <div class="section-header">
-    <div class="section-eyebrow" id="sec-eyebrow">Tìm hiểu theo thể loại</div>
-    <h2 class="section-title" id="sec-title">Các thể loại di sản</h2>
+    <div class="civs-header">
+      <div>
+        <div class="section-eyebrow" id="sec-eyebrow">Tìm hiểu theo thể loại</div>
+        <h2 class="section-title" id="sec-title">Các thể loại di sản</h2>
+      </div>
+      <a href="database.html" class="civs-all-btn" id="sec-explore-all">Xem tất cả →</a>
+    </div>
   </div>
 
   <div class="era-grid">
@@ -475,24 +445,6 @@
   </div>
 </section>
 
-<div class="gold-rule"></div>
-
-<!-- ── CIVILISATIONS SECTION ── -->
-<section class="civs-section" id="civilisations">
-  <div class="civs-header">
-    <div>
-      <div class="section-eyebrow" id="civs-eyebrow">Di sản nổi bật</div>
-      <h2 class="section-title" id="civs-title">Những Di Sản Tiêu Biểu</h2>
-      <p class="civs-sub" id="civs-sub">Sáu di sản văn hóa phi vật thể tiêu biểu trong 16 di sản UNESCO — từ Nhã nhạc cung đình Huế đến Lễ hội Vía Bà Chúa Xứ Núi Sam.</p>
-    </div>
-    <a href="database.html" class="civs-all-btn" id="civs-explore-all">Xem tất cả →</a>
-  </div>
-  <!-- Cards built by buildCivCards() -->
-  <div class="civs-row" id="civs-row"></div>
-</section>
-
-<div class="gold-rule"></div>
-
 <!-- ── FOOTER ── -->
 <footer id="about">
   <span id="foot-copy">© 2026 Di sản văn hóa phi vật thể Việt Nam</span>
@@ -506,32 +458,26 @@
 const UI = {
   vi: {
     navHome:'Trang chủ', navMap:'Khám phá bản đồ', navAbout:'Giới thiệu', navMapBtn:'Mở bản đồ',
-    navDb:'Kho lưu trữ', navCivs:'Nền Văn Minh',
-    civsSectionEyebrow:'Di sản nổi bật',
-    civsSectionTitle:'Những Di Sản Tiêu Biểu',
-    civsSectionSub:'Sáu di sản văn hóa phi vật thể tiêu biểu trong 16 di sản UNESCO — từ Nhã nhạc cung đình Huế đến Lễ hội Vía Bà Chúa Xứ Núi Sam.',
-    civsExploreAll:'Xem tất cả →',
-    civsExplore:'Khám phá →',
-    civsArtifacts:'di sản',
+    navDb:'Kho lưu trữ',
     eyebrow:'16 Di Sản UNESCO Được Công Nhận',
     h1a:'Di Sản', h1b:'Việt Nam',
     tagline:'Từ Nhã nhạc cung đình Huế đến không gian văn hóa Cồng Chiêng Tây Nguyên — hành trình 16 di sản văn hóa phi vật thể UNESCO qua 14 lần công nhận.',
     ctaMap:'Bản đồ tương tác', ctaExplore:'Khám phá',
     statA:'Di Sản', statB:'Tỉnh Thành', statC:'Thể Loại', statD:'Lần Công Nhận',
-    secEyebrow:'Tìm hiểu theo thể loại', secTitle:'Các thể loại di sản',
-    e1Ey:'Thể loại 1', e1Ti:'Âm nhạc · Nhạc cụ', e1Pe:'2003 — 2005',
+    secEyebrow:'Tìm hiểu theo thể loại', secTitle:'Các thể loại di sản', secExploreAll:'Xem tất cả →',
+    e1Ey:'Thể loại 1', e1Ti:'Âm nhạc · Nhạc cụ',
     e1De:'Nhã nhạc cung đình Huế và Không gian văn hóa Cồng Chiêng Tây Nguyên — những di sản âm nhạc truyền thống tinh tế, gắn liền với nghi lễ triều đình và đời sống tâm linh dân tộc Tây Nguyên.',
     e1Ex:'Nhã nhạc Huế, Cồng Chiêng Tây Nguyên', e1Ct:'Khám phá →',
-    e2Ey:'Thể loại 2', e2Ti:'Hát · Dân ca', e2Pe:'2009 — 2019',
+    e2Ey:'Thể loại 2', e2Ti:'Hát · Dân ca',
     e2De:'Quan họ, Ca trù, Đờn ca tài tử, Ví Giặm, Bài Chòi, Hát Xoan và Thực hành Then — thể loại dân ca đối đáp và hát nghi lễ phong phú nhất, trải dài từ Bắc chí Nam.',
     e2Ex:'Quan họ, Ca trù, Đờn ca tài tử, Hát Xoan, Then', e2Ct:'Khám phá →',
-    e3Ey:'Thể loại 3', e3Ti:'Tín ngưỡng · Lễ nghi', e3Pe:'2012 — 2024',
+    e3Ey:'Thể loại 3', e3Ti:'Tín ngưỡng · Lễ nghi',
     e3De:'Tín ngưỡng thờ cúng Hùng Vương, thờ Mẫu tam tòa và Lễ hội Vía Bà Chúa Xứ — những tục thờ tổ tiên và nữ thần bảo hộ sâu sắc trong tâm thức người Việt.',
     e3Ex:'Thờ Hùng Vương, Thờ Mẫu, Vía Bà Chúa Xứ', e3Ct:'Khám phá →',
-    e4Ey:'Thể loại 4', e4Ti:'Lễ hội dân gian', e4Pe:'2010 — 2021',
+    e4Ey:'Thể loại 4', e4Ti:'Lễ hội dân gian',
     e4De:'Hội Gióng, Nghi lễ kéo co và Nghệ thuật Xòe Thái — những lễ hội dân gian tưởng nhớ anh hùng dân tộc và cầu mong mùa màng tươi tốt, thể hiện tinh thần cộng đồng.',
     e4Ex:'Hội Gióng, Kéo co, Xòe Thái', e4Ct:'Khám phá →',
-    e5Ey:'Thể loại 5', e5Ti:'Nghề thủ công', e5Pe:'2022',
+    e5Ey:'Thể loại 5', e5Ti:'Nghề thủ công',
     e5De:'Nghệ thuật làm gốm của người Chăm — kỹ thuật làm gốm thủ công độc đáo không dùng bàn xoay, được truyền qua nhiều thế hệ ở Ninh Thuận và Bình Thuận.',
     e5Ex:'Gốm Chăm', e5Ct:'Khám phá →',
     footCopy:'© 2026 Di sản văn hóa phi vật thể Việt Nam',
@@ -539,19 +485,13 @@ const UI = {
   },
   en: {
     navHome:'Home', navMap:'Explore the Map', navAbout:'About', navMapBtn:'Open Map',
-    navDb:'Database', navCivs:'Civilisations',
-    civsSectionEyebrow:'Featured heritage',
-    civsSectionTitle:'Featured Heritage',
-    civsSectionSub:'Six notable intangible cultural heritage entries among the 16 UNESCO inscriptions — from Huế Royal Court Music to the Festival of Bà Chúa Xứ.',
-    civsExploreAll:'View all →',
-    civsExplore:'Explore →',
-    civsArtifacts:'heritage',
+    navDb:'Database', 
     eyebrow:'16 UNESCO Recognized Heritage',
     h1a:"Vietnam's", h1b:'Heritage',
     tagline:"From the royal court music of Huế to the gong culture of the Central Highlands — a journey through 16 UNESCO intangible cultural heritage entries across 14 recognition years.",
     ctaMap:'Interactive Map', ctaExplore:'Explore',
     statA:'Heritage', statB:'Provinces', statC:'Genres', statD:'Recognition Years',
-    secEyebrow:'Explore by genre', secTitle:'Heritage Genres',
+    secEyebrow:'Explore by genre', secTitle:'Heritage Genres', secExploreAll:'View all →',
     e1Ey:'Genre 1', e1Ti:'Instrumental Music', e1Pe:'2003 — 2005',
     e1De:'Huế Royal Court Music and the Gong Culture of the Central Highlands — refined musical traditions tied to court ceremonies and the spiritual life of Central Highlands ethnic groups.',
     e1Ex:'Nhã nhạc Huế, Central Highlands Gongs', e1Ct:'Explore →',
@@ -602,11 +542,7 @@ function applyLang() {
   setEl('stat-d', s.statD);
   setEl('sec-eyebrow', s.secEyebrow);
   setEl('sec-title',   s.secTitle);
-  setEl('civs-eyebrow',   s.civsSectionEyebrow);
-  setEl('civs-title',     s.civsSectionTitle);
-  setEl('civs-sub',       s.civsSectionSub);
-  setEl('civs-explore-all', s.civsExploreAll);
-  buildCivCards(s);
+  setEl('sec-explore-all', s.secExploreAll);
   [1,2,3,4,5].forEach(n => {
     setEl(`e${n}-eyebrow`, s[`e${n}Ey`]);
     setEl(`e${n}-title`,   s[`e${n}Ti`]);
@@ -763,52 +699,6 @@ function buildDrum() {
   ticks(24, 181, 193, '0.8');
   circle(197, '1.4');
   circle(205, '0.5');
-}
-
-/* ═══════════════════════════════════════
-   CIVILISATIONS MINI CARDS
-═══════════════════════════════════════ */
-const CIVS_DATA = [
-  { color:'#4caf84', num:{ vi:'Năm 2003', en:'Year 2003' }, name:{ vi:'Nhã nhạc cung đình Huế', en:'Huế Royal Court Music' },
-    dates:{ vi:'Thừa Thiên Huế', en:'Thừa Thiên Huế' }, count:1, page:'VNMT.html?genre=instrumental',
-    desc:{ vi:'Âm nhạc cung đình Việt Nam tinh tế bậc nhất, biểu diễn trong các dịp lễ triều đình nhà Nguyễn.',
-           en:'The most refined Vietnamese court music, performed at Nguyễn dynasty ceremonies.' } },
-  { color:'#4caf84', num:{ vi:'Năm 2005', en:'Year 2005' }, name:{ vi:'Cồng Chiêng Tây Nguyên', en:'Gong Culture Central Highlands' },
-    dates:{ vi:'Đắk Lắk · Gia Lai · Kon Tum', en:'Đắk Lắk · Gia Lai · Kon Tum' }, count:1, page:'VNMT.html?genre=instrumental',
-    desc:{ vi:'Không gian văn hóa gắn liền với đời sống tâm linh của các dân tộc Tây Nguyên.',
-           en:'Cultural space central to the spiritual life of Central Highlands ethnic groups.' } },
-  { color:'#c9943a', num:{ vi:'Năm 2009', en:'Year 2009' }, name:{ vi:'Quan họ Bắc Ninh', en:'Quan họ Folk Singing' },
-    dates:{ vi:'Bắc Ninh · Vùng Kinh Bắc', en:'Bắc Ninh · Kinh Bắc region' }, count:1, page:'VNMT.html?genre=singings',
-    desc:{ vi:'Dân ca đối đáp đặc trưng vùng Kinh Bắc, mười câu mười lời trao gửi tình nghĩa trăm năm.',
-           en:'Antiphonal folk singing from Kinh Bắc, expressing hundred-year bonds of friendship.' } },
-  { color:'#9b6fbf', num:{ vi:'Năm 2012', en:'Year 2012' }, name:{ vi:'Thờ cúng Hùng Vương', en:'Worship of Hùng Kings' },
-    dates:{ vi:'Phú Thọ · Đền Hùng', en:'Phú Thọ · Hùng Temples' }, count:1, page:'VNMT.html?genre=belief',
-    desc:{ vi:'Tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước.',
-           en:'The most profound ancestor-veneration practice, rooted in the legend of the Hùng Kings.' } },
-  { color:'#c9943a', num:{ vi:'Năm 2013', en:'Year 2013' }, name:{ vi:'Đờn ca tài tử', en:'Đờn ca tài tử' },
-    dates:{ vi:'Đồng bằng sông Cửu Long', en:'Mekong Delta' }, count:1, page:'VNMT.html?genre=singings',
-    desc:{ vi:'Nghệ thuật âm nhạc truyền thống Nam Bộ, bắt nguồn từ nhạc lễ và cải lương thế kỷ XIX.',
-           en:'Traditional musical art of southern Vietnam, originating from 19th century ritual music.' } },
-  { color:'#9b6fbf', num:{ vi:'Năm 2024', en:'Year 2024' }, name:{ vi:'Vía Bà Chúa Xứ Núi Sam', en:'Bà Chúa Xứ Festival' },
-    dates:{ vi:'An Giang · Châu Đốc', en:'An Giang · Châu Đốc' }, count:1, page:'VNMT.html?genre=belief',
-    desc:{ vi:'Lễ hội dân gian lớn miền Tây Nam Bộ, tôn vinh nữ thần bảo hộ vùng đất Châu Đốc.',
-           en:'Major folk festival in the Mekong Delta, honoring the protective goddess of Châu Đốc.' } },
-];
-
-function buildCivCards(s) {
-  const row = document.getElementById('civs-row');
-  if (!row) return;
-  row.innerHTML = CIVS_DATA.map(c => `
-    <a class="civs-mini-card" href="${c.page}" style="--civ-color:${c.color}">
-      <div class="civs-mini-num">${c.num[lang]}</div>
-      <div class="civs-mini-name">${c.name[lang]}</div>
-      <div class="civs-mini-dates">${c.dates[lang]}</div>
-      <div class="civs-mini-desc">${c.desc[lang]}</div>
-      <div class="civs-mini-foot">
-        <span class="civs-mini-count">${c.count} ${s.civsArtifacts}</span>
-        <span class="civs-mini-cta">${s.civsExplore}</span>
-      </div>
-    </a>`).join('');
 }
 
 /* ═══════════════════════════════════════
