@@ -20,7 +20,7 @@ const TREASURES = [
     location: 'Thừa Thiên Huế · Kinh đô Huế',
     provinces: ['Thừa Thiên Huế'],
     year: '2003',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'instrumental',
     badge: 'UNESCO',
     desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2003, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
@@ -34,7 +34,7 @@ const TREASURES = [
     location: 'Đắk Lắk · Gia Lai · Kon Tum',
     provinces: ['Đắk Lắk','Gia Lai','Quảng Ngãi'],
     year: '2005',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'instrumental',
     badge: 'UNESCO',
     desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2005.',
@@ -48,7 +48,7 @@ const TREASURES = [
     location: 'Bắc Ninh · Vùng Kinh Bắc',
     provinces: ['Bắc Ninh'],
     year: '2009',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Quan họ là thể loại dân ca đối đáp đặc trưng của vùng Kinh Bắc, được công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2009. Ca hát diễn ra trong các lễ hội làng, bóng dáng thân thiện, mười câu mười lời trao gửi tình nghĩa trăm năm.',
@@ -76,7 +76,7 @@ const TREASURES = [
     location: 'Hà Nội · Gia Lâm · Sóc Sơn',
     provinces: ['Hà Nội'],
     year: '2010',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'festival',
     badge: 'UNESCO',
     desc_vi: 'Hội Gióng là lễ hội lớn tưởng nhớ Thánh Gióng đánh thắng giặc Ân, truyền thuyết về anh hùng dân tộc. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2010.',
@@ -90,7 +90,7 @@ const TREASURES = [
     location: 'Phú Thọ · Đền Hùng',
     provinces: ['Phú Thọ'],
     year: '2012',
-    status: 'inscribed',
+    status: 'national',
     genre: 'belief',
     badge: 'UNESCO',
     desc_vi: 'Tín ngưỡng thờ cúng Hùng Vương là tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2012.',
@@ -104,7 +104,7 @@ const TREASURES = [
     location: 'Cần Thơ · Đồng bằng sông Cửu Long',
     provinces: ['Cần Thơ','An Giang','Vĩnh Long','Đồng Tháp','Cà Mau', 'Tây Ninh'],
     year: '2013',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
@@ -118,7 +118,7 @@ const TREASURES = [
     location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
     provinces: ['Nghệ An','Hà Tĩnh'],
     year: '2014',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
@@ -132,7 +132,7 @@ const TREASURES = [
     location: 'Hà Nội · Lào Cai · Vĩnh Phúc · Bắc Ninh',
     provinces: ['Hà Nội','Lào Cai','Phú Thọ','Bắc Ninh'],
     year: '2015',
-    status: 'inscribed',
+    status: 'national',
     genre: 'festival',
     badge: 'UNESCO',
     desc_vi: 'Nghi lễ và trò chơi kéo co là tập tục văn hóa dân gian phổ biến ở nhiều địa phương, cầu mong mùa màng tươi tốt, thịnh vượng. UNESCO công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2015.',
@@ -146,7 +146,7 @@ const TREASURES = [
     location: 'Nam Định · Phủ Dày',
     provinces: ['Ninh Bình'],
     year: '2016',
-    status: 'inscribed',
+    status: 'national',
     genre: 'belief',
     badge: 'UNESCO',
     desc_vi: 'Tín ngưỡng thờ Mẫu tam tòa (Thiên – Địa – Thủy) thể hiện qua nghi lễ Hầu đồng và hát văn. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2016.',
@@ -160,7 +160,7 @@ const TREASURES = [
     location: 'Quảng Nam · Quảng Ngãi · Bình Định',
     provinces: ['Đà Nẵng','Quảng Ngãi','Gia Lai'],
     year: '2017',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Bài Chòi là nghệ thuật diễn xướng kết hợp giữa trò chơi bài và hát Wooden của nông dân miền Trung. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2017.',
@@ -174,7 +174,7 @@ const TREASURES = [
     location: 'Phú Thọ · Đền Hùng',
     provinces: ['Phú Thọ'],
     year: '2017',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
@@ -188,7 +188,7 @@ const TREASURES = [
     location: 'Cao Bằng · Hà Giang · Lạng Sơn',
     provinces: ['Cao Bằng','Lạng Sơn','Tuyên Quang'],
     year: '2019',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'singings',
     badge: 'UNESCO',
     desc_vi: 'Thực hành Then là loại hình dân ca nghi lễ của người Tày, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2019.',
@@ -202,7 +202,7 @@ const TREASURES = [
     location: 'Yên Bái · Sơn La · Lai Châu · Điện Biên',
     provinces: ['Lào Cai','Sơn La','Lai Châu','Điện Biên'],
     year: '2021',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'festival',
     badge: 'UNESCO',
     desc_vi: 'Xòe Thái là điệu múa truyền thống đặc sắc của người Thái ở Tây Bắc, thể hiện tinh thần cộng đồng, tình yêu quê hương. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2021.',
@@ -216,7 +216,7 @@ const TREASURES = [
     location: 'Ninh Thuận · Bình Thuận',
     provinces: ['Lâm Đồng','Khánh Hòa'],
     year: '2022',
-    status: 'inscribed',
+    status: 'urgent',
     genre: 'craft',
     badge: 'UNESCO',
     desc_vi: 'Nghệ thuật làm gốm của người Chăm là kỹ thuật làm gốm thủ công truyền thống độc đáo, không dùng bàn xoay, được truyền qua nhiều thế hệ. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2022.',
@@ -230,7 +230,7 @@ const TREASURES = [
     location: 'An Giang · Núi Sam · Châu Đốc',
     provinces: ['An Giang'],
     year: '2024',
-    status: 'inscribed',
+    status: 'representative',
     genre: 'belief',
     badge: 'UNESCO',
     desc_vi: 'Lễ hội Vía Bà Chúa Xứ Núi Sam là lễ hội dân gian lớn ở miền Tây Nam Bộ, tôn vinh nữ thần bảo hộ vùng đất Châu Đốc. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2024.',
@@ -267,8 +267,8 @@ const STRINGS = {
     footerCredit: 'Bản đồ: <em>CartoDB / OpenStreetMap</em> · Ranh giới tỉnh: <em>vn_geo.json</em>',
     legendStatus: 'Trạng thái UNESCO',
     legendGenre: 'Thể loại di sản',
-    resultCountUnit: 'điều di sản',
-    provinceHover: 'điều di sản',
+    resultCountUnit: 'Di sản',
+    provinceHover: 'Di sản',
     pieCta: 'Xem chi tiết →',
   },
   en: {
@@ -294,8 +294,8 @@ const STRINGS = {
     footerCredit: 'Map: <em>CartoDB / OpenStreetMap</em> · Province borders: <em>vn_geo.json</em>',
     legendStatus: 'UNESCO Status',
     legendGenre: 'Heritage Genre',
-    resultCountUnit: 'heritage items',
-    provinceHover: 'heritage items',
+    resultCountUnit: 'heritages',
+    provinceHover: 'heritages',
     pieCta: 'View details →',
   },
 };
@@ -320,7 +320,7 @@ const STATUS_CONFIG = {
     vi: { label:'Danh sách cần bảo vệ khẩn cấp', short:'Cấp thiết' },
     en: { label:'Urgent Safeguarding List', short:'Urgent' },
   },
-  inscribed: {
+  representative: {
     color:'#c9a84c',
     vi: { label:'Danh sách đại diện của nhân loại', short:'Đại diện' },
     en: { label:'Representative List of Humanity', short:'Representative' },
@@ -329,11 +329,6 @@ const STATUS_CONFIG = {
     color:'#5a8a9f',
     vi: { label:'Di sản văn hóa phi vật thể quốc gia', short:'Quốc gia' },
     en: { label:'National Intangible Heritage', short:'National' },
-  },
-  tentative: {
-    color:'#8a7c5e',
-    vi: { label:'Đề cử UNESCO', short:'Đề cử' },
-    en: { label:'Tentative UNESCO List', short:'Tentative' },
   },
 };
 
@@ -371,7 +366,7 @@ function genreLabel(key, form='label') { return GENRE_CONFIG[key]?.[lang]?.[form
 
 /* — manual status overrides for entries whose status is ambiguous — */
 const STATUS_OVERRIDES = {
-  12: 'inscribed',  // Hát Xoan — moved from Urgent (2011) to Representative (2017)
+  12: 'representative',  // Hát Xoan — moved from Urgent (2011) to Representative (2017)
 };
 
 /* ── STATUS reader — status is a direct field on each heritage item ── */
@@ -720,13 +715,11 @@ function showProvinceModal(provinceName) {
     const genre  = getGenre(item);
     const color  = activeColor(item);
     const title  = lang === 'vi' ? item.name : item.english;
-    const sub    = lang === 'vi' ? item.english : item.name;
     return `
       <div class="province-item" data-id="${item.id}">
         <span class="province-item-dot" style="background:${color}"></span>
         <div class="province-item-body">
           <div class="province-item-title">${title}</div>
-          <div class="province-item-sub">${sub}</div>
           <div class="province-item-tags">
             <span style="color:${statusColor(item)}">${statusLabel(status,'short')}</span>
             <span style="color:${genreColor(item)}">${genreLabel(genre,'short')}</span>
@@ -740,8 +733,6 @@ function showProvinceModal(provinceName) {
     ? (lang === 'vi' ? 'Phân bố UNESCO' : 'UNESCO status distribution')
     : (lang === 'vi' ? 'Phân bố thể loại' : 'Genre distribution');
 
-  const heritageLabel = lang === 'vi' ? 'Di sản trong tỉnh' : 'Heritage in this province';
-
   const html = total > 0 ? `
     <div class="province-modal-title">${provinceName}</div>
     <div class="province-modal-sub">${dimLabel}</div>
@@ -752,7 +743,6 @@ function showProvinceModal(provinceName) {
     <div class="province-pie-total">
       ${lang === 'vi' ? 'Tổng di sản' : 'Total heritage'}: <strong>${total}</strong>
     </div>
-    <div class="province-item-list-label">${heritageLabel}</div>
     <div class="province-item-list">${itemRows}</div>
   ` : `
     <div class="province-modal-title">${provinceName}</div>
@@ -1305,8 +1295,8 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 
 /* ═══════════════════════════════════════
    URL PARAMETER — status/genre deep-link
-   e.g. VNMT.html?status=inscribed
-        VNMT.html?genre=quan_ho
+   e.g. VNMT.html?status=representative
+        VNMT.html?genre=singings
 ═══════════════════════════════════════ */
 (function readURLParams() {
   const p = new URLSearchParams(window.location.search);
