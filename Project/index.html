@@ -286,12 +286,11 @@
       <polygon points="11,1 13,8 20,8 14.5,12.5 16.5,20 11,15.5 5.5,20 7.5,12.5 2,8 9,8"
                fill="currentColor"/>
     </svg>
-    <span id="nav-logo-text">VietHeritage Map</span>
+    <span id="nav-logo-text">VietHeritage</span>
   </a>
 
   <ul class="nav-links">
     <li><a href="index.html" class="active" id="nav-home">Trang chủ</a></li>
-    <li><a href="VNMT.html" id="nav-map-link">Khám phá bản đồ</a></li>
     <li><a href="database.html"      id="nav-db-link">Kho lưu trữ</a></li>
     <li><a href="about.html" id="nav-about">Giới thiệu</a></li>
   </ul>
@@ -317,12 +316,12 @@
   <div class="hero-content">
     <div class="hero-eyebrow">
       <span class="eyebrow-diamond"></span>
-      <span id="hero-eyebrow">16 Di Sản UNESCO Được Công Nhận</span>
+      <span id="hero-eyebrow">16 Di Sản được UNESCO công nhận</span>
     </div>
 
     <h1 class="hero-headline">
-      <span id="hero-h1a">Di Sản</span><br>
-      <em id="hero-h1b">Việt Nam</em>
+      <span id="hero-h1a">Sống động</span>
+      <em id="hero-h1b">vượt thời gian</em>
     </h1>
 
     <p class="hero-tagline" id="hero-tagline">
@@ -332,7 +331,7 @@
 
     <div class="hero-cta-row">
       <a href="VNMT.html" class="cta-map">
-        <span>⊞</span><span id="cta-map-text">Bản đồ tương tác</span>
+        <span>⊞   Bản đồ tương tác<span id="cta-map-text"></span>
       </a>
       <a href="#eras" class="cta-explore">
         <span id="cta-explore-text">Khám phá</span><span>↓</span>
@@ -460,9 +459,9 @@ const UI = {
     navHome:'Trang chủ', navMap:'Khám phá bản đồ', navAbout:'Giới thiệu', navMapBtn:'Mở bản đồ',
     navDb:'Kho lưu trữ',
     eyebrow:'16 Di Sản UNESCO Được Công Nhận',
-    h1a:'Di Sản', h1b:'Việt Nam',
+    h1a:'Sống động', h1b:'vượt thời gian',
     tagline:'Từ Nhã nhạc cung đình Huế đến không gian văn hóa Cồng Chiêng Tây Nguyên — hành trình 16 di sản văn hóa phi vật thể UNESCO qua 14 lần công nhận.',
-    ctaMap:'Bản đồ tương tác', ctaExplore:'Khám phá',
+    ctaExplore:'Khám phá',
     statA:'Di Sản', statB:'Tỉnh Thành', statC:'Thể Loại', statD:'Lần Công Nhận',
     secEyebrow:'Tìm hiểu theo thể loại', secTitle:'Các thể loại di sản', secExploreAll:'Xem tất cả →',
     e1Ey:'Thể loại 1', e1Ti:'Âm nhạc · Nhạc cụ',
@@ -487,9 +486,9 @@ const UI = {
     navHome:'Home', navMap:'Explore the Map', navAbout:'About', navMapBtn:'Open Map',
     navDb:'Database', 
     eyebrow:'16 UNESCO Recognized Heritage',
-    h1a:"Vietnam's", h1b:'Heritage',
+    h1a:'Eternally', h1b:'Vivid',
     tagline:"From the royal court music of Huế to the gong culture of the Central Highlands — a journey through 16 UNESCO intangible cultural heritage entries across 14 recognition years.",
-    ctaMap:'Interactive Map', ctaExplore:'Explore',
+    ctaExplore:'Explore',
     statA:'Heritage', statB:'Provinces', statC:'Genres', statD:'Recognition Years',
     secEyebrow:'Explore by genre', secTitle:'Heritage Genres', secExploreAll:'View all →',
     e1Ey:'Genre 1', e1Ti:'Instrumental Music', e1Pe:'2003 — 2005',
@@ -708,8 +707,8 @@ applyLang();
 buildDrum();
 </script>
 <!-- ═══════════════════════════════════════
-     MUSEUM AI CHAT WIDGET
-═══════════════════════════════════════ -->
+     MUSEUM AI CHAT WIDGET — MCQ + Grounded Chat
+═══════════════════════════ -->
 
 <!-- Chat toggle button -->
 <button class="chat-fab" id="chat-fab" aria-label="Open Museum AI">
@@ -717,7 +716,7 @@ buildDrum();
        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
-  <span class="chat-fab-label" id="chat-fab-label">Bảo tàng AI</span>
+  <span class="chat-fab-label" id="chat-fab-label">AI Bảo tàng Số</span>
 </button>
 
 <!-- Chat panel -->
@@ -731,7 +730,7 @@ buildDrum();
         </svg>
       </div>
       <div>
-        <div class="chat-title" id="chat-title">Bảo tàng AI</div>
+        <div class="chat-title" id="chat-title">AI Bảo tàng Số</div>
         <div class="chat-status" id="chat-status">
           <span class="chat-status-dot" id="chat-status-dot"></span>
           <span id="chat-status-text">Đang kết nối…</span>
@@ -883,6 +882,92 @@ buildDrum();
 /* ── ANIMATIONS ── */
 @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.4} }
 @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+@keyframes slideIn { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+
+/* ── MCQ SURVEY ── */
+.mcq-container {
+  max-width:88%; align-self:flex-start;
+  animation:slideIn .3s ease;
+}
+.mcq-question {
+  font-size:13px; font-weight:600; color:var(--gold-light);
+  margin-bottom:10px; line-height:1.5;
+}
+.mcq-options {
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.mcq-option {
+  background:var(--card); border:1px solid var(--border);
+  color:var(--text); font-size:11.5px; font-family:var(--font-body);
+  padding:7px 12px; border-radius:16px; cursor:pointer;
+  transition:all .2s; white-space:nowrap;
+}
+.mcq-option:hover {
+  border-color:var(--gold); background:rgba(201,168,76,0.08);
+  color:var(--gold-light); transform:translateY(-1px);
+}
+.mcq-option.selected {
+  background:var(--gold); color:#1a1400; border-color:var(--gold);
+  font-weight:600;
+}
+.mcq-progress {
+  display:flex; gap:3px; margin-top:8px;
+}
+.mcq-progress-dot {
+  width:18px; height:3px; border-radius:2px; background:var(--border);
+  transition:background .3s;
+}
+.mcq-progress-dot.active { background:var(--gold); }
+.mcq-progress-dot.done { background:rgba(201,168,76,0.5); }
+
+/* ── RECOMMENDATION CARDS ── */
+.rec-card {
+  display:block; text-decoration:none; color:var(--text);
+  background:var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:12px 14px; margin-top:8px;
+  max-width:88%; align-self:flex-start;
+  transition:all .22s; cursor:pointer;
+  border-left:3px solid var(--gold);
+  animation:slideIn .3s ease;
+}
+.rec-card:hover {
+  border-color:var(--gold); transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+.rec-card-header {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; margin-bottom:6px;
+}
+.rec-card-name {
+  font-family:'Playfair Display',serif; font-size:13px;
+  color:var(--white); font-weight:700; line-height:1.3;
+}
+.rec-card-badge {
+  font-size:9px; font-weight:600; letter-spacing:0.08em;
+  padding:2px 8px; border-radius:10px;
+  background:rgba(201,168,76,0.15); color:var(--gold);
+  border:1px solid rgba(201,168,76,0.3);
+  white-space:nowrap;
+}
+.rec-card-meta {
+  display:flex; gap:10px; font-size:10.5px; color:var(--muted);
+  margin-bottom:6px;
+}
+.rec-card-meta span { display:flex; align-items:center; gap:3px; }
+.rec-card-desc {
+  font-size:11px; color:var(--muted); line-height:1.6;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.rec-card-cta {
+  font-size:10px; font-weight:600; color:var(--gold);
+  margin-top:8px; display:flex; align-items:center; gap:4px;
+}
+.rec-card:hover .rec-card-cta { gap:7px; }
+.rec-header {
+  font-size:12px; font-weight:600; color:var(--gold-light);
+  margin:12px 0 4px; align-self:flex-start; max-width:88%;
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width:440px) {
@@ -893,7 +978,7 @@ buildDrum();
 
 <script>
 /* ═══════════════════════════════════════
-   CHAT WIDGET
+   CHAT WIDGET — MCQ Survey + Grounded Chat + Small Talk
 ═══════════════════════════════════════ */
 (function() {
   const API   = 'http://localhost:8000';
@@ -912,24 +997,42 @@ buildDrum();
   let open        = false;
   let botStatus   = 'loading';
   let welcomeSent = false;
+  let mcqActive   = false;
+  let mcqStep     = 0;
+  let mcqAnswers  = {};
+  let mcqQuestions = [];
 
   /* ── i18n ── (piggybacks on the page's `lang` variable & `UI` object) */
   const CW = {
     vi: {
-      fab:'Bảo tàng AI', title:'Người hướng dẫn AI', send:'Gửi',
+      fab:'AI Bảo tàng số', title:'Hướng dẫn viên ảo', send:'Gửi',
       placeholder:'Hỏi về di sản UNESCO…',
-      welcome:'Xin chào! Tôi là người hướng dẫn AI của bảo tàng. Hãy hỏi tôi về bất kỳ di sản UNESCO nào trong 16 di sản văn hóa phi vật thể.',
+      welcome:'Xin chào! 👋 Tôi là người hướng dẫn bảo tàng. Tôi có thể gợi ý di sản phù hợp với bạn qua bài khảo sát ngắn, hoặc trả lời câu hỏi về 16 di sản UNESCO.',
+      surveyIntro:'Hãy làm bài khảo sát ngắn — tôi sẽ gợi ý 5 di sản phù hợp nhất với bạn! 🏛️',
+      surveyDone:'Cảm ơn bạn! Dựa trên câu trả lời, đây là 5 di sản tôi gợi ý:',
+      surveySkip:'Bỏ qua',
+      surveyNext:'Tiếp theo →',
+      surveyFinish:'Xem gợi ý →',
+      surveyRestart:'🔄 Làm lại khảo sát',
+      recHeader:'Gợi ý di sản cho bạn',
       statusLoading:'Đang kết nối…', statusOnline:'Sẵn sàng', statusError:'Ngoại tuyến',
-      errConn:'Không thể kết nối máy chủ. Hãy đảm bảo app.py đang chạy.',
+      errConn:'Không thể kết nối máy chủ. Hãy đảm bảo backend đang chạy.',
       errServer:'Lỗi máy chủ. Vui lòng thử lại.',
       youLabel:'Bạn', aiLabel:'Curator AI', nowLabel:'vừa xong',
     },
     en: {
-      fab:'Museum AI', title:'AI Curator', send:'Send',
+      fab:'AI Digital Museum', title:'Virtual Guide', send:'Send',
       placeholder:'Ask about a UNESCO heritage…',
-      welcome:"Hello! I'm your AI museum curator. Ask me about any of Vietnam's 16 UNESCO intangible cultural heritage entries.",
+      welcome:"Hello! 👋 I'm your museum curator. I can recommend heritage sites via a quick survey, or answer questions about 16 UNESCO heritage entries.",
+      surveyIntro:"Take a quick survey — I'll recommend 5 heritage sites tailored for you! 🏛️",
+      surveyDone:"Thanks! Based on your answers, here are my top 5 recommendations:",
+      surveySkip:'Skip',
+      surveyNext:'Next →',
+      surveyFinish:'Get recommendations →',
+      surveyRestart:'🔄 Restart survey',
+      recHeader:'Recommended for you',
       statusLoading:'Connecting…', statusOnline:'Ready', statusError:'Offline',
-      errConn:'Cannot reach the server. Make sure app.py is running.',
+      errConn:'Cannot reach the server. Make sure the backend is running.',
       errServer:'Server error. Please try again.',
       youLabel:'You', aiLabel:'Curator AI', nowLabel:'just now',
     },
@@ -1004,7 +1107,268 @@ buildDrum();
     document.getElementById('typing-indicator')?.remove();
   }
 
-  function pushWelcome() { pushMsg(cw().welcome, 'ai'); }
+  function pushWelcome() {
+    pushMsg(cw().welcome, 'ai');
+    /* Auto-start MCQ survey after welcome */
+    setTimeout(() => startMCQ(), 800);
+  }
+
+  /* ── MCQ SURVEY ── */
+  async function startMCQ() {
+    if (mcqActive) return;
+    mcqActive = true;
+    mcqStep = 0;
+    mcqAnswers = {};
+
+    const s = cw();
+    pushMsg(s.surveyIntro, 'ai');
+
+    /* Fetch questions from backend */
+    try {
+      const currentLang = typeof lang !== 'undefined' ? lang : 'vi';
+      const res = await fetch(`${API}/api/v1/recommend/questions?lang=${currentLang}`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      mcqQuestions = (await res.json()).questions || [];
+    } catch {
+      /* Fallback: use hardcoded questions */
+      const fl = typeof lang !== 'undefined' ? lang : 'vi';
+      mcqQuestions = fl === 'vi' ? [
+        { id:'genre', question:'Bạn hứng thú với loại hình di sản nào?', options:[
+          {value:'instrumental',label:'Âm nhạc · Nhạc cụ'},
+          {value:'singings',label:'Hát · Dân ca'},
+          {value:'belief',label:'Tín ngưỡng · Lễ nghi'},
+          {value:'festival',label:'Lễ hội dân gian'},
+          {value:'craft',label:'Nghề thủ công'},
+        ]},
+        { id:'region', question:'Bạn muốn khám phá vùng nào?', options:[
+          {value:'north',label:'Miền Bắc'},
+          {value:'central',label:'Miền Trung'},
+          {value:'south',label:'Miền Nam'},
+          {value:'highlands',label:'Tây Nguyên'},
+        ]},
+        { id:'status', question:'Bạn quan tâm đến loại di sản nào?', options:[
+          {value:'inscribed',label:'Danh sách đại diện UNESCO'},
+          {value:'urgent',label:'Cần bảo vệ khẩn cấp'},
+          {value:'national',label:'Di sản quốc gia'},
+        ]},
+        { id:'era', question:'Thời kỳ công nhận nào bạn thích?', options:[
+          {value:'early',label:'Trước 2010'},
+          {value:'mid',label:'2010 — 2019'},
+          {value:'recent',label:'2020 trở đi'},
+        ]},
+      ] : [
+        { id:'genre', question:'What type of heritage interests you?', options:[
+          {value:'instrumental',label:'Instrumental Music'},
+          {value:'singings',label:'Singing · Folk Songs'},
+          {value:'belief',label:'Belief & Ritual'},
+          {value:'festival',label:'Folk Festival'},
+          {value:'craft',label:'Traditional Craft'},
+        ]},
+        { id:'region', question:'Which region do you want to explore?', options:[
+          {value:'north',label:'North'},
+          {value:'central',label:'Central'},
+          {value:'south',label:'South'},
+          {value:'highlands',label:'Highlands'},
+        ]},
+        { id:'status', question:'Which heritage status interests you?', options:[
+          {value:'inscribed',label:'UNESCO Representative List'},
+          {value:'urgent',label:'Urgent Safeguarding'},
+          {value:'national',label:'National Heritage'},
+        ]},
+        { id:'era', question:'Which recognition era do you prefer?', options:[
+          {value:'early',label:'Before 2010'},
+          {value:'mid',label:'2010 — 2019'},
+          {value:'recent',label:'2020 onwards'},
+        ]},
+      ];
+    }
+
+    showMCQQuestion();
+  }
+
+  function showMCQQuestion() {
+    if (mcqStep >= mcqQuestions.length) {
+      finishMCQ();
+      return;
+    }
+
+    const q = mcqQuestions[mcqStep];
+    const s = cw();
+    const currentLang = typeof lang !== 'undefined' ? lang : 'vi';
+
+    /* Remove previous MCQ container if any */
+    document.getElementById('mcq-container')?.remove();
+
+    const container = document.createElement('div');
+    container.className = 'mcq-container msg msg-ai';
+    container.id = 'mcq-container';
+
+    const questionEl = document.createElement('div');
+    questionEl.className = 'mcq-question';
+    questionEl.textContent = `${mcqStep + 1}. ${q.question}`;
+    container.appendChild(questionEl);
+
+    const optionsEl = document.createElement('div');
+    optionsEl.className = 'mcq-options';
+
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'mcq-option';
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => selectMCQOption(q.id, opt.value, opt.label, btn));
+      optionsEl.appendChild(btn);
+    });
+
+    /* Skip button */
+    const skipBtn = document.createElement('button');
+    skipBtn.className = 'mcq-option';
+    skipBtn.style.opacity = '0.6';
+    skipBtn.style.fontSize = '10.5px';
+    skipBtn.textContent = s.surveySkip;
+    skipBtn.addEventListener('click', () => {
+      mcqStep++;
+      showMCQQuestion();
+    });
+    optionsEl.appendChild(skipBtn);
+
+    container.appendChild(optionsEl);
+
+    /* Progress dots */
+    const progressEl = document.createElement('div');
+    progressEl.className = 'mcq-progress';
+    for (let i = 0; i < mcqQuestions.length; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'mcq-progress-dot';
+      if (i < mcqStep) dot.classList.add('done');
+      else if (i === mcqStep) dot.classList.add('active');
+      progressEl.appendChild(dot);
+    }
+    container.appendChild(progressEl);
+
+    msgs.appendChild(container);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function selectMCQOption(questionId, value, label, btnEl) {
+    /* Mark selected */
+    btnEl.parentElement.querySelectorAll('.mcq-option').forEach(b => b.classList.remove('selected'));
+    btnEl.classList.add('selected');
+
+    /* Store answer */
+    mcqAnswers[questionId] = value;
+
+    /* Show user's choice as a message */
+    pushMsg(label, 'user');
+
+    /* Advance after short delay */
+    setTimeout(() => {
+      mcqStep++;
+      showMCQQuestion();
+    }, 400);
+  }
+
+  async function finishMCQ() {
+    mcqActive = false;
+    document.getElementById('mcq-container')?.remove();
+
+    const s = cw();
+    const currentLang = typeof lang !== 'undefined' ? lang : 'vi';
+
+    pushMsg(s.surveyDone, 'ai');
+    pushTyping();
+
+    try {
+      const res = await fetch(`${API}/api/v1/recommend`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          ...mcqAnswers,
+          lang: currentLang,
+        }),
+        signal: AbortSignal.timeout(10000),
+      });
+      const data = await res.json();
+      removeTyping();
+      renderRecommendations(data.recommendations || []);
+    } catch {
+      removeTyping();
+      pushMsg(cw().errConn, 'ai');
+    }
+  }
+
+  function renderRecommendations(recs) {
+    if (!recs || recs.length === 0) {
+      pushMsg(cw().errServer, 'ai');
+      return;
+    }
+
+    const s = cw();
+    const currentLang = typeof lang !== 'undefined' ? lang : 'vi';
+
+    /* Header */
+    const header = document.createElement('div');
+    header.className = 'rec-header';
+    header.textContent = `✨ ${s.recHeader} (${recs.length})`;
+    msgs.appendChild(header);
+
+    /* Cards */
+    recs.forEach((rec, idx) => {
+      const card = document.createElement('a');
+      card.className = 'rec-card';
+      card.href = rec.link || `VNMT.html?id=${rec.id}`;
+      card.style.animationDelay = `${idx * 0.1}s`;
+
+      const cardHeader = document.createElement('div');
+      cardHeader.className = 'rec-card-header';
+
+      const name = document.createElement('div');
+      name.className = 'rec-card-name';
+      name.textContent = rec.name;
+      cardHeader.appendChild(name);
+
+      const badge = document.createElement('span');
+      badge.className = 'rec-card-badge';
+      badge.textContent = rec.badge || 'UNESCO';
+      cardHeader.appendChild(badge);
+
+      card.appendChild(cardHeader);
+
+      const meta = document.createElement('div');
+      meta.className = 'rec-card-meta';
+      meta.innerHTML = `<span>📍 ${rec.location || ''}</span><span>📅 ${rec.year || ''}</span>`;
+      card.appendChild(meta);
+
+      const desc = document.createElement('div');
+      desc.className = 'rec-card-desc';
+      desc.textContent = rec.desc || '';
+      card.appendChild(desc);
+
+      const cta = document.createElement('div');
+      cta.className = 'rec-card-cta';
+      cta.textContent = currentLang === 'vi' ? 'Khám phá →' : 'Explore →';
+      card.appendChild(cta);
+
+      msgs.appendChild(card);
+    });
+
+    /* Restart button */
+    const restartBtn = document.createElement('button');
+    restartBtn.className = 'mcq-option';
+    restartBtn.style.marginTop = '8px';
+    restartBtn.style.alignSelf = 'flex-start';
+    restartBtn.textContent = cw().surveyRestart;
+    restartBtn.addEventListener('click', () => {
+      startMCQ();
+    });
+    const restartWrap = document.createElement('div');
+    restartWrap.style.maxWidth = '88%';
+    restartWrap.style.alignSelf = 'flex-start';
+    restartWrap.appendChild(restartBtn);
+    msgs.appendChild(restartWrap);
+
+    msgs.scrollTop = msgs.scrollHeight;
+  }
 
   /* ── health poller ── */
   function checkHealth() {
@@ -1047,6 +1411,9 @@ buildDrum();
     const text = input.value.trim();
     if (!text || botStatus !== 'online') return;
 
+    /* If MCQ is active, ignore text input (user should click options) */
+    if (mcqActive) return;
+
     input.value = '';
     send.disabled = true;
     pushMsg(text, 'user');
@@ -1062,6 +1429,11 @@ buildDrum();
       const data = await res.json();
       removeTyping();
       pushMsg(data.response || cw().errServer, 'ai');
+
+      /* If small talk steers to survey, auto-start MCQ */
+      if (data.steer_to_survey && !mcqActive) {
+        setTimeout(() => startMCQ(), 1000);
+      }
     } catch {
       removeTyping();
       pushMsg(cw().errConn, 'ai');
