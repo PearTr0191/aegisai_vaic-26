@@ -6,6 +6,7 @@ from app.core.cache import cache
 from app.core.config import settings
 import time
 import platform
+import httpx
 
 router = APIRouter(prefix="/monitoring", tags=["monitoring"])
 
@@ -23,29 +24,25 @@ async def health_check():
 
 @router.get("/health/models")
 async def model_health():
-    """Check ONNX model and Ollama availability"""
+    """Check ONNX model and OpenRouter availability"""
     import os
-    import httpx
-    
+
     model_path = settings.ETHNOMUSIC_MODEL_PATH
     model_exists = os.path.exists(model_path)
     model_size = os.path.getsize(model_path) if model_exists else 0
-    
-    # Check Ollama
-    ollama_status = "unknown"
+
+    # Check OpenRouter
+    openrouter_status = "unknown"
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
-            resp = await client.get(f"{settings.OLLAMA_HOST}/api/tags")
+            resp = await client.get("https://openrouter.ai/api/v1/models")
             if resp.status_code == 200:
-                models = resp.json().get("models", [])
-                phi_available = any("phi" in m.get("name", "") for m in models)
-                nomic_available = any("nomic" in m.get("name", "") for m in models)
-                ollama_status = "healthy" if phi_available and nomic_available else "degraded"
+                openrouter_status = "healthy" if settings.OPENROUTER_API_KEY else "configured_but_no_key"
             else:
-                ollama_status = "unhealthy"
+                openrouter_status = "unhealthy"
     except Exception:
-        ollama_status = "unreachable"
-    
+        openrouter_status = "unreachable"
+
     return {
         "ethnomusic_model": {
             "path": model_path,
@@ -53,10 +50,11 @@ async def model_health():
             "size_mb": round(model_size / 1024 / 1024, 2) if model_exists else 0,
             "status": "ready" if model_exists else "missing",
         },
-        "ollama": {
-            "host": settings.OLLAMA_HOST,
-            "status": ollama_status,
-            "models": [settings.OLLAMA_MODEL, settings.OLLAMA_EMBED_MODEL],
+        "openrouter": {
+            "status": openrouter_status,
+            "configured": bool(settings.OPENROUTER_API_KEY),
+            "model": settings.OPENROUTER_MODEL,
+            "embed_model": settings.OPENROUTER_EMBED_MODEL,
         },
     }
 
@@ -99,7 +97,7 @@ async def system_info():
 async def metrics():
     """Basic metrics endpoint (Prometheus-compatible format)"""
     cache_stats = cache.stats()
-    
+
     return f"""# HELP cache_size Current cache size
 # TYPE cache_size gauge
 cache_size {cache_stats["size"]}

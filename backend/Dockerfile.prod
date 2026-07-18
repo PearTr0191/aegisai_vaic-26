@@ -1,5 +1,6 @@
-# Production Multi-stage Dockerfile
-# Stage 1: Build dependencies
+# Production Dockerfile - Cloud-only (no Ollama)
+# Uses OpenRouter for LLM inference
+
 FROM python:3.11-slim AS builder
 
 WORKDIR /app
@@ -7,7 +8,6 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,27 +17,16 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Copy dependency files
 COPY pyproject.toml uv.lock* ./
 
-# Install dependencies
+# Install dependencies (no dev dependencies)
 RUN uv sync --frozen --no-dev
 
-# Stage 2: Ollama with Phi-3.5-Mini model
-FROM ollama/ollama:latest AS ollama-builder
-
-# Pull Phi-3.5-Mini Q4_K_M model (will be baked into image)
-RUN ollama serve & \
-    sleep 5 && \
-    ollama pull phi3.5:3.8b-mini-instruct-q4_k_m && \
-    ollama pull nomic-embed-text:latest && \
-    pkill ollama
-
-# Stage 3: Production runtime
+# Production runtime
 FROM python:3.11-slim AS runtime
 
 WORKDIR /app
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -47,37 +36,24 @@ RUN useradd --create-home --shell /bin/bash appuser
 # Copy Python dependencies from builder
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy Ollama with baked models
-COPY --from=ollama-builder /root/.ollama /home/appuser/.ollama
-COPY --from=ollama-builder /usr/bin/ollama /usr/bin/ollama
-
 # Copy application code
 COPY --chown=appuser:appuser . .
-
-# Create models directory and copy ONNX model (will be added during build)
-RUN mkdir -p /app/models
-# COPY models/ethnomusic_net_int8.onnx /app/models/
 
 # Switch to non-root user
 USER appuser
 
 # Set PATH
-ENV PATH="/app/.venv/bin:/usr/bin:${PATH}"
+ENV PATH="/app/.venv/bin:${PATH}"
 
 # Environment variables
 ENV IS_PRODUCTION=true
-ENV OLLAMA_HOST=http://localhost:11434
-ENV ETHNOMUSIC_MODEL_PATH=/app/models/ethnomusic_net_int8.onnx
 
-# Expose ports
-EXPOSE 8000 11434
+# Expose port
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Start script
-COPY --chown=appuser:appuser scripts/start.sh /app/scripts/start.sh
-RUN chmod +x /app/scripts/start.sh
-
-CMD ["/app/scripts/start.sh"]
+# Run the application
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

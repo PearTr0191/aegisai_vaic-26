@@ -2,7 +2,7 @@
 Unified Chat API — routes between grounded retrieval and small talk.
 
 - Heritage questions → GroundedChatService (cites treasures.json only)
-- Off-topic messages → SmallTalkService (Gemma3:270M via Ollama, steers to survey)
+- Off-topic messages → SmallTalkService (OpenRouter, steers to survey)
 - Voice input → transcribe then forward to text chat
 """
 from typing import List, Optional
@@ -95,7 +95,7 @@ async def chat(request: ChatRequest):
     # Route: check if off-topic
     if small_talk_service.is_off_topic(message):
         # Small talk path
-        result = small_talk_service.respond(message, lang)
+        result = await small_talk_service.respond(message, lang)
         return ChatResponse(
             response=result["text"],
             confidence=result["confidence"],

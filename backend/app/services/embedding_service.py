@@ -1,47 +1,41 @@
 """
-Embedding service for knowledge chunks using Ollama nomic-embed-text model.
+Embedding service for knowledge chunks using OpenRouter nomic-embed-text model.
 Stores embeddings in sqlite-vec virtual table for similarity search.
 """
 import asyncio
 import json
 from typing import List, Optional
-import ollama
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models.artisan import KnowledgeChunk
+from app.services.openrouter_service import OpenRouterService
 
 
 class EmbeddingService:
-    """Generate embeddings and store in sqlite-vec"""
+    """Generate embeddings and store in sqlite-vec using OpenRouter"""
     
-    EMBEDDING_DIM = 1024  # nomic-embed-text output dimension
+    EMBEDDING_DIM = 768  # OpenRouter nomic-embed output dimension
     
-    def __init__(self, ollama_client: Optional[ollama.AsyncClient] = None):
-        self.client = ollama_client or ollama.AsyncClient(host=settings.OLLAMA_HOST)
+    def __init__(self, openrouter_client: Optional[OpenRouterService] = None):
+        self.openrouter = openrouter_client or OpenRouterService()
     
     async def generate_embedding(self, text: str) -> bytes:
         """Generate embedding for text and return as bytes"""
-        response = await self.client.embeddings(
-            model=settings.OLLAMA_EMBED_MODEL,
+        embedding = await self.openrouter.embeddings(
             prompt=text,
         )
-        embedding = response.get("embedding", [])
         # Convert to bytes (float32 array)
         import struct
         return struct.pack(f"{len(embedding)}f", *embedding)
     
-    async def embed_and_store(self, db: AsyncSession, chunk_id: str, content: str) -> None:
+    async def embed_and_store(
+        self, db: AsyncSession, chunk_id: str, content: str
+    ) -> None:
         """Embed content and store in vector table"""
         embedding_bytes = await self.generate_embedding(content)
-        
+
         # Insert into sqlite-vec virtual table
-        stmt = insert(
-            # knowledge_chunks_vec is a VIRTUAL table managed by sqlite-vec
-            # We use raw SQL via connection
-        )
-        
-        # Use raw connection for vector table
         from app.core.database import engine
         async with engine.connect() as conn:
             await conn.execute(
@@ -65,7 +59,7 @@ class EmbeddingService:
         """Search for similar chunks using vector similarity"""
         query_embedding = await self.generate_embedding(query)
         import struct
-        
+
         # Query sqlite-vec using knn_search
         from app.core.database import engine
         query_sql = f"""
@@ -81,13 +75,13 @@ class EmbeddingService:
             )
         """
         params = [query_embedding, query_embedding, limit]
-        
+
         if persona_id:
             query_sql += " AND k.artisan_persona_id = ?"
             params.insert(2, str(persona_id))
         
         query_sql += " ORDER BY distance"
-        
+
         async with engine.connect() as conn:
             result = await conn.execute(query_sql, tuple(params))
             rows = result.fetchall()
@@ -108,20 +102,20 @@ class EmbeddingService:
 async def ingest_all_chunks(db: AsyncSession) -> int:
     """Embed all knowledge chunks and store in vector table"""
     service = EmbeddingService()
-    
+
     # Get all chunks
     result = await db.execute(select(KnowledgeChunk))
     chunks = result.scalars().all()
-    
+
     count = 0
     for chunk in chunks:
         # Combine Vietnamese and English content for embedding
         combined = f"{chunk.content_vi}"
         if chunk.content_en:
             combined += f"\n\n{chunk.content_en}"
-        
+
         embedding_bytes = await service.generate_embedding(combined)
-        
+
         # Store in vector table
         from app.core.database import engine
         async with engine.connect() as conn:
@@ -135,7 +129,7 @@ async def ingest_all_chunks(db: AsyncSession) -> int:
             )
             await conn.commit()
         count += 1
-    
+
     return count
 
 

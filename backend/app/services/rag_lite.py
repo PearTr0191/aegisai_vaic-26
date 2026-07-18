@@ -3,7 +3,6 @@ from typing import List, Optional, Literal, cast
 from uuid import UUID
 from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
-import ollama
 import httpx
 from app.core.config import settings
 from app.models.artisan import KnowledgeChunk, ArtisanPersona, ArtisanResponse
@@ -14,36 +13,22 @@ from app.services.openrouter_service import OpenRouterService
 
 class HeritageRAGLite:
     """
-    Lightweight RAG: Keyword search + Few-shot prompting with vector fallback
+    Lightweight RAG: Keyword search + Few-shot prompting with vector fallback.
+    Uses OpenRouter as primary LLM provider.
     """
 
     def __init__(
         self,
         db: AsyncSession,
-        ollama_client: Optional[ollama.AsyncClient] = None,
         openrouter_client: Optional[OpenRouterService] = None,
     ):
         self.db = db
-        self.ollama = ollama_client
         self.openrouter = openrouter_client or OpenRouterService()
         self.persona_prompts = self._load_persona_prompts()
-        self.embedding_service = EmbeddingService(ollama_client)
+        self.embedding_service = EmbeddingService()
 
-    async def _generate_with_fallback(self, prompt: str) -> Optional[str]:
-        """Generate text using Ollama with OpenRouter fallback"""
-        # Try Ollama first
-        if self.ollama:
-            try:
-                response = await self.ollama.generate(
-                    model=settings.OLLAMA_MODEL,
-                    prompt=prompt,
-                    options={"temperature": 0.3, "top_p": 0.9},
-                )
-                return response.get("response", "").strip()
-            except Exception:
-                pass
-
-        # Fall back to OpenRouter
+    async def _generate_with_openrouter(self, prompt: str) -> Optional[str]:
+        """Generate text using OpenRouter (primary method)"""
         try:
             return await self.openrouter.generate(prompt)
         except Exception:
@@ -55,7 +40,8 @@ class HeritageRAGLite:
         """Search knowledge chunks using vector similarity fallback"""
         try:
             results = await self.embedding_service.vector_search(
-                self.db, question, persona_id=str(persona_id) if persona_id else None, limit=limit, threshold=0.5
+                self.db, question, persona_id=str(persona_id) if persona_id else None,
+                limit=limit, threshold=0.5
             )
             chunks = []
             for r in results:
@@ -87,7 +73,7 @@ NGUYÊN TẮC:
 NGỮ CẢNH:
 {context}
 
-VÍ DỰ:
+VÍ DỤ:
 Hỏi: "Tại sao hát Quan họ phải trao trầu?"
 Trả lời: "Theo lời các bậc tiền bối, trầu trân là lễ nghĩa, biểu tượng trăm năm..."
 
@@ -240,8 +226,8 @@ TRẢ LỜI:"""
         # 6. Few-shot prompt
         prompt = self._build_few_shot_prompt(question, chunks, persona, lang)
 
-        # 7. Generate with Ollama/OpenRouter fallback
-        answer = await self._generate_with_fallback(prompt)
+        # 7. Generate with OpenRouter
+        answer = await self._generate_with_openrouter(prompt)
         if not answer:
             return self._unknown_response(lang, chunks)
 

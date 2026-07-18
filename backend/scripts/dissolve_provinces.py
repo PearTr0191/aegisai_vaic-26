@@ -7,15 +7,18 @@ Two-pass approach:
    to eliminate any remaining shared borders
 """
 import json
-from shapely.geometry import shape, mapping
+from pathlib import Path
+
+from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 from shapely.validation import make_valid
 
-INPUT  = "Project/vn_geo.json"
-OUTPUT = "Project/vn_geo.json"
+INPUT = Path(__file__).resolve().parents[2] / "Project" / "vn_geo.json"
+OUTPUT = Path(__file__).resolve().parents[2] / "Project" / "vn_geo.json"
 
-with open(INPUT, "r", encoding="utf-8") as f:
+with INPUT.open(encoding="utf-8") as f:
     geo = json.load(f)
+
 
 def fix_geom(g):
     """Aggressively fix invalid geometries."""
@@ -26,23 +29,24 @@ def fix_geom(g):
         g = make_valid(g)
         if g.is_valid:
             return g
-    except:
+    except Exception:
         pass
     # Try buffer(0)
     try:
         g = g.buffer(0)
         if g.is_valid:
             return g
-    except:
+    except Exception:
         pass
     # Try negative then positive buffer
     try:
         g = g.buffer(-0.0001).buffer(0.0001)
         if g.is_valid:
             return g
-    except:
+    except Exception:
         pass
     return g
+
 
 # PASS 1: Group by name and merge
 groups = {}
@@ -111,7 +115,7 @@ for feat in merged_features:
                 p = fix_geom(p)
             if not p.is_empty:
                 shapely_polys.append(p)
-        except:
+        except Exception:
             pass
 
     if len(shapely_polys) <= 1:
@@ -140,7 +144,7 @@ for feat in merged_features:
 
 result = {"type": "FeatureCollection", "features": final_features}
 
-with open(OUTPUT, "w", encoding="utf-8") as f:
+with OUTPUT.open("w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
 
 print(f"Pass 1: {len(geo['features'])} -> {len(merged_features)} features")

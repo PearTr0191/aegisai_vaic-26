@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Test script for the chatbot services."""
 import sys
+import asyncio
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -8,6 +9,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.services.recommendation import recommendation_service
 from app.services.grounded_chat import grounded_chat_service
 from app.services.small_talk import small_talk_service
+
+
+async def test_small_talk_async():
+    print("=== Small Talk Test ===")
+    result = await small_talk_service.respond("hello", lang="vi")
+    print(f"Response: {result['text'][:80]}...")
+    assert result["steer_to_survey"] is True
+    print("PASS\n")
 
 
 def test_recommendation():
@@ -35,14 +44,6 @@ def test_grounded_chat():
     print("PASS\n")
 
 
-def test_small_talk():
-    print("=== Small Talk Test ===")
-    result = small_talk_service.respond("hello", lang="vi")
-    print(f"Response: {result['text'][:80]}...")
-    assert result["steer_to_survey"] is True
-    print("PASS\n")
-
-
 def test_off_topic():
     print("=== Off-topic Detection Test ===")
     assert small_talk_service.is_off_topic("hello") is True
@@ -52,10 +53,10 @@ def test_off_topic():
     print("PASS\n")
 
 
-def main():
+async def main():
     test_recommendation()
     test_grounded_chat()
-    test_small_talk()
+    await test_small_talk_async()
     test_off_topic()
     print("=" * 50)
     print("ALL TESTS PASSED!")
@@ -63,4 +64,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

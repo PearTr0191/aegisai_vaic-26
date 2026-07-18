@@ -13,24 +13,12 @@ services:
         fromDatabase:
           name: vietheritage-db
           property: connectionString
-      - key: OLLAMA_HOST
-        value: "http://localhost:11434"
-      - key: OLLAMA_MODEL
-        value: "phi3.5:3.8b-mini-instruct-q4_k_m"
-      - key: OLLAMA_EMBED_MODEL
-        value: "nomic-embed-text:latest"
-      - key: MINIO_ENDPOINT
-        value: "localhost:9000"
-      - key: MINIO_ACCESS_KEY
-        value: "vietheritage"
-      - key: MINIO_SECRET_KEY
-        value: "vietheritage_prod"
-      - key: MINIO_BUCKET
-        value: "vietheritage-assets"
-      - key: MINIO_SECURE
-        value: "false"
-      - key: ETHNOMUSIC_MODEL_PATH
-        value: "/app/models/ethnomusic_net_int8.onnx"
+      - key: OPENROUTER_API_KEY
+        sync: false  # Set this in Render dashboard
+      - key: OPENROUTER_MODEL
+        value: "meta-llama/llama-3.2-3b-instruct:free"
+      - key: OPENROUTER_EMBED_MODEL
+        value: "nomic/nomic-embed-text-v1:0"
       - key: CORS_ORIGINS
         value: "https://vietheritage.netlify.app,https://vietheritage.vercel.app"
       - key: SENTRY_DSN

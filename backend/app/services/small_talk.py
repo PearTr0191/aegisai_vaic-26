@@ -1,5 +1,5 @@
 """
-Small talk service — cheeky responses via Gemma3:270M (Ollama) with rule-based fallback.
+Small talk service — cheeky responses via OpenRouter (cloud LLM) with rule-based fallback.
 
 Only triggered for off-topic messages (greetings, weather, jokes, etc.).
 Always steers the conversation back to the heritage MCQ survey.
@@ -9,61 +9,22 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any
+from typing import Any, Optional
+from app.services.openrouter_service import OpenRouterService
 
 logger = logging.getLogger(__name__)
-
-# Try to import ollama; if not available, use rule-based fallback
-try:
-    import ollama
-    _OLLAMA_AVAILABLE = True
-except ImportError:
-    _OLLAMA_AVAILABLE = False
-    logger.warning("ollama package not installed — small talk will use rule-based fallback")
 
 
 class SmallTalkService:
     """
     Handles off-topic messages with cheeky responses and steers back to the survey.
-    Uses Gemma3:270M via Ollama if available; otherwise rule-based templates.
+    Uses OpenRouter for generation; falls back to rule-based templates.
     """
 
-    def __init__(self, model: str = "gemma3:270m", ollama_host: str = "http://localhost:11434"):
-        self.model = model
-        self.ollama_host = ollama_host
-        self._available: bool | None = None  # lazy check
+    def __init__(self, openrouter_client: Optional[OpenRouterService] = None):
+        self.openrouter = openrouter_client or OpenRouterService()
 
-    def _check_available(self) -> bool:
-        """Check if Ollama and the model are available."""
-        if not _OLLAMA_AVAILABLE:
-            return False
-        if self._available is not None:
-            return self._available
-        try:
-            # Quick health check
-            import httpx
-            r = httpx.get(f"{self.ollama_host}/api/tags", timeout=2.0)
-            if r.status_code == 200:
-                models = r.json().get("models", [])
-                model_names = [m.get("name", "") for m in models]
-                # Check if our model (or a close variant) is available
-                self._available = any(
-                    self.model in name or "gemma3" in name
-                    for name in model_names
-                )
-                if not self._available:
-                    logger.info(
-                        "Model %s not found in Ollama. Available: %s. Using fallback.",
-                        self.model, model_names,
-                    )
-            else:
-                self._available = False
-        except Exception as e:
-            logger.info("Ollama not available: %s. Using rule-based fallback.", e)
-            self._available = False
-        return self._available
-
-    def respond(self, message: str, lang: str = "vi") -> dict[str, Any]:
+    async def respond(self, message: str, lang: str = "vi") -> dict[str, Any]:
         """
         Generate a cheeky response to an off-topic message and steer back to the survey.
 
@@ -75,18 +36,19 @@ class SmallTalkService:
                 "steer_to_survey": bool,  # always True
             }
         """
-        # Try Ollama first
-        if self._check_available():
-            try:
-                return self._ollama_respond(message, lang)
-            except Exception as e:
-                logger.warning("Ollama small talk failed: %s. Using fallback.", e)
+        # Try OpenRouter first
+        try:
+            result = await self._openrouter_respond(message, lang)
+            if result:
+                return result
+        except Exception as e:
+            logger.warning("OpenRouter small talk failed: %s. Using fallback.", e)
 
         # Rule-based fallback
         return self._rule_based_respond(message, lang)
 
-    def _ollama_respond(self, message: str, lang: str) -> dict[str, Any]:
-        """Use Ollama Gemma3:270M for small talk."""
+    async def _openrouter_respond(self, message: str, lang: str) -> Optional[dict[str, Any]]:
+        """Use OpenRouter for small talk."""
         if lang == "vi":
             system_prompt = (
                 "Bạn là người hướng dẫn bảo tàng vui vẻ, hài hước. "
@@ -107,33 +69,20 @@ class SmallTalkService:
             )
 
         try:
-            # Configure ollama client with custom host if needed
-            ollama_client = ollama.Client(host=self.ollama_host)
-            response = ollama_client.chat(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": message},
-                ],
-                options={
-                    "temperature": 0.8,
-                    "num_predict": 60,  # max tokens
-                    "top_p": 0.9,
-                },
+            response = await self.openrouter.generate(
+                prompt=f"{system_prompt}\n\nUser: {message}",
             )
-            text = response.get("message", {}).get("content", "").strip()
-            if not text:
-                return self._rule_based_respond(message, lang)
-
-            return {
-                "text": text,
-                "lang": lang,
-                "confidence": 0.5,
-                "steer_to_survey": True,
-            }
+            if response:
+                return {
+                    "text": response.strip(),
+                    "lang": lang,
+                    "confidence": 0.5,
+                    "steer_to_survey": True,
+                }
         except Exception as e:
-            logger.warning("Ollama chat error: %s", e)
-            raise
+            logger.warning("OpenRouter generation error: %s", e)
+
+        return None
 
     def _rule_based_respond(self, message: str, lang: str) -> dict[str, Any]:
         """Rule-based cheeky responses with survey steering."""

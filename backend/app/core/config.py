@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./vietheritage.db"
     DATABASE_URL_PROD: str = "sqlite+aiosqlite:///./vietheritage.db"
 
-    # Ollama (local)
+    # Ollama (local) - DEPRECATED: Using OpenRouter for cloud LLM
     OLLAMA_HOST: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "phi3.5:3.8b-mini-instruct-q4_k_m"
     OLLAMA_EMBED_MODEL: str = "nomic-embed-text:latest"
@@ -28,9 +28,9 @@ class Settings(BaseSettings):
     # Small talk model (lightweight, for off-topic chat only)
     SMALL_TALK_MODEL: str = "gemma3:270m"
 
-    # OpenRouter (for $0-cost cloud LLM)
+    # OpenRouter (for $0-cost cloud LLM) - PRIMARY after Ollama removal
     OPENROUTER_API_KEY: str = ""
-    OPENROUTER_MODEL: str = "microsoft/phi-3-mini-128k-instruct:free"
+    OPENROUTER_MODEL: str = "meta-llama/llama-3.2-3b-instruct:free"
     OPENROUTER_EMBED_MODEL: str = "nomic/nomic-embed-text-v1:0"
 
     # MinIO

@@ -6,7 +6,9 @@ the knowledge base scope.
 """
 import pytest
 from uuid import UUID
+from unittest.mock import AsyncMock, MagicMock
 from app.services.rag_lite import HeritageRAGLite
+from app.services.openrouter_service import OpenRouterService
 
 
 # Trick questions that should NOT match any knowledge chunks
@@ -44,27 +46,23 @@ async def test_trick_questions_return_unknown_response():
     Test that trick questions outside heritage scope return unknown response.
     These should not match any knowledge chunks in the database.
     """
-    # Use a mock session and ollama client
-    from unittest.mock import AsyncMock, MagicMock
-    
     mock_db = AsyncMock()
-    mock_ollama = AsyncMock()
-    
-    # Mock persona
+    mock_openrouter = AsyncMock(spec=OpenRouterService)
+
     mock_persona = MagicMock()
     mock_persona.id = "artisan-quan-ho-01"
     mock_persona.name_vi = "Bà Nguyễn Thị Hương"
     mock_persona.region = "Bắc Ninh"
     mock_persona.specialty = "quan_ho_singer"
-    
+
     # Mock empty results for keyword search (no matches)
     mock_db.execute = AsyncMock()
     mock_db.execute.return_value.scalars = MagicMock()
     mock_db.execute.return_value.scalars.return_value.all = MagicMock(return_value=[])
     mock_db.execute.return_value.scalar_one_or_none = MagicMock(return_value=mock_persona)
-    
-    rag = HeritageRAGLite(mock_db, mock_ollama)
-    
+
+    rag = HeritageRAGLite(mock_db, mock_openrouter)
+
     # Test Vietnamese trick questions
     for question in TRICK_QUESTIONS_VI:
         response = await rag.ask(
@@ -84,17 +82,15 @@ async def test_known_questions_return_valid_response():
     Test that legitimate heritage questions return valid responses.
     These should match knowledge chunks in the database.
     """
-    from unittest.mock import AsyncMock, MagicMock
-    
     mock_db = AsyncMock()
-    mock_ollama = AsyncMock()
-    
+    mock_openrouter = AsyncMock(spec=OpenRouterService)
+
     mock_persona = MagicMock()
     mock_persona.id = "artisan-quan-ho-01"
     mock_persona.name_vi = "Bà Nguyễn Thị Hương"
     mock_persona.region = "Bắc Ninh"
     mock_persona.specialty = "quan_ho_singer"
-    
+
     # Mock knowledge chunk
     mock_chunk = MagicMock()
     mock_chunk.id = "chunk-quan-ho-history-1"
@@ -102,24 +98,24 @@ async def test_known_questions_return_valid_response():
     mock_chunk.content_en = "Quan họ formed in the 13th century in Kinh Bac."
     mock_chunk.source_type = "unesco"
     mock_chunk.category = "history"
-    
+
     # Mock results
     mock_db.execute = AsyncMock()
     mock_db.execute.return_value.scalars = MagicMock()
     mock_db.execute.return_value.scalars.return_value.all = MagicMock(return_value=[mock_chunk])
     mock_db.execute.return_value.scalar_one_or_none = MagicMock(return_value=mock_persona)
-    
-    # Mock ollama response
-    mock_ollama.generate = AsyncMock(return_value={"response": "Quan họ formed in the 13th century as per UNESCO records."})
-    
-    rag = HeritageRAGLite(mock_db, mock_ollama)
-    
+
+    # Mock openrouter response
+    mock_openrouter.generate = AsyncMock(return_value="Quan họ formed in the 13th century as per UNESCO records.")
+
+    rag = HeritageRAGLite(mock_db, mock_openrouter)
+
     response = await rag.ask(
         question="Quan họ bắt nguồn từ đâu?",
         persona_id=UUID("artisan-quan-ho-01"),
         lang="vi"
     )
-    
+
     # Should have some content
     assert response.text is not None
     assert len(response.text) > 0

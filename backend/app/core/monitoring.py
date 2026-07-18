@@ -40,14 +40,14 @@ class ModelHealthChecker:
     """Health checks for ML models and external services"""
 
     @staticmethod
-    async def check_ollama() -> dict:
+    async def check_openrouter() -> dict:
+        """Check OpenRouter API availability"""
         import httpx
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                resp = await client.get(f"{settings.OLLAMA_HOST}/api/tags")
+                resp = await client.get("https://openrouter.ai/api/v1/models")
                 if resp.status_code == 200:
-                    models = resp.json().get("models", [])
-                    return {"status": "healthy", "models": len(models)}
+                    return {"status": "healthy", "configured": bool(settings.OPENROUTER_API_KEY)}
                 return {"status": "unhealthy", "error": f"HTTP {resp.status_code}"}
         except Exception as e:
             return {"status": "unhealthy", "error": str(e)}
@@ -74,13 +74,13 @@ class ModelHealthChecker:
 
     @staticmethod
     async def check_all() -> dict:
-        ollama, db, onnx = await asyncio.gather(
-            ModelHealthChecker.check_ollama(),
+        openrouter, db, onnx = await asyncio.gather(
+            ModelHealthChecker.check_openrouter(),
             ModelHealthChecker.check_database(),
             ModelHealthChecker.check_onnx_model(),
         )
-        all_healthy = all(c["status"] == "healthy" for c in [ollama, db, onnx])
+        all_healthy = all(c["status"] == "healthy" for c in [openrouter, db, onnx])
         return {
             "status": "healthy" if all_healthy else "degraded",
-            "checks": {"ollama": ollama, "database": db, "onnx_model": onnx},
+            "checks": {"openrouter": openrouter, "database": db, "onnx_model": onnx},
         }

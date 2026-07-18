@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import ollama
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.artisan import ArtisanPersona, KnowledgeChunk
 from app.schemas.chat import ArtisanAskRequest, ArtisanResponse, Citation
 from app.services.rag_lite import HeritageRAGLite
+from app.services.openrouter_service import OpenRouterService
 from uuid import UUID
 
 router = APIRouter(prefix="/artisan", tags=["artisan"])
@@ -24,8 +24,9 @@ async def ask_artisan(
     if not persona:
         raise HTTPException(status_code=404, detail="Artisan persona not found")
 
-    # Use RAG-lite service with Ollama client
-    ollama_client = ollama.AsyncClient(host=settings.OLLAMA_HOST)
-    rag = HeritageRAGLite(db, ollama_client)
+    # Use RAG-lite service with OpenRouter (primary)
+    openrouter_client = OpenRouterService()
+    rag = HeritageRAGLite(db, openrouter_client)
     response = await rag.ask(request.question, UUID(request.persona_id), request.lang)
+    await openrouter_client.close()
     return response
