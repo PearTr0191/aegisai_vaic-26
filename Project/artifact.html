@@ -513,27 +513,7 @@
 <!-- HERO — filled by JS -->
 <div id="hero-section"></div>
 
-<!-- 3D MODEL VIEWER — shown/hidden by button -->
-<div class="model-section" id="model-section">
-  <div class="model-close-bar">
-    <button class="model-close-btn" id="model-close-btn">✕ <span id="lbl-close-3d">Đóng mô hình</span></button>
-  </div>
-  <div class="model-viewer">
-    <iframe id="model-iframe"
-            frameborder="0"
-            allowfullscreen
-            mozallowfullscreen="true"
-            webkitallowfullscreen="true"
-            allow="autoplay; fullscreen; xr-spatial-tracking"
-            xr-spatial-tracking
-            execution-while-out-of-viewport
-            execution-while-not-rendered
-            web-share
-            src="about:blank">
-    </iframe>
-  </div>
-  <div class="model-attribution" id="model-attribution"></div>
-</div>
+
 
 <!-- CONTENT — filled by JS -->
 <div class="content-wrap" id="content-section" style="display:none">
@@ -655,12 +635,13 @@ const ERA_CONFIG = {
   century_10_20: { color:'#4caf84', vi:'Thế kỷ X–XIX',        en:'10th–19th Century' },
   modern_1945:   { color:'#5a8a9f', vi:'1900–Nay',            en:'1900–Present' },
 };
-const TYPE_CONFIG = {
-  tools:    { vi:'Công cụ & Vũ khí',       en:'Tools & Weapons' },
-  religious:{ vi:'Tôn giáo',               en:'Religious' },
-  art:      { vi:'Nghệ thuật & Trang trí', en:'Art & Decoration' },
-  academic: { vi:'Học thuật & Văn bản',    en:'Academic & Documents' },
-};
+    const TYPE_CONFIG = {
+      instrumental: { vi:'Âm nhạc & Nhạc cụ',      en:'Instrumental Music' },
+      singings:     { vi:'Hát & Dân ca',           en:'Singing & Folk Songs' },
+      belief:       { vi:'Tín ngưỡng & Lễ nghi',    en:'Belief & Ritual' },
+      festival:     { vi:'Lễ hội dân gian',        en:'Folk Festival' },
+      craft:        { vi:'Nghề thủ công truyền thống', en:'Traditional Craft' },
+    };
 const ERA_OVERRIDES = { 82:'century_10_20',87:'century_10_20',88:'century_10_20',91:'century_10_20' };
 
 function getEra(t) {
@@ -828,16 +809,7 @@ function renderArtifact() {
           </svg>
           ${t.location}
         </div>
-        ${t.model3d ? `
-        <button class="btn-3d" id="btn-3d">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-            <line x1="12" y1="22.08" x2="12" y2="12"/>
-          </svg>
-          <span id="btn-3d-text">${lang === 'vi' ? 'Xem mô hình 3D' : 'View 3D Model'}</span>
-        </button>` : ''}
+
         ${t.script ? `
         <button class="btn-script" id="btn-script">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
