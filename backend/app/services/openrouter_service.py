@@ -15,11 +15,12 @@ class OpenRouterService:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or settings.OPENROUTER_API_KEY
+        referer = settings.RENDER_EXTERNAL_URL or "https://aegisai-vaic-26.onrender.com"
         self.client = httpx.AsyncClient(
             base_url=self.API_BASE,
             headers={
                 "Authorization": f"Bearer {self.api_key}",
-                "HTTP-Referer": "https://vietheritage.netlify.app",
+                "HTTP-Referer": referer,
                 "X-Title": "VietHeritage Map",
             },
         )

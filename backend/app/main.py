@@ -60,22 +60,13 @@ else:
         allow_headers=["*"],
     )
 
-# Serve React frontend from /static (built in Dockerfile)
+# Serve Project frontend (with chatbot) from /static
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 if STATIC_DIR.exists():
     app.mount(
         "/",
         StaticFiles(directory=str(STATIC_DIR), html=True),
-        name="react-frontend",
-    )
-
-# Serve legacy Project/ frontend for unified local origin
-PROJECT_DIR = Path(__file__).resolve().parents[2] / "Project"
-if PROJECT_DIR.exists():
-    app.mount(
-        "/legacy",
-        StaticFiles(directory=str(PROJECT_DIR), html=True),
-        name="legacy-frontend",
+        name="project-frontend",
     )
 
 # Health check

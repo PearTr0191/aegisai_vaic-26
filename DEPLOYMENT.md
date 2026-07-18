@@ -1,104 +1,112 @@
 # Deployment Guide - VietHeritage
 
-## Migration to OpenRouter Complete
+## 🚀 Deploy to Render (OpenRouter + Chatbot)
 
-The backend has been migrated from local Ollama to OpenRouter cloud LLM for production deployment.
+The backend uses **OpenRouter** for cloud LLM inference ($0-cost tier available). The chatbot is served from the legacy frontend and connects to the FastAPI backend for chat functionality.
 
-### Changes Made:
-1. **config.py** - Updated `OPENROUTER_MODEL` to `meta-llama/llama-3.2-3b-instruct:free`
-2. **embedding_service.py** - Now uses OpenRouter for embeddings (removed Ollama)
-3. **rag_lite.py** - Uses OpenRouter as primary LLM provider
-4. **small_talk.py** - Uses OpenRouter for small talk (with rule-based fallback)
-5. **artisan.py** - Updated to use OpenRouterService
-6. **chat.py** - Made small_talk respond async
-7. **monitoring.py** - Updated to check OpenRouter instead of Ollama
-8. **Dockerfile.prod** - Removed Ollama, simplified for Render
-9. **render.yaml** - Removed Ollama/MinIO dependencies, added OPENROUTER_API_KEY
-10. **pyproject.toml / requirements.txt** - Removed `ollama` dependency
-11. **start.sh** - Removed Ollama startup
+### Key Features
+- Chatbot widget in `Project/index.html` uses `window.location.origin` for API endpoint (works in production)
+- Project frontend is served at root `/` in production
 
----
+### Pre-deployment Checklist
 
-## 🚀 Deploy to Production
+- [x] `Dockerfile` - Multi-stage build with frontend + backend
+- [x] `render.yaml` - Configured for free-tier Render deployment
+- [x] `backend/app/data/treasures.json` - Heritage data loaded at runtime
+- [x] `backend/.env.example` - Environment variable template
 
-### Step 1: Get OpenRouter API Key
-1. Go to [openrouter.ai](https://openrouter.ai)
-2. Sign up and get $1 credit (enough for free LLM usage)
-3. Copy your API key
+### Step 1: Configure Environment Variables
 
-### Step 2: Deploy Backend to Render
+Add your OpenRouter API key to Render:
 
-```bash
-# Push to GitHub
-git add .
-git commit -m "feat: migrate to OpenRouter for cloud deployment"
-git push origin main
-```
+1. Go to [OpenRouter](https://openrouter.ai) and get a free API key
+2. In Render dashboard, add environment variable:
+   - **Key**: `OPENROUTER_API_KEY`
+   - **Value**: Your API key from OpenRouter
+
+### Step 2: Deploy to Render
 
 1. Go to [Render Dashboard](https://dashboard.render.com)
 2. Create New → Web Service
-3. Connect your GitHub repo
-4. Set environment variables:
-   - `OPENROUTER_API_KEY` = your-api-key
-   - `DATABASE_URL` = (auto-set by Render Postgres)
-   - `IS_PRODUCTION` = true
-5. Deploy!
+3. Connect your GitHub repo (`PearTr0191/aegisai_vaic-26`)
+4. Set configuration:
+   - **Name**: `vietheritage` (or custom name)
+   - **Region**: Singapore
+   - **Plan**: Free
+   - **Dockerfile Path**: `Dockerfile`
+   - **Docker Context**: `.`
 
-### Step 3: Deploy Frontend to Netlify
+### Step 3: Verify Deployment
 
-```bash
-# In frontend directory
-npm run build
-# Drag dist/ to Netlify dashboard or connect repo
-```
+After deployment, check:
+- `https://aegisai-vaic-26.onrender.com/health` - Should return `{"status": "healthy"}`
+- `https://aegisai-vaic-26.onrender.com/api/v1/chat` - Chat endpoint available
 
-1. Go to [Netlify](https://app.netlify.com)
-2. Link your GitHub repo
-3. Set build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. Add environment variable:
-   - `VITE_API_URL` = https://vietheritage-api.onrender.com
+### Step 4: Test the Chatbot
 
-### Step 4: Update CORS (if needed)
-
-In Render dashboard, update `CORS_ORIGINS` to include your Netlify URL.
+1. Visit `https://aegisai-vaic-26.onrender.com/` (homepage with chatbot)
+2. Click the "AI Bảo tàng Số" button to open the chat widget
+3. The chatbot should connect automatically and show "Ready" status
 
 ---
 
-## 📡 Alternative: Cloudflare Tunnel (Development)
-
-If you want to keep local dev and just expose it:
+## 🔧 Local Development
 
 ```bash
-# Install cloudflared
-# Run:
-cloudflared tunnel --url http://localhost:8000
-# Then update frontend vite.config.ts with the tunnel URL
-```
+# Setup
+cd backend
+cp .env.example .env
+# Edit .env with OPENROUTER_API_KEY if using LLM features
 
----
+# Install dependencies
+uv sync
 
-## 🔧 Testing Locally
-
-```bash
-# Create .env from .env.example
-cp backend/.env.example backend/.env
-
-# Edit backend/.env with your OpenRouter API key
-# Run locally:
+# Start API (with uvicorn)
 uv run uvicorn app.main:app --reload
 ```
 
+The chatbot widget expects the backend at `http://localhost:8000`.
+
 ---
 
-## Architecture Changes
+## Architecture
 
-### Before (Local Only):
 ```
-[Frontend] → [FastAPI + Ollama + Phi-3.5 + MinIO + Postgres]
+[FastAPI on Render (Dockerfile)]
+├── Project frontend (chatbot at /)
+│   └── Chatbot widget → /api/v1/chat
+├── SQLite database (or Postgres via DATABASE_URL)
+└── OpenRouter API (cloud LLM)
 ```
 
-### After (Cloud Ready):
-```
-[Frontend on Netlify] → [FastAPI on Render + OpenRouter API + SQLite]
+---
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/api/v1/chat` | POST | Chat with heritage knowledge |
+| `/api/v1/chat/voice` | POST | Voice chat with transcription |
+| `/api/v1/recommend` | POST | MCQ heritage recommendations |
+| `/api/v1/recommend/questions` | GET | Get MCQ questions |
+
+---
+
+## Troubleshooting
+
+**Chatbot shows "Offline" status:**
+- Verify `OPENROUTER_API_KEY` is set in Render dashboard
+- Check Render logs for errors
+
+**Build fails:**
+- Ensure `backend/uv.lock` exists (run `uv lock` in backend/)
+- Check that all required files are committed to git
+
+**Chatbot not loading:**
+- Verify health check passes at `/health`
+- Check browser console for CORS or connection errors
+
+**No LLM response:**
+- The grounded chat service (`grounded_chat_service`) works without API key
+- Small talk requires `OPENROUTER_API_KEY`

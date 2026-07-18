@@ -1,13 +1,5 @@
-# Production Dockerfile - Full Stack on Render
-# Uses OpenRouter for LLM inference, serves React frontend
-
-# === Frontend Build Stage ===
-FROM node:20-alpine AS frontend
-WORKDIR /frontend
-COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm ci --omit=dev
-COPY frontend/ .
-RUN npm run build
+# Production Dockerfile - VietHeritage Chatbot on Render
+# Uses OpenRouter for LLM inference, serves Project frontend
 
 # === Backend Build Stage ===
 FROM python:3.11-slim AS builder
@@ -24,7 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy dependency files
-COPY backend/pyproject.toml backend/uv.lock* ./
+COPY backend/pyproject.toml ./
+COPY backend/uv.lock* ./
 WORKDIR /app
 RUN uv sync --frozen --no-dev
 
@@ -45,15 +38,13 @@ RUN useradd --create-home --shell /bin/bash appuser
 COPY --from=builder /app/.venv /app/.venv
 
 # Copy backend application code
-COPY --chown=appuser:appuser backend/ /app/backend/
 COPY --chown=appuser:appuser backend/app /app/app
 
-# Copy frontend build
+# Copy Project frontend (chatbot at root)
 RUN mkdir -p /app/static
-COPY --from=frontend /frontend/dist /app/static
+COPY --chown=appuser:appuser Project/ /app/static/
 
-# Copy data files
-COPY --chown=appuser:appuser backend/app/data /app/app/data
+# Copy data files (already included in backend/app copy)
 
 # Switch to non-root user
 USER appuser
