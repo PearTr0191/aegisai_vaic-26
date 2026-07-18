@@ -1,13 +1,21 @@
 """
-Unified Chat API - merges ArtifactBot (artifact archive) with RAG-lite (intangible heritage)
-Supports both text and voice input for heritage queries.
+Unified Chat API — routes between grounded retrieval and small talk.
+
+- Heritage questions → GroundedChatService (cites treasures.json only)
+- Off-topic messages → SmallTalkService (Gemma3:270M via Ollama, steers to survey)
+- Voice input → transcribe then forward to text chat
 """
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
 import tempfile
 import os
+import logging
 
+from app.services.grounded_chat import grounded_chat_service
+from app.services.small_talk import small_talk_service
+
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
@@ -20,6 +28,9 @@ class ChatResponse(BaseModel):
     response: str
     confidence: float = 1.0
     sources: List[str] = []
+    is_small_talk: bool = False
+    steer_to_survey: bool = False
+    matched_treasures: List[dict] = []
 
 
 def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
@@ -28,7 +39,6 @@ def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
         from faster_whisper import WhisperModel
         from app.core.config import settings
 
-        # Use cached model or download
         model_path = settings.WHISPER_MODEL_PATH
         if model_path.startswith("openai/"):
             model_name = model_path.replace("openai/", "")
@@ -37,7 +47,6 @@ def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
 
         model = WhisperModel(model_name, device="cpu", compute_type="int8")
 
-        # Write to temp file for processing
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
@@ -49,90 +58,74 @@ def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
         finally:
             os.unlink(tmp_path)
     except Exception:
-        # Fallback: return empty string to trigger text fallback
         return ""
 
 
-# Voice transcription via Whisper (requires faster-whisper)
 @router.post("/voice", response_model=ChatResponse)
 async def transcribe_and_chat(file: UploadFile = File(...)):
-    """
-    Accept voice input (audio file), transcribe to text using Whisper, then chat.
-    """
+    """Accept voice input, transcribe, then chat."""
     if not file.content_type or not file.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Audio file required")
 
     audio_bytes = await file.read()
-
-    # Transcribe with faster-whisper
     transcript = _transcribe_audio_faster_whisper(audio_bytes)
 
     if transcript:
-        # Forward to text chat endpoint
         return await chat(ChatRequest(message=transcript, lang="vi"))
 
-    # Fallback if transcription fails
     return ChatResponse(
-        response="Xin lá»—i, tÃ´i chÆ°a thá»ƒ xá»­ lÃ½ Ã¢m thanh. Vui lÃ²ng viáº¿t tin nháº¯n.",
+        response="Xin lỗi, tôi chưa thể xử lý âm thanh. Vui lòng viết tin nhắn.",
         confidence=0.0,
     )
 
 
-# Text chat using LocalChatService (no external LLM required)
 @router.post("", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     """
-    Chat endpoint for heritage queries.
-    Uses LocalChatService for intangible heritage (no external LLM required).
+    Chat endpoint with intent routing:
+    - Heritage questions → grounded retrieval (cites treasures.json)
+    - Off-topic → small talk (steers to MCQ survey)
     """
     message = request.message.strip()
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
 
-    # Use local chat service (no external LLM required)
-    try:
-        from app.services.local_chat import LocalChatService
-        from app.core.database import async_session_maker
+    lang = request.lang if request.lang in ("vi", "en") else "vi"
 
-        async with async_session_maker() as db:
-            chat = LocalChatService(db)
-            result = await chat.ask(message, persona_id="e7ce269d-d116-5334-99b9-66062d5f55ed", lang=request.lang)
-
-            return ChatResponse(
-                response=result.get("text", ""),
-                confidence=result.get("confidence", 0.0),
-                sources=[c.get("source_type", "") for c in result.get("citations", [])],
-            )
-    except Exception as e:
-        # Log error
-        import logging
-        logging.error(f"Chat error: {e}")
-        pass
-
-    # Fallback response
-    if request.lang == "vi":
+    # Route: check if off-topic
+    if small_talk_service.is_off_topic(message):
+        # Small talk path
+        result = small_talk_service.respond(message, lang)
         return ChatResponse(
-            response="Xin lá»—i, tÃ´i khÃ´ng cÃ³ Ä‘á»§ thÃ´ng tin Ä‘á»ƒ tráº£ lá»i cÃ¢u há»i nÃ y.",
-            confidence=0.0,
+            response=result["text"],
+            confidence=result["confidence"],
             sources=[],
-        )
-    else:
-        return ChatResponse(
-            response="Sorry, I don't have enough information to answer this question.",
-            confidence=0.0,
-            sources=[],
+            is_small_talk=True,
+            steer_to_survey=result.get("steer_to_survey", True),
+            matched_treasures=[],
         )
 
+    # Grounded retrieval path (heritage questions)
+    result = grounded_chat_service.ask(message, lang)
+    return ChatResponse(
+        response=result["text"],
+        confidence=result["confidence"],
+        sources=[c.get("source", "treasures.json") for c in result.get("citations", [])],
+        is_small_talk=False,
+        steer_to_survey=False,
+        matched_treasures=result.get("matched_treasures", []),
+    )
 
-# Voice grading endpoint - compare user recording to reference sample
+
+# Voice grading endpoint (preserved from original)
 class VoiceGradeRequest(BaseModel):
-    genre: str  # "quan_ho", "ca_tru", etc.
+    genre: str
     lat: float
     lng: float
 
 
 class VoiceGradeResponse(BaseModel):
-    grade: float  # 0.0 to 1.0 similarity score
+    grade: float
     feedback_vi: str
     feedback_en: str
     detected_techniques: List[str] = []
@@ -143,10 +136,7 @@ async def grade_voice_recording(
     request: VoiceGradeRequest,
     file: UploadFile = File(...),
 ):
-    """
-    Grade user's singing attempt against reference sample.
-    Simple pitch similarity for placeholder implementation.
-    """
+    """Grade user's singing attempt against reference sample."""
     import numpy as np
     import librosa
 
@@ -156,7 +146,6 @@ async def grade_voice_recording(
     audio_bytes = await file.read()
 
     try:
-        # Load user audio
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
@@ -164,7 +153,6 @@ async def grade_voice_recording(
         y_user, sr_user = librosa.load(tmp_path, sr=None)
         os.unlink(tmp_path)
 
-        # Get pitch contour (simplified grading)
         f0_user, voiced_flag, _ = librosa.pyin(
             y_user,
             fmin=float(librosa.note_to_hz("C2")),
@@ -172,22 +160,19 @@ async def grade_voice_recording(
             sr=sr_user,
         )
 
-        # Placeholder: use a simple metric (pitch variance + voiced ratio)
         voiced_ratio = float(voiced_flag.mean()) if len(voiced_flag) > 0 else 0.0
         pitch_variance = float(np.var(f0_user[voiced_flag])) if np.any(voiced_flag) else 0.0
 
-        # Normalize to grade (0-1)
         grade = min(1.0, voiced_ratio * 0.5 + min(pitch_variance / 1000, 0.5))
 
-        # Simple feedback based on grade
         if grade > 0.7:
-            feedback_vi = "Giá»ng hÃ¡t tá»‘t! Báº¡n Ä‘Ã£ báº¯t Ä‘áº§u náº¯m báº¯t Ä‘Æ°á»£c báº£n sáº¯c ca trÃ¹."
-            feedback_en = "Good singing! You're beginning to grasp the essence of ca trÃ¹."
+            feedback_vi = "Giọng hát tốt! Bạn đã bắt đầu nắm bắt được bản sắc ca trù."
+            feedback_en = "Good singing! You're beginning to grasp the essence of ca trù."
         elif grade > 0.4:
-            feedback_vi = "Cáº§n luyá»‡n táº­p thÃªm. HÃ£y chÃº Ã½ vÃ o hÃ²a Ã¢m vÃ  ngá»¯ cáº£nh."
+            feedback_vi = "Cần luyện tập thêm. Hãy chú ý vào hòa âm và ngữ cảnh."
             feedback_en = "Needs practice. Pay attention to ornamentation and context."
         else:
-            feedback_vi = "HÃ£y há»c tá»« nghá»‡ nhÃ¢n vÃ  luyá»‡n táº­p ká»¹ hÆ¡n. TÃ´i cÃ³ thá»ƒ giÃºp gÃ¬?"
+            feedback_vi = "Hãy học từ nghệ nhân và luyện tập kỹ hơn. Tôi có thể giúp gì?"
             feedback_en = "Learn from the artisan and practice more. How can I help?"
 
         return VoiceGradeResponse(
