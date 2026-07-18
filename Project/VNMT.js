@@ -766,12 +766,12 @@ function showProvinceModal(provinceName) {
   document.getElementById('province-modal-content').innerHTML = html;
   modal.classList.add('visible');
 
-  /* wire up item rows → open the detail modal */
+  /* wire up item rows → navigate to artifact.html */
   modal.querySelectorAll('.province-item').forEach(row => {
     row.addEventListener('click', () => {
       const id = parseInt(row.dataset.id, 10);
       closeProvinceModal();
-      activateItem(id);
+      window.location.href = `artifact.html?id=${id}`;
     });
   });
 }

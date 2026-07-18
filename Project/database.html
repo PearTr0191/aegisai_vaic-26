@@ -554,7 +554,7 @@ function renderPage(page) {
       const nameMain = lang === 'vi' ? t.name : t.english;
       const nameSub  = lang === 'vi' ? t.english : t.name;
       return `
-        <tr onclick="window.location='VNMT.html?status=${status}'"
+        <tr onclick="window.location='artifact.html?id=${t.id}'"
             style="cursor:pointer"
             title="${nameMain}">
           <td class="td-no">${start + i + 1}</td>
