@@ -725,7 +725,7 @@ function showProvinceModal(provinceName) {
             <span style="color:${genreColor(item)}">${genreLabel(genre,'short')}</span>
           </div>
         </div>
-        <span class="province-item-cta">${t('pieCta')}</span>
+        <button class="province-item-cta" type="button">${t('pieCta')}</button>
       </div>`;
   }).join('');
 
