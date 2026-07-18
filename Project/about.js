@@ -30,8 +30,8 @@ const ABOUT_META = {
 // ── Intro section ────────────────────────────────────────────────
 const INTRO_CONTENT = {
   heading: {
-    vi: 'AegisAI · VietHeritage không chỉ là một trang web — đây là <strong class="highlight">bảo tàng số tích hợp AI</strong> lưu trữ và phục dựng 17 di sản văn hóa phi vật thể (gồm 16 di sản được UNESCO ghi danh/bảo vệ khẩn cấp và 1 di sản phi vật thể quốc gia) trải dài trên 27 tỉnh thành của Việt Nam.',
-    en: 'AegisAI · VietHeritage is not just a website — it is an <strong class="highlight">AI-powered digital museum</strong> archiving and reviving 17 intangible cultural heritages (including 16 UNESCO-inscribed or urgently safeguarded heritages and 1 national intangible heritage) spanning 27 provinces across Vietnam.'
+    vi: 'AegisAI · VietHeritage không chỉ là một trang web - đây là <strong class="highlight">bảo tàng số tích hợp AI</strong> lưu trữ và phục dựng 16 di sản văn hóa phi vật thể được UNESCO ghi danh trải dài trên 27 tỉnh thành của Việt Nam.',
+    en: 'AegisAI · VietHeritage is not just a website - it is an <strong class="highlight">AI-powered digital museum</strong> archiving and reviving 16 intangible cultural heritages inscribed by UNESCO spanning 27 provinces across Vietnam.'
   },
   paragraph: {
     vi: 'Từ những làn điệu <strong>Quan họ Bắc Ninh đối đáp</strong> đến tiếng <strong>Hò Nghệ Tĩnh</strong> mộc mạc hay nhịp <strong>Cồng chiêng Tây Nguyên</strong> vang vọng, hành trình này kết nối cộng đồng thông qua 5 thể loại cốt lõi (Âm nhạc, Hát dân ca, Tín ngưỡng, Lễ hội và Nghề thủ công). Dự án được phát triển với ba sứ mệnh:',
@@ -45,8 +45,8 @@ const INTRO_CONTENT = {
         en: 'Systematic Archiving'
       },
       desc: {
-        vi: 'Tập trung các nguồn tư liệu thực địa, âm thanh gốc và thông tin học thuật của 17 di sản phi vật thể cũng như danh mục 357 Bảo vật Quốc gia lên một giao diện tương tác trực quan.',
-        en: 'Centralize field data, original audio recordings, and academic research of 17 intangible heritages and the 357 National Treasures inventory into an intuitive interactive interface.'
+        vi: 'Tập trung các nguồn tư liệu thực địa, âm thanh gốc và thông tin học thuật của 16 di sản phi vật thể lên một giao diện tương tác trực quan.',
+        en: 'Centralize field data, original audio recordings, and academic research of 16 intangible heritages into an intuitive interactive interface.'
       }
     },
     {
@@ -56,7 +56,7 @@ const INTRO_CONTENT = {
         en: 'AI-Powered Interaction'
       },
       desc: {
-        vi: 'Ứng dụng mô hình nhận diện giọng nói và thuật toán so sánh cao độ (pitch-contour pyin) để hỗ trợ người dùng luyện giọng và chấm điểm hát dân ca trực tiếp.',
+        vi: 'Ứng dụng mô hình nhận diện giọng nói và thuật toán so sánh cao độ (pitch-contour) để hỗ trợ người dùng luyện giọng và chấm điểm hát dân ca trực tiếp.',
         en: 'Utilize speech transcription models and pitch-contour algorithms to help users practice traditional singing and receive instant performance feedback.'
       }
     },
@@ -120,8 +120,8 @@ const FEATURES = [
       en: 'Interactive Heritage Map'
     },
     desc: {
-      vi: 'Sử dụng Leaflet hỗ trợ Marker Cluster tìm kiếm và lọc điểm di sản theo thể loại hoặc trạng thái UNESCO, đi kèm biểu đồ thống kê theo tỉnh thành.',
-      en: 'Leaflet map featuring Marker Cluster search and filters by genre or UNESCO status, complete with provincial distribution charts.'
+      vi: 'Tìm kiếm và lọc điểm di sản theo thể loại hoặc trạng thái UNESCO, đi kèm biểu đồ thống kê theo tỉnh thành.',
+      en: 'Search and filter by genre or UNESCO status, complete with provincial distribution charts.'
     }
   },
   {
@@ -136,7 +136,7 @@ const FEATURES = [
     }
   },
   {
-    icon: 'mic',
+    icon: 'music',
     title: {
       vi: 'Luyện tập & Chấm điểm giọng ca',
       en: 'Vocal Practice & Grading'
@@ -157,17 +157,7 @@ const FEATURES = [
       en: 'Supports audio file uploads to extract MFCC features, detect vocal activity (VAD), and run comparisons with the reference sound database.'
     }
   },
-  {
-    icon: 'box',
-    title: {
-      vi: 'Mô hình 3D bảo vật quốc gia',
-      en: '3D National Treasures'
-    },
-    desc: {
-      vi: 'Xem quay 360 độ các hiện vật tiêu biểu như trống đồng Ngọc Lũ, ấn vàng Hoàng đế chi bảo hoặc xe tăng 390 qua trình xem 3D tương tác.',
-      en: 'Interactive 360-degree viewing of prominent artifacts like the Ngọc Lũ drum, Imperial Seal, or Tank 390 via a web-based 3D viewer.'
-    }
-  },
+  
   {
     icon: 'download',
     title: {
@@ -254,8 +244,8 @@ const TEAM = [
       en: 'Seed data ingestion, Knowledge chunking, Prompt tuning'
     },
     desc: {
-      vi: 'Chuẩn bị dữ liệu 17 di sản, phân vùng văn bản (chunking) từ các tài liệu chuẩn, thiết kế hệ thống prompt hạn chế hallucination cho chatbot.',
-      en: 'Prepared data for the 17 heritages, segmented texts into standard knowledge chunks, and optimized system prompts to avoid AI hallucinations.'
+      vi: 'Chuẩn bị dữ liệu 16 di sản, phân vùng văn bản (chunking) từ các tài liệu chuẩn, thiết kế hệ thống prompt hạn chế hallucination cho chatbot.',
+      en: 'Prepared data for the 16 heritages, segmented texts into standard knowledge chunks, and optimized system prompts to avoid AI hallucinations.'
     }
   }
 ];
@@ -280,8 +270,8 @@ const DATA_SOURCES = [
       en: 'Prime Ministerial Decisions'
     },
     desc: {
-      vi: 'Danh mục 357 Bảo vật Quốc gia và các di sản văn hóa phi vật thể được Bộ Văn hóa, Thể thao và Du lịch ghi danh cấp quốc gia.',
-      en: 'The catalog of 357 National Treasures and intangible heritages formally designated at the national level by the MOCST.'
+      vi: 'Danh mục di sản văn hóa phi vật thể được Bộ Văn hóa, Thể thao và Du lịch ghi danh cấp quốc gia.',
+      en: 'The catalog of intangible heritages formally designated at the national level by the MOCST.'
     }
   },
   {
@@ -302,8 +292,8 @@ const DATA_SOURCES = [
       en: 'OpenStreetMap & CartoDB'
     },
     desc: {
-      vi: 'Dữ liệu địa lý phục vụ việc định vị tọa độ địa lý chính xác của 27 tỉnh thành và các vùng di sản liên quan trên bản đồ nền.',
-      en: 'Geographical data providing accurate coordinates for the 27 provinces and related heritage zones on the base map.'
+      vi: 'Dữ liệu địa lý phục vụ việc định vị tọa độ địa lý chính xác vùng di sản liên quan trên bản đồ nền.',
+      en: 'Geographical data providing accurate coordinates for the heritage zones on the base map.'
     }
   }
 ];
@@ -311,18 +301,14 @@ const DATA_SOURCES = [
 // ── Footer CTA ───────────────────────────────────────────────────
 const FOOTER_CTA = {
   title: {
-    vi: 'Bắt đầu hành trình khám phá di sản<br><em>Tìm hiểu 17 di sản phi vật thể và hàng trăm bảo vật quốc gia.</em>',
-    en: 'Begin Your Heritage Journey<br><em>Explore 17 intangible heritages and hundreds of national treasures.</em>'
+    vi: 'Bắt đầu hành trình khám phá di sản<br><em>Tìm hiểu 16 di sản phi vật thể.</em>',
+    en: 'Begin Your Heritage Journey<br><em>Explore 16 intangible heritages.</em>'
   },
   desc: {
     vi: 'Dù bạn là một nhà nghiên cứu, một học sinh hay một người yêu mến âm nhạc truyền thống, AegisAI · VietHeritage cung cấp không gian mở để kết nối và học hỏi.',
     en: 'Whether you are a researcher, a student, or an enthusiast of traditional music, AegisAI · VietHeritage offers an open space to connect and learn.'
   },
   buttons: {
-    map: {
-      vi: 'Mở bản đồ tương tác',
-      en: 'Open Interactive Map'
-    },
     database: {
       vi: 'Xem kho lưu trữ',
       en: 'Browse Archive'
@@ -336,17 +322,13 @@ const NAV_LABELS = {
     home: 'Trang chủ',
     map: 'Bản đồ di sản',
     db: 'Kho lưu trữ',
-    civs: 'Cổ vật 3D',
     about: 'Giới thiệu',
-    mapBtn: 'Mở bản đồ'
   },
   en: {
     home: 'Home',
     map: 'Heritage Map',
     db: 'Archive',
-    civs: '3D Artifacts',
     about: 'About',
-    mapBtn: 'Open Map'
   }
 };
 

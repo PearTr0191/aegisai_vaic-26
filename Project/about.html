@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">Giới thiệu — Bảo Vật Việt</title>
+  <title id="page-title">Giới thiệu — VietHeritage Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -231,10 +231,6 @@
     <div class="lang-toggle">
       <button class="lang-btn" data-lang="vi">VI</button>
       <button class="lang-btn" data-lang="en">EN</button>
-    </div>
-    <a href="VNMT.html" class="nav-map-btn">
-      <span>⊞</span><span id="nav-map-btn-text">Mở bản đồ</span>
-    </a>
   </div>
 </nav>
 
@@ -315,9 +311,6 @@
     <h2 class="footer-cta-title" id="cta-title"></h2>
     <p class="footer-cta-desc" id="cta-desc"></p>
     <div class="footer-cta-buttons">
-      <a href="VNMT.html" class="btn btn-primary" id="cta-map-btn">
-        <span>⊞</span><span id="cta-map-text">Mở bản đồ tương tác</span>
-      </a>
       <a href="database.html" class="btn btn-secondary" id="cta-db-btn">
         <span id="cta-db-text">Xem kho lưu trữ</span>
       </a>
@@ -329,7 +322,7 @@
 <!-- ── FOOTER ── -->
 <footer>
   <span id="foot-copy">© 2026 Bảo vật Quốc gia Việt Nam</span>
-  <span id="foot-data">Dữ liệu: <em>Thủ tướng Chính phủ</em> · Bản đồ: <em>CartoDB / OpenStreetMap</em></span>
+  <span id="foot-data">Dữ liệu: <em>UNESCO</em> · Bản đồ: <em>CartoDB / OpenStreetMap</em></span>
 </footer>
 
 <!-- ── CONTENT DATA ── -->
@@ -447,7 +440,7 @@ function applyLang() {
     setText('nav-civs-link', nav[lang].civs);
     setText('nav-about', nav[lang].about);
     setText('nav-map-btn-text', nav[lang].mapBtn);
-    setText('nav-logo-text', lang === 'vi' ? 'Bảo Vật Việt' : 'Vietnam National Treasures');
+    setText('nav-logo-text', lang === 'vi' ? 'VietHeritage Map' : 'VietHeritage Map');
   }
 
   // Intro
