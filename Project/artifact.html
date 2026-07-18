@@ -241,8 +241,8 @@
     .coord-lbl  { font-size:9px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
     .coord-val  { font-size:12.5px; color:var(--text); font-family:'Merriweather',serif; }
 
-    /* ── 3D MODEL BUTTON ── */
-    .btn-3d {
+    /* ── 3D EXPERIENCE BUTTON ── */
+    .btn-3d-exp {
       display:inline-flex; align-items:center; gap:9px;
       background:rgba(201,168,76,0.12); color:#c9a84c;
       border:1.5px solid rgba(201,168,76,0.45); border-radius:5px;
@@ -251,9 +251,9 @@
       font-family:'Merriweather',serif; cursor:pointer;
       transition:all .22s; margin-top:20px;
     }
-    .btn-3d:hover  { background:rgba(201,168,76,0.22); border-color:#c9a84c; }
-    .btn-3d.open   { background:rgba(201,168,76,0.28); border-color:#c9a84c; }
-    .btn-3d svg    { flex-shrink:0; }
+    .btn-3d-exp:hover  { background:rgba(201,168,76,0.22); border-color:#c9a84c; }
+    .btn-3d-exp.open   { background:rgba(201,168,76,0.28); border-color:#c9a84c; }
+    .btn-3d-exp svg    { flex-shrink:0; }
 
     /* ── SCRIPT (INSCRIPTION) BUTTON ── */
     .btn-script {
@@ -476,6 +476,135 @@
     }
     .model-close-btn:hover { color:#c9a84c; border-color:#c9a84c; }
 
+    /* ── INTERACTIVE IMAGE OVERLAY ── */
+    .exp-overlay {
+      position:fixed; inset:0; z-index:4000;
+      background:rgba(5,4,0,0.88); backdrop-filter:blur(8px);
+      display:none; align-items:center; justify-content:center;
+      padding:20px;
+    }
+    .exp-overlay.visible { display:flex; }
+
+    .exp-container {
+      position:relative;
+      width:100%; max-width:1100px;
+      background:#0a0900; border:1px solid #2c2507;
+      border-radius:12px; overflow:hidden;
+      box-shadow:0 24px 70px rgba(0,0,0,0.7);
+      animation:expIn .3s ease-out;
+    }
+    @keyframes expIn { from{opacity:0;transform:scale(0.95) translateY(10px)} to{opacity:1;transform:none} }
+
+    .exp-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 24px;
+      background:var(--heading); border-bottom:1px solid #2c2507;
+    }
+    .exp-header h2 {
+      font-family:'Merriweather',serif;
+      font-size:16px; font-weight:700; color:#f5f0e6;
+    }
+    .exp-close {
+      background:none; border:1px solid #2c2507; border-radius:50%;
+      width:30px; height:30px; color:#8a7c5e;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:all .2s; flex-shrink:0;
+    }
+    .exp-close:hover { color:#c9a84c; border-color:#c9a84c; }
+
+    .exp-image-wrap {
+      position:relative; width:100%;
+      /* aspect ratio based on image. We'll use 3:2 as a guess for images.jpg */
+      background:#000; overflow:hidden;
+      line-height:0;
+    }
+    .exp-image-wrap img {
+      width:100%; height:auto; display:block;
+    }
+
+    /* Clickable dot */
+    .exp-dot {
+      position:absolute;
+      width:28px; height:28px;
+      margin-left:-14px; margin-top:-14px;
+      border-radius:50%;
+      background:rgba(201,168,76,0.3);
+      border:2.5px solid #c9a84c;
+      box-shadow:0 0 12px rgba(201,168,76,0.3), inset 0 0 6px rgba(201,168,76,0.2);
+      cursor:pointer;
+      transition:all .25s ease;
+      z-index:5;
+    }
+    .exp-dot::after {
+      content:'';
+      position:absolute;
+      top:50%; left:50%;
+      width:8px; height:8px;
+      margin-left:-4px; margin-top:-4px;
+      border-radius:50%;
+      background:#c9a84c;
+      transition:all .25s ease;
+    }
+    .exp-dot:hover {
+      background:rgba(201,168,76,0.5);
+      border-color:#f5e08c;
+      transform:scale(1.15);
+      box-shadow:0 0 20px rgba(201,168,76,0.5);
+    }
+    .exp-dot.active {
+      background:rgba(201,168,76,0.6);
+      border-color:#f5e08c;
+      transform:scale(1.2);
+      box-shadow:0 0 24px rgba(201,168,76,0.6);
+    }
+
+    /* Information tag (tooltip) for each dot */
+    .exp-tag {
+      position:absolute;
+      z-index:10;
+      background:rgba(26,16,8,0.95);
+      border:1px solid #c9a84c;
+      border-radius:8px;
+      padding:14px 18px;
+      min-width:200px;
+      max-width:280px;
+      color:#e8dfc8;
+      font-size:13px;
+      line-height:1.6;
+      font-family:'Merriweather',serif;
+      box-shadow:0 8px 28px rgba(0,0,0,0.6);
+      pointer-events:auto;
+      animation:tagIn .2s ease-out;
+    }
+    @keyframes tagIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+    .exp-tag::before {
+      content:'';
+      position:absolute;
+      width:10px; height:10px;
+      background:rgba(26,16,8,0.95);
+      border-left:1px solid #c9a84c;
+      border-top:1px solid #c9a84c;
+      transform:rotate(45deg);
+    }
+    .exp-tag.pos-top::before { bottom:-6px; left:16px; border-left:none; border-top:none; border-right:1px solid #c9a84c; border-bottom:1px solid #c9a84c; }
+    .exp-tag.pos-bottom::before { top:-6px; left:16px; }
+    .exp-tag-close {
+      position:absolute;
+      top:4px; right:6px;
+      background:none; border:none;
+      color:#8a7c5e; font-size:12px;
+      cursor:pointer; line-height:1; padding:2px;
+      transition:color .2s;
+    }
+    .exp-tag-close:hover { color:#c9a84c; }
+    .exp-tag h4 {
+      font-size:13px; font-weight:700; color:#c9a84c;
+      margin-bottom:5px; padding-right:16px;
+    }
+    .exp-tag p {
+      font-size:12px; color:#e8dfc8; margin-bottom:0;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width:900px) {
       .hero { grid-template-columns:1fr; padding:24px 20px 32px; }
@@ -484,6 +613,9 @@
       nav { padding:0 20px; }
       .nav-links { display:none; }
       .info-grid { grid-template-columns:1fr; }
+      .exp-tag { min-width:160px; max-width:220px; font-size:11.5px; padding:10px 14px; }
+      .exp-dot { width:22px; height:22px; margin-left:-11px; margin-top:-11px; }
+      .exp-dot::after { width:6px; height:6px; margin-left:-3px; margin-top:-3px; }
     }
   </style>
 </head>
@@ -512,8 +644,6 @@
 
 <!-- HERO — filled by JS -->
 <div id="hero-section"></div>
-
-
 
 <!-- CONTENT — filled by JS -->
 <div class="content-wrap" id="content-section" style="display:none">
@@ -624,6 +754,33 @@
   <a href="database.html" id="err-back-link" style="color:#7a1f1f; font-size:13px;">← Back to database</a>
 </div>
 
+<!-- 3D Model Viewer section (existing) -->
+<div class="model-section" id="model-section">
+  <div class="model-viewer">
+    <iframe id="model-iframe" src="about:blank" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+  </div>
+  <div class="model-close-bar">
+    <button class="model-close-btn" id="model-close-btn">
+      <span id="lbl-close-3d">Close model</span>
+    </button>
+  </div>
+  <div class="model-attribution" id="model-attribution"></div>
+</div>
+
+<!-- ── INTERACTIVE IMAGE OVERLAY ── -->
+<div class="exp-overlay" id="exp-overlay">
+  <div class="exp-container">
+    <div class="exp-header">
+      <h2 id="exp-title">Ca trù — Khám phá tương tác</h2>
+      <button class="exp-close" id="exp-close" aria-label="Close">✕</button>
+    </div>
+    <div class="exp-image-wrap" id="exp-image-wrap">
+      <img id="exp-image" src="" alt="Interactive exploration" />
+      <!-- Dots injected by JS -->
+    </div>
+  </div>
+</div>
+
 <script src="data.js"></script>
 <script>
 /* ═══════════════════════════════════════
@@ -700,6 +857,8 @@ const STRINGS = {
     errMsg:'Không tìm thấy hiện vật. Vui lòng quay lại kho lưu trữ.',
     btnBackDb:'← Quay lại kho lưu trữ',
     quoteEmpty:'[ Chưa có mô tả chi tiết. Thêm trường quote vào data.js để hiển thị ở đây. ]',
+    expTitle:'Ca trù — Khám phá tương tác',
+    expBtn:'Trải nghiệm 3D',
   },
   en: {
     navHome:'Home', navMap:'Map', navDb:'Database',
@@ -712,6 +871,8 @@ const STRINGS = {
     errMsg:'Artifact not found. Please return to the database.',
     btnBackDb:'← Back to database',
     quoteEmpty:'[ No detailed quote yet. Add a quote field to data.js to display it here. ]',
+    expTitle:'Ca trù — Interactive Discovery',
+    expBtn:'3D Experience',
   },
 };
 const S = k => STRINGS[lang][k];
@@ -730,6 +891,8 @@ function applyLang() {
   const errBack = document.getElementById('err-back-link');
   if (errBack) errBack.textContent = S('btnBackDb');
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  const expTitle = document.getElementById('exp-title');
+  if (expTitle) expTitle.textContent = S('expTitle');
 }
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -740,6 +903,170 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     renderArtifact();
   });
 });
+
+/* ═══════════════════════════════════════
+   INTERACTIVE IMAGE OVERLAY
+═══════════════════════════════════════ */
+const CA_TRU_DOTS = [
+  {
+    pctX: 28, pctY: 32,
+    vi: { title: 'Đào nương', desc: 'Ca sĩ chính (đào nương) với phong cách nhả chữ rung luyến tinh tế, là linh hồn của nghệ thuật Ca trù.' },
+    en: { title: 'Female Vocalist', desc: 'The lead singer (đào nương) delivers refined ornamentation and is the soul of Ca trù chamber music.' }
+  },
+  {
+    pctX: 48, pctY: 48,
+    vi: { title: 'Kép đàn', desc: 'Người chơi đàn đáy – nhạc cụ dây dài 3 dây, âm vang trầm bổng, tạo nên giai điệu nền cho ca nương.' },
+    en: { title: 'Lute Player', desc: 'The male musician plays the đàn đáy – a 3-string long-necked lute providing the melodic accompaniment.' }
+  },
+  {
+    pctX: 68, pctY: 40,
+    vi: { title: 'Quan viên', desc: 'Người đánh trống chầu (phách), giữ nhịp và chấm điểm cho phần trình diễn của đào nương.' },
+    en: { title: 'Percussionist', desc: 'The quan viên plays the praise drum (trống chầu), keeping rhythm and scoring the singer\'s performance.' }
+  },
+  {
+    pctX: 72, pctY: 62,
+    vi: { title: 'Trống chầu', desc: 'Nhạc cụ gõ được quan viên sử dụng để đệm nhịp, tạo điểm nhấn và biểu lộ cảm xúc.' },
+    en: { title: 'Praise Drum', desc: 'A percussion instrument used by the quan viên to accentuate rhythm and express emotional nuances.' }
+  },
+  {
+    pctX: 18, pctY: 58,
+    vi: { title: 'Không gian diễn xướng', desc: 'Ca trù được trình diễn trong không gian phòng nhỏ ấm cúng, thường tại đình làng hoặc tư gia.' },
+    en: { title: 'Performance Space', desc: 'Ca trù is performed in an intimate chamber setting, typically at communal houses or private homes.' }
+  },
+  {
+    pctX: 38, pctY: 68,
+    vi: { title: 'Phong cách truyền thống', desc: 'Ca trù kết hợp giữa thi ca hát nói và nhạc cụ truyền thống Việt Nam, thể hiện văn hóa bác học.' },
+    en: { title: 'Traditional Style', desc: 'Ca trù combines sung poetry (hát nói) with traditional instruments, embodying Vietnam\'s scholarly culture.' }
+  },
+  {
+    pctX: 55, pctY: 24,
+    vi: { title: 'Di sản UNESCO', desc: 'Ca trù được UNESCO ghi danh vào Danh sách di sản cần bảo vệ khẩn cấp năm 2009.' },
+    en: { title: 'UNESCO Heritage', desc: 'Ca trù was inscribed on UNESCO\'s Urgent Safeguarding List in 2009.' }
+  },
+  {
+    pctX: 85, pctY: 28,
+    vi: { title: 'Họa tiết trang phục', desc: 'Trang phục của đào nương và kép đàn mang họa tiết phong phú, thể hiện tính thẩm mỹ tinh tế.' },
+    en: { title: 'Costume Patterns', desc: 'The costumes of performers feature rich ornamentation, reflecting refined aesthetic sensibilities.' }
+  }
+];
+
+(function() {
+  const overlay  = document.getElementById('exp-overlay');
+  const closeBtn = document.getElementById('exp-close');
+  const img      = document.getElementById('exp-image');
+  const wrap     = document.getElementById('exp-image-wrap');
+
+  /* ── OPEN ── */
+  function openExpOverlay(dots) {
+    /* Set the image */
+    img.src = 'images.jpg';
+
+    /* Clear any existing dots/tags */
+    wrap.querySelectorAll('.exp-dot').forEach(el => el.remove());
+    wrap.querySelectorAll('.exp-tag').forEach(el => el.remove());
+
+    /* Create dots */
+    if (dots && dots.length) {
+      dots.forEach((d, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'exp-dot';
+        dot.dataset.idx = idx;
+        dot.style.left = d.pctX + '%';
+        dot.style.top  = d.pctY + '%';
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTag(idx, dot, dots);
+        });
+        wrap.appendChild(dot);
+      });
+    }
+
+    overlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* ── TOGGLE TAG ── */
+  let activeTag = null;
+
+  function toggleTag(idx, dotEl, dots) {
+    /* Remove existing tag if same dot clicked */
+    if (activeTag && activeTag.dataset.idx === String(idx)) {
+      activeTag.remove();
+      activeTag = null;
+      dotEl.classList.remove('active');
+      return;
+    }
+
+    /* Remove previous tag */
+    if (activeTag) {
+      activeTag.remove();
+      document.querySelectorAll('.exp-dot.active').forEach(d => d.classList.remove('active'));
+    }
+
+    const d = dots[idx];
+    const info = lang === 'vi' ? d.vi : d.en;
+
+    const tag = document.createElement('div');
+    tag.className = 'exp-tag';
+    tag.dataset.idx = idx;
+
+    /* Determine position: show above if dot is in bottom half, below if in top half */
+    if (d.pctY > 50) {
+      tag.classList.add('pos-bottom');
+      tag.style.left   = Math.max(5, Math.min(75, d.pctX - 10)) + '%';
+      tag.style.bottom = (100 - d.pctY + 3) + '%';
+    } else {
+      tag.classList.add('pos-top');
+      tag.style.left   = Math.max(5, Math.min(75, d.pctX - 10)) + '%';
+      tag.style.top    = (d.pctY + 3) + '%';
+    }
+
+    tag.innerHTML = `
+      <button class="exp-tag-close" data-idx="${idx}">✕</button>
+      <h4>${info.title}</h4>
+      <p>${info.desc}</p>
+    `;
+
+    /* Close button inside tag */
+    tag.querySelector('.exp-tag-close').addEventListener('click', (e) => {
+      e.stopPropagation();
+      tag.remove();
+      activeTag = null;
+      dotEl.classList.remove('active');
+    });
+
+    wrap.appendChild(tag);
+    activeTag = tag;
+    dotEl.classList.add('active');
+  }
+
+  /* ── CLOSE ── */
+  function closeExpOverlay() {
+    overlay.classList.remove('visible');
+    document.body.style.overflow = '';
+    if (activeTag) {
+      activeTag.remove();
+      activeTag = null;
+    }
+    document.querySelectorAll('.exp-dot.active').forEach(d => d.classList.remove('active'));
+  }
+
+  closeBtn.addEventListener('click', closeExpOverlay);
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay || e.target === wrap) {
+      closeExpOverlay();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('visible')) {
+      closeExpOverlay();
+    }
+  });
+
+  /* ── EXPOSE globally ── */
+  window.openExpOverlay = openExpOverlay;
+  window.closeExpOverlay = closeExpOverlay;
+})();
 
 /* ═══════════════════════════════════════
    RENDER
@@ -776,6 +1103,7 @@ function renderArtifact() {
   document.title = `${nameMain} — Bảo Vật Việt`;
 
   /* ── HERO ── */
+  const isCatru = t.id === 4; /* Ca trù has interactive image */
   document.getElementById('hero-section').innerHTML = `
     <div class="hero">
       <div class="hero-left">
@@ -810,7 +1138,20 @@ function renderArtifact() {
           ${t.location}
         </div>
 
-        ${t.script ? `
+        ${isCatru ? `
+        <button class="btn-3d-exp" id="btn-exp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <span>${S('expBtn')}</span>
+        </button>` : ''}
+
+        ${!isCatru && t.script ? `
         <button class="btn-script" id="btn-script">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -820,7 +1161,7 @@ function renderArtifact() {
             <line x1="16" y1="17" x2="8" y2="17"/>
             <polyline points="10 9 9 9 8 9"/>
           </svg>
-          <span>${lang === 'vi' ? 'Xem văn bản' : 'See full script'}</span>
+          <span>${lang === 'vi' ? 'Trải nghiệm không gian 3D' : '3D experience'}</span>
         </button>` : ''}
       </div>
       <div class="hero-img-wrap">
@@ -901,6 +1242,16 @@ function renderArtifact() {
   } else {
     modelAttr.innerHTML = '';
     if (closeBtn) closeBtn.onclick = null;
+  }
+
+  /* ── WIRE INTERACTIVE IMAGE BUTTON ── */
+  const btnExp = document.getElementById('btn-exp');
+  if (btnExp && isCatru) {
+    btnExp.addEventListener('click', () => {
+      if (typeof window.openExpOverlay === 'function') {
+        window.openExpOverlay(CA_TRU_DOTS);
+      }
+    });
   }
 
   /* ── WIRE SCRIPT BUTTON ── */
@@ -1064,7 +1415,7 @@ renderArtifact();
 
     /* render {word|note} spans */
     text = text.replace(/\{([^|{}]+)\|([^{}]+)\}/g, (_, word, note) => {
-      const safe = note.replace(/"/g, '&quot;');
+      const safe = note.replace(/"/g, '"');
       return `<span class="annotated" data-note="${safe}">${word}</span>`;
     });
 
@@ -1263,7 +1614,7 @@ renderArtifact();
 
   /* ── HELPERS ── */
   function escapeHTML(str) {
-    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (str || '').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
   }
 
   function emptyNote(title, sub) {
