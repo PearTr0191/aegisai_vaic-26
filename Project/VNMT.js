@@ -1218,9 +1218,29 @@ function renderActiveMapInfo() {
   const t = TREASURES.find(x => x.id === activeItemId);
   if (!t) { hideMapInfoBox(); return; }
   const title = lang === 'vi' ? t.name : t.english;
+  const sub    = lang === 'vi' ? t.english : t.name;
+  const color  = activeColor(t);
+  const status = getStatus(t);
+  const genre  = getGenre(t);
+  const stLbl  = statusLabel(status,'short');
+  const gnLbl  = genreLabel(genre,'short');
+  const stC    = STATUS_CONFIG[status]?.color || '#8a7c5e';
+  const gnC    = GENRE_CONFIG[genre]?.color   || '#8a7c5e';
   showMapInfoBox(`
     <div class="map-info-title">${title}</div>
-    <div class="map-info-sub">${t.location}</div>
+    <div class="map-info-sub">${sub}</div>
+    <div class="map-info-tags">
+      <span style="color:${stC};border-color:${stC}55;background:${stC}11">${stLbl}</span>
+      <span style="color:${gnC};border-color:${gnC}55;background:${gnC}11">${gnLbl}</span>
+    </div>
+    <a class="map-info-btn" href="artifact.html?id=${t.id}" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/>
+        <line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+      <span>${lang === 'vi' ? 'Xem chi tiết' : 'View Details'}</span>
+    </a>
     <div class="map-info-count" id="map-info-count"></div>
   `);
 }
