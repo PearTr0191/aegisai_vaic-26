@@ -617,6 +617,290 @@
       .exp-dot { width:22px; height:22px; margin-left:-11px; margin-top:-11px; }
       .exp-dot::after { width:6px; height:6px; margin-left:-3px; margin-top:-3px; }
     }
+
+    /* ═══════════════════════════════════════
+       AUDIO RECORDING & ANALYSIS UI
+    ═══════════════════════════════════════ */
+
+    /* ── Audio Sample Section ── */
+    .modal-audio-section {
+      margin: 16px 0;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .modal-audio-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .audio-sample-item {
+      margin-bottom: 12px;
+    }
+    .audio-sample-item:last-child {
+      margin-bottom: 0;
+    }
+    .audio-sample-label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .modal-audio-player {
+      width: 100%;
+      height: 36px;
+      border-radius: 6px;
+      outline: none;
+    }
+    .modal-audio-caption {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Practice / Recording Section ── */
+    .modal-practice-section {
+      margin: 16px 0;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--card-bg) 0%, #f0ebe2 100%);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .modal-practice-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+    .modal-practice-hint {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    /* ── Recorder Controls ── */
+    .recorder-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .recorder-controls button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Merriweather', serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      background: var(--card-bg);
+      color: var(--text);
+    }
+    .recorder-controls button:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+    .recorder-controls button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ── Record Button (special) ── */
+    .record-btn {
+      border-color: rgba(196,43,43,0.4) !important;
+      color: var(--red) !important;
+    }
+    .record-btn:hover {
+      border-color: var(--red) !important;
+      background: rgba(196,43,43,0.1) !important;
+    }
+    .record-btn.recording {
+      background: var(--red) !important;
+      color: #fff !important;
+      border-color: var(--red) !important;
+      animation: pulse-red 1.5s infinite;
+    }
+    .record-btn.recording .record-icon { display: none; }
+    .record-btn.recording .stop-icon { display: inline-block; }
+    .record-btn .stop-icon { display: none; }
+    .record-btn.recording svg { color: #fff; }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(196,43,43,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(196,43,43,0); }
+    }
+
+    /* ── Playback / Analyze / Clear Buttons ── */
+    .playback-btn {
+      border-color: rgba(76,175,132,0.3) !important;
+      color: #4caf84 !important;
+    }
+    .playback-btn:hover {
+      border-color: #4caf84 !important;
+      background: rgba(76,175,132,0.08) !important;
+    }
+    .analyze-btn {
+      border-color: rgba(201,168,76,0.3) !important;
+      color: var(--gold) !important;
+    }
+    .analyze-btn:hover {
+      border-color: var(--gold) !important;
+      background: rgba(201,168,76,0.08) !important;
+    }
+    .clear-btn {
+      border-color: rgba(138,124,94,0.3) !important;
+      color: var(--muted) !important;
+    }
+    .clear-btn:hover {
+      border-color: var(--muted) !important;
+      background: rgba(138,124,94,0.08) !important;
+    }
+
+    /* ── Visualizer ── */
+    .recording-visualizer {
+      background: var(--page-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .recording-visualizer canvas {
+      width: 100%;
+      height: 60px;
+      display: block;
+      border-radius: 4px;
+    }
+
+    /* ── Timer ── */
+    .recording-timer {
+      font-family: 'Merriweather', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold-light);
+      text-align: center;
+      padding: 4px 0;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Audio Analysis Results ── */
+    .modal-audio-analysis {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .modal-audio-analysis-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .modal-audio-analysis-header h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      margin: 0;
+    }
+    .modal-audio-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color .2s;
+    }
+    .modal-audio-close:hover { color: var(--gold); }
+
+    /* ── Analysis Content ── */
+    .audio-analysis-content { min-height: 60px; }
+
+    .audio-analysis-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .audio-analysis-results {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .analysis-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .analysis-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .analysis-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold-light);
+      text-align: right;
+      flex: 1;
+      margin-left: 12px;
+    }
+
+    /* ── Error State ── */
+    .audio-analysis-error {
+      text-align: center;
+      padding: 12px 0;
+    }
+    .audio-analysis-error p {
+      font-size: 12px;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .retry-btn {
+      padding: 6px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--gold);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .retry-btn:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
   </style>
 </head>
 <body>
@@ -657,6 +941,9 @@
 
     <!-- Main description -->
     <div class="desc-body" id="desc-body"></div>
+
+    <!-- Audio & Recording Section for singing types -->
+    <div id="audio-section-container" style="margin-top:24px; padding-top:18px; border-top:1px solid var(--border);"></div>
 
     <!-- Info grid -->
     <div class="info-grid">
@@ -748,7 +1035,19 @@
   </div><!-- /sidebar -->
 </div><!-- /content-wrap -->
 
-<!-- Error state -->
+<!-- 3D VIEWER SECTION (hidden by default, shown when btn-3d clicked) -->
+<div class="model-section" id="model-section">
+  <div class="model-close-bar">
+    <button class="model-close-btn" id="model-close-btn">
+      <span id="lbl-close-3d">Close model</span>
+    </button>
+  </div>
+  <div class="model-viewer">
+    <iframe id="model-iframe" src="about:blank" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+  </div>
+  <div class="model-attribution" id="model-attribution"></div>
+</div>
+
 <div id="error-state" style="display:none; text-align:center; padding:80px 24px; color:#7a6a52;">
   <p style="font-size:16px; margin-bottom:8px;" id="err-msg">Artifact not found.</p>
   <a href="database.html" id="err-back-link" style="color:#7a1f1f; font-size:13px;">← Back to database</a>
@@ -1163,6 +1462,14 @@ function renderArtifact() {
           </svg>
           <span>${lang === 'vi' ? 'Trải nghiệm không gian 3D' : '3D experience'}</span>
         </button>` : ''}
+        ${t.model3d ? `
+        <button class="btn-3d" id="btn-3d">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          <span id="btn-3d-text">${lang === 'vi' ? 'Xem mô hình 3D' : 'View 3D Model'}</span>
+        </button>` : ''}
       </div>
       <div class="hero-img-wrap">
         <img src="${imgSrc}" alt="${nameMain}"
@@ -1183,11 +1490,11 @@ function renderArtifact() {
   const closeBtn     = document.getElementById('model-close-btn');
   const closeLbl     = document.getElementById('lbl-close-3d');
 
-  /* hide viewer whenever a new artifact is rendered */
-  modelSection.classList.remove('visible');
-  modelIframe.src = 'about:blank';
+  /* hide viewer whenever a new artifact is rendered (guard against null) */
+  if (modelSection) modelSection.classList.remove('visible');
+  if (modelIframe) modelIframe.src = 'about:blank';
 
-  if (t.model3d) {
+  if (t.model3d && modelSection) {
     /* attribution line */
     modelAttr.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -1240,7 +1547,7 @@ function renderArtifact() {
       };
     }
   } else {
-    modelAttr.innerHTML = '';
+    if (modelAttr) modelAttr.innerHTML = '';
     if (closeBtn) closeBtn.onclick = null;
   }
 
@@ -1298,22 +1605,434 @@ function renderArtifact() {
   document.getElementById('loc-city').textContent    = locCity || t.location;
   document.getElementById('loc-address').textContent = t.location;
 
-  const mapsUrl = `https://www.google.com/maps?q=${t.lat},${t.lng}`;
+const mapsUrl = `https://www.google.com/maps?q=${t.lat},${t.lng}`;
   document.getElementById('link-maps').href = mapsUrl;
   document.getElementById('btn-view-map').href = `VNMT.html`;
 
   document.getElementById('coord-lat').textContent = t.lat?.toFixed(5) ?? '—';
   document.getElementById('coord-lng').textContent = t.lng?.toFixed(5) ?? '—';
 
+  // Build audio section for singing types
+  renderAudioSection(t);
+
   document.getElementById('content-section').style.display = 'grid';
 }
 
 /* ═══════════════════════════════════════
+   AUDIO SECTION RENDERING
+═══════════════════════════════════════ */
+function renderAudioSection(t) {
+  const container = document.getElementById('audio-section-container');
+  const isSingingType = t.type === 'singings';
+  const hasAudioPreview = t.audio_preview;
+
+  if (!isSingingType || !hasAudioPreview) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const previewSrc = t.audio_preview;
+  const vocalSrc = t.audio_vocal_only || t.audio_preview;
+  const audioSectionHTML = `
+    <div class="modal-audio-section">
+      <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Samples'}</h4>
+      <div class="audio-sample-item">
+        <span class="audio-sample-label">${lang === 'vi' ? 'Bản gốc' : 'Original'}:</span>
+        <audio controls src="${previewSrc}" class="modal-audio-player"></audio>
+        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - bản gốc' : 'Quan họ Bắc Ninh - original version'}</p>
+      </div>
+      <div class="audio-sample-item">
+        <span class="audio-sample-label">${lang === 'vi' ? 'Chỉ giọng' : 'Vocals only'}:</span>
+        <audio controls src="${vocalSrc}" class="modal-audio-player"></audio>
+        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - phiên bản chỉ giọng hát' : 'Quan họ Bắc Ninh - vocals only version'}</p>
+      </div>
+    </div>
+    <div class="modal-practice-section">
+      <h4>${lang === 'vi' ? 'Thử hát & Phân tích' : 'Try Singing & Analyze'}</h4>
+      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích thể loại, nhạc cụ và kỹ thuật' : 'Record your singing for AI analysis of genre, instruments, and techniques'}</p>
+      <div class="recorder-controls">
+        <button class="record-btn" id="record-btn-${t.id}" onclick="toggleRecording(${t.id})">
+          <svg class="record-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="8"></circle>
+          </svg>
+          <svg class="stop-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" hidden>
+            <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+          </svg>
+          <span class="record-text">${lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording'}</span>
+        </button>
+        <button class="playback-btn" id="playback-btn-${t.id}" onclick="playbackRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>${lang === 'vi' ? 'Nghe lại' : 'Playback'}</span>
+        </button>
+        <button class="analyze-btn" id="analyze-btn-${t.id}" onclick="analyzeUserRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          <span>${lang === 'vi' ? 'Phân tích' : 'Analyze'}</span>
+        </button>
+        <button class="clear-btn" id="clear-btn-${t.id}" onclick="clearRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>${lang === 'vi' ? 'Xóa' : 'Clear'}</span>
+        </button>
+      </div>
+      <div class="recording-visualizer" id="recording-visualizer-${t.id}" hidden>
+        <canvas id="waveform-canvas-${t.id}" width="400" height="80"></canvas>
+      </div>
+      <div class="recording-timer" id="recording-timer-${t.id}" hidden>00:00</div>
+    </div>
+
+    <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
+      <div class="modal-audio-analysis-header">
+        <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
+        <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
+      </div>
+      <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
+        <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
+          <div class="spinner"></div>
+          <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
+        </div>
+        <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Thể loại' : 'Genre'}</span>
+            <span class="analysis-value" id="analysis-genre-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Độ tin cậy' : 'Confidence'}</span>
+            <span class="analysis-value" id="analysis-confidence-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Nhạc cụ' : 'Instruments'}</span>
+            <span class="analysis-value" id="analysis-instruments-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Kỹ thuật' : 'Techniques'}</span>
+            <span class="analysis-value" id="analysis-techniques-${t.id}">—</span>
+          </div>
+        </div>
+        <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
+          <p id="audio-analysis-error-msg-${t.id}"></p>
+          <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = audioSectionHTML;
+}
+
+/* ═══════════════════════════════════════
+   AUDIO RECORDING & ANALYSIS
+═══════════════════════════════════════ */
+
+// Audio recording state per artifact
+const recordingState = {};
+const mediaRecorders = {};
+const recordedChunks = {};
+const recordingTimers = {};
+
+/* ═══════════════════════════════════════
+   AUDIO CONTEXT INITIALIZATION
+═══════════════════════════════════════ */
+async function initAudioContext(id) {
+  if (!recordingState[id]) {
+    recordingState[id] = {
+      isRecording: false,
+      audioBlob: null,
+      audioContext: null,
+      analyser: null,
+      stream: null,
+      animationFrame: null
+    };
+  }
+  const state = recordingState[id];
+  if (!state.audioContext) {
+    state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return state;
+}
+
+/* ═══════════════════════════════════════
+   RECORDING TOGGLE
+═══════════════════════════════════════ */
+async function toggleRecording(id) {
+  const state = await initAudioContext(id);
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+
+  if (state.isRecording) {
+    stopRecording(id);
+    recordBtn.classList.remove('recording');
+    recordBtn.querySelector('.record-icon').hidden = false;
+    recordBtn.querySelector('.stop-icon').hidden = true;
+    recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+    playbackBtn.hidden = false;
+    analyzeBtn.hidden = false;
+    clearBtn.hidden = false;
+    visualizer.hidden = true;
+    timer.hidden = true;
+    if (recordingTimers[id]) {
+      clearInterval(recordingTimers[id]);
+      recordingTimers[id] = null;
+    }
+  } else {
+    try {
+      state.stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { 
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          sampleRate: 22050
+        } 
+      });
+      const mediaRecorder = new MediaRecorder(state.stream, {
+        mimeType: 'audio/webm;codecs=opus'
+      });
+      mediaRecorders[id] = mediaRecorder;
+      recordedChunks[id] = [];
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordedChunks[id].push(e.data);
+      };
+      mediaRecorder.onstop = () => {
+        state.audioBlob = new Blob(recordedChunks[id], { type: 'audio/webm' });
+        state.stream.getTracks().forEach(track => track.stop());
+        if (state.audioBlob) state.audioUrl = URL.createObjectURL(state.audioBlob);
+      };
+      mediaRecorder.start(100);
+      state.isRecording = true;
+      recordBtn.classList.add('recording');
+      recordBtn.querySelector('.record-icon').hidden = true;
+      recordBtn.querySelector('.stop-icon').hidden = false;
+      recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Dừng ghi âm' : 'Stop Recording';
+      playbackBtn.hidden = true;
+      analyzeBtn.hidden = true;
+      clearBtn.hidden = true;
+      visualizer.hidden = false;
+      timer.hidden = false;
+      setupVisualizer(id);
+      let seconds = 0;
+      recordingTimers[id] = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        timer.textContent = `${mins}:${secs}`;
+        if (seconds >= 30) stopAndResetRecording(id);
+      }, 1000);
+    } catch (err) {
+      console.error('Recording failed:', err);
+      alert(lang === 'vi' ? 'Không thể truy cập micro. Vui lòng cho phép quyền truy cập.' : 'Cannot access microphone. Please allow permission.');
+    }
+  }
+}
+
+function stopRecording(id) {
+  if (mediaRecorders[id] && mediaRecorders[id].state !== 'inactive') {
+    mediaRecorders[id].stop();
+  }
+  if (recordingState[id]) {
+    recordingState[id].isRecording = false;
+  }
+}
+
+function stopAndResetRecording(id) {
+  const state = recordingState[id];
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+  if (mediaRecorders[id] && mediaRecorders[id].state !== 'inactive') mediaRecorders[id].stop();
+  if (state) {
+    state.isRecording = false;
+    if (state.stream) {
+      state.stream.getTracks().forEach(track => { try { track.stop(); } catch(e) {} });
+      state.stream = null;
+    }
+    if (state.animationFrame) { cancelAnimationFrame(state.animationFrame); state.animationFrame = null; }
+  }
+  if (recordingTimers[id]) { clearInterval(recordingTimers[id]); recordingTimers[id] = null; }
+  if (recordBtn) {
+    recordBtn.classList.remove('recording');
+    recordBtn.querySelector('.record-icon').hidden = false;
+    recordBtn.querySelector('.stop-icon').hidden = true;
+    recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+  }
+  if (playbackBtn) playbackBtn.hidden = false;
+  if (analyzeBtn) analyzeBtn.hidden = false;
+  if (clearBtn) clearBtn.hidden = false;
+  if (visualizer) visualizer.hidden = true;
+  if (timer) timer.hidden = true;
+}
+
+function setupVisualizer(id) {
+  const state = recordingState[id];
+  const canvas = document.getElementById(`waveform-canvas-${id}`);
+  if (!canvas || !state.stream) return;
+  const ctx = canvas.getContext('2d');
+  const analyser = state.audioContext.createAnalyser();
+  analyser.fftSize = 256;
+  const source = state.audioContext.createMediaStreamSource(state.stream);
+  source.connect(analyser);
+  state.analyser = analyser;
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+  const draw = () => {
+    if (!state.isRecording) return;
+    state.animationFrame = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let x = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
+      const hue = 45 + (dataArray[i] / 255) * 30;
+      ctx.fillStyle = `hsl(${hue}, 80%, 50%)`;
+      ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 1;
+    }
+  };
+  draw();
+}
+
+function playbackRecording(id) {
+  const state = recordingState[id];
+  if (state.audioUrl) {
+    const audio = new Audio(state.audioUrl);
+    audio.play();
+  }
+}
+
+function clearRecording(id) {
+  const state = recordingState[id];
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+  if (state.audioUrl) { URL.revokeObjectURL(state.audioUrl); state.audioUrl = null; }
+  state.audioBlob = null;
+  recordBtn.classList.remove('recording');
+  recordBtn.querySelector('.record-icon').hidden = false;
+  recordBtn.querySelector('.stop-icon').hidden = true;
+  recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+  playbackBtn.hidden = true;
+  analyzeBtn.hidden = true;
+  clearBtn.hidden = true;
+  visualizer.hidden = true;
+  timer.hidden = true;
+  timer.textContent = '00:00';
+  const canvas = document.getElementById(`waveform-canvas-${id}`);
+  if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+}
+
+async function convertWebMToWav(webmBlob) {
+  const arrayBuffer = await webmBlob.arrayBuffer();
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let audioBuffer;
+  try {
+    audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  } catch (decodeErr) {
+    await audioContext.close();
+    throw new Error(lang === 'vi' ? 'Không thể giải mã âm thanh. Vui lòng dùng trình duyệt khác.' : 'Cannot decode audio. Please try a different browser.');
+  }
+  const numChannels = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+  const length = audioBuffer.length;
+  const bytesPerSample = 2;
+  const blockAlign = numChannels * bytesPerSample;
+  const byteRate = sampleRate * blockAlign;
+  const dataSize = length * blockAlign;
+  const headerSize = 44;
+  const totalSize = headerSize + dataSize;
+  const wavBuffer = new ArrayBuffer(totalSize);
+  const view = new DataView(wavBuffer);
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, totalSize - 8, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, 16, true);
+  writeString(view, 36, 'data');
+  view.setUint32(40, dataSize, true);
+  let offset = headerSize;
+  for (let i = 0; i < length; i++) {
+    for (let ch = 0; ch < numChannels; ch++) {
+      const sample = Math.max(-1, Math.min(1, audioBuffer.getChannelData(ch)[i]));
+      view.setInt16(offset, sample * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  await audioContext.close();
+  return new Blob([wavBuffer], { type: 'audio/wav' });
+}
+
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++) { view.setUint8(offset + i, string.charCodeAt(i)); }
+}
+
+async function analyzeUserRecording(id) {
+  const state = recordingState[id];
+  if (!state.audioBlob) { alert(lang === 'vi' ? 'Chưa có file ghi âm' : 'No recording available'); return; }
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const loading = document.getElementById(`audio-analysis-loading-${id}`);
+  const results = document.getElementById(`audio-analysis-results-${id}`);
+  const error = document.getElementById(`audio-analysis-error-${id}`);
+  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
+  analysisSection.hidden = false;
+  loading.hidden = false;
+  results.hidden = true;
+  error.hidden = true;
+  analyzeBtn.disabled = true;
+  try {
+    const wavBlob = await convertWebMToWav(state.audioBlob);
+    const formData = new FormData();
+    formData.append('file', wavBlob, `recording_${id}.wav`);
+    const response = await fetch('/api/v1/audio/analyze', { method: 'POST', body: formData });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const GENRE_VI_MAP = { 'quan_ho': 'Quan họ', 'ca_tru': 'Ca trù', 'nha_nhac': 'Nhã nhạc', 'don_ca_tai_tu': 'Đờn ca tài tử', 'ho': 'Hò' };
+    const genreLabel = data.genre?.label || 'unknown';
+    document.getElementById(`analysis-genre-${id}`).textContent = lang === 'vi' ? (GENRE_VI_MAP[genreLabel] || genreLabel) : genreLabel;
+    document.getElementById(`analysis-confidence-${id}`).textContent = ((data.genre?.confidence || data.confidence || 0) * 100).toFixed(1) + '%';
+    document.getElementById(`analysis-instruments-${id}`).textContent = data.instruments?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    document.getElementById(`analysis-techniques-${id}`).textContent = data.techniques?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    loading.hidden = true;
+    results.hidden = false;
+  } catch (err) {
+    loading.hidden = true;
+    error.hidden = false;
+    document.getElementById(`audio-analysis-error-msg-${id}`).textContent = lang === 'vi' ? `Phân tích thất bại: ${err.message}` : `Analysis failed: ${err.message}`;
+  } finally {
+    analyzeBtn.disabled = false;
+  }
+}
+
+function hideAudioAnalysis(id) {
+  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
+  if (analysisSection) analysisSection.hidden = true;
+}
+
+window.toggleRecording = toggleRecording;
+window.playbackRecording = playbackRecording;
+window.clearRecording = clearRecording;
+window.analyzeUserRecording = analyzeUserRecording;
+window.hideAudioAnalysis = hideAudioAnalysis;
+
+/* ═══════════════════════════════════════
    INIT
 ═══════════════════════════════════════ */
-applyLang();
-renderArtifact();
+  applyLang();
+  renderArtifact();
 </script>
+
 <!-- ── SCRIPT (INSCRIPTION) MODAL ── -->
 <div class="script-overlay" id="script-overlay" aria-hidden="true">
   <div class="script-modal">
