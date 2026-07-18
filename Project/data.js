@@ -55,6 +55,8 @@ const TREASURES = [
     script: { han: '', hanvan: '', viet: '' },
     desc_vi: 'Quan họ là thể loại dân ca đối đáp đặc trưng của vùng Kinh Bắc, được công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2009. Ca hát diễn ra trong các lễ hội làng, bóng dáng thân thiện, mười câu mười lời trao gửi tình nghĩa trăm năm.',
     desc: 'Quan họ is an antiphonal folk singing genre from the Kinh Bắc region, inscribed on the UNESCO Representative List in 2009. Performed during village festivals, its gracious melodies and ten-verse exchanges express hundred-year bonds of friendship and affection.',
+    audio_preview: 'audio/quanho-preview.wav',
+    audio_vocal_only: 'audio/quanho-embed.wav',
   },
   {
     id: 4,

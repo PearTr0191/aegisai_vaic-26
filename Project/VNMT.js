@@ -53,6 +53,8 @@ const TREASURES = [
     badge: 'UNESCO',
     desc_vi: 'Quan họ là thể loại dân ca đối đáp đặc trưng của vùng Kinh Bắc, được công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2009. Ca hát diễn ra trong các lễ hội làng, bóng dáng thân thiện, mười câu mười lời trao gửi tình nghĩa trăm năm.',
     desc: 'Quan họ is an antiphonal folk singing genre from the Kinh Bắc region, inscribed on the UNESCO Representative List in 2009. Performed during village festivals, its gracious melodies and ten-verse exchanges express hundred-year bonds of friendship and affection.',
+    audio_preview: 'audio/quanho-preview.wav',
+    audio_vocal_only: 'audio/quanho-embed.wav',
   },
   {
     id: 4,
@@ -847,6 +849,27 @@ function buildModalHTML(t) {
     </div>
   `;
 
+    // Build audio samples section (preview only - vocal-only is for backend training)
+    const audioPrefix = window.location.pathname.includes('/legacy/') ? '/legacy/' : '';
+    const previewSrc = hasAudioPreview ? audioPrefix + t.audio_preview : '';
+    const vocalSrc = hasAudioPreview && t.audio_vocal_only ? audioPrefix + t.audio_vocal_only : previewSrc;
+
+    const audioSamplesSection = hasAudioPreview ? `
+      <div class="modal-audio-section">
+        <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Samples'}</h4>
+        <div class="audio-sample-item">
+          <span class="audio-sample-label">${lang === 'vi' ? 'Bản gốc' : 'Original'}:</span>
+          <audio controls src="${previewSrc}" class="modal-audio-player"></audio>
+          <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - bản gốc' : 'Quan họ Bắc Ninh - original version'}</p>
+        </div>
+        <div class="audio-sample-item">
+          <span class="audio-sample-label">${lang === 'vi' ? 'Chỉ giọng' : 'Vocals only'}:</span>
+          <audio controls src="${vocalSrc}" class="modal-audio-player"></audio>
+          <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - phiên bản chỉ giọng hát' : 'Quan họ Bắc Ninh - vocals only version'}</p>
+        </div>
+      </div>
+      ` : '';
+
   return `
     <div class="modal-image-container">
       <img src="${imageUrl}" alt="${title}" class="modal-image" onerror="this.onerror=null; this.src='images/artifacts/placeholder.svg'" />
@@ -885,13 +908,7 @@ function buildModalHTML(t) {
       <div class="modal-desc">${desc}${pending}</div>
     </div>
     
-    ${hasAudioPreview ? `
-    <div class="modal-audio-section">
-      <h4>${lang === 'vi' ? 'Nghe mẫu' : 'Audio Sample'}</h4>
-      <audio controls src="${t.audio_preview}" class="modal-audio-player"></audio>
-      <p class="modal-audio-caption">${lang === 'vi' ? 'Phiên bản tham khảo' : 'Reference version'}</p>
-    </div>
-    ` : ''}
+    ${audioSamplesSection}
     
     ${isSingingType ? `
     <div class="modal-practice-section">
@@ -1346,6 +1363,14 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 })();
 
 /* ═══════════════════════════════════════
+   GENRE VIETNAMESE LABEL MAP (for backend genre labels)
+═══════════════════════════════════════ */
+const GENRE_VI_MAP = {
+  'quan_ho': 'Quan họ',
+  'ho': 'Hò',
+};
+
+/* ═══════════════════════════════════════
    AUDIO RECORDING & ANALYSIS
 ═══════════════════════════════════════ */
 
@@ -1461,19 +1486,19 @@ async function toggleRecording(id) {
       // Setup visualizer
       setupVisualizer(id);
       
-      // Start timer
-      let seconds = 0;
-      recordingTimers[id] = setInterval(() => {
-        seconds++;
-        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-        const secs = (seconds % 60).toString().padStart(2, '0');
-        timer.textContent = `${mins}:${secs}`;
-        
-        // Auto-stop at 30 seconds
-        if (seconds >= 30) {
-          toggleRecording(id);
-        }
-      }, 1000);
+       // Start timer
+       let seconds = 0;
+       recordingTimers[id] = setInterval(() => {
+         seconds++;
+         const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+         const secs = (seconds % 60).toString().padStart(2, '0');
+         timer.textContent = `${mins}:${secs}`;
+         
+         // Auto-stop at 30 seconds - use stopAndResetRecording to avoid recursion
+         if (seconds >= 30) {
+           stopAndResetRecording(id);
+         }
+       }, 1000);
       
     } catch (err) {
       console.error('Recording failed:', err);
@@ -1489,6 +1514,63 @@ function stopRecording(id) {
   if (recordingState[id]) {
     recordingState[id].isRecording = false;
   }
+}
+
+/**
+ * Stop recording and reset UI (used for auto-stop at 30 seconds)
+ * Avoids recursion by not calling toggleRecording
+ */
+function stopAndResetRecording(id) {
+  const state = recordingState[id];
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+
+  // Stop recording
+  if (mediaRecorders[id] && mediaRecorders[id].state !== 'inactive') {
+    mediaRecorders[id].stop();
+  }
+  
+  if (state) {
+    state.isRecording = false;
+    
+    // Stop stream tracks
+    if (state.stream) {
+      state.stream.getTracks().forEach(track => {
+        try { track.stop(); } catch(e) { /* already stopped */ }
+      });
+      state.stream = null;
+    }
+    
+    // Cancel animation frame
+    if (state.animationFrame) {
+      cancelAnimationFrame(state.animationFrame);
+      state.animationFrame = null;
+    }
+  }
+  
+  // Clear timer
+  if (recordingTimers[id]) {
+    clearInterval(recordingTimers[id]);
+    recordingTimers[id] = null;
+  }
+
+  // Update UI
+  if (recordBtn) {
+    recordBtn.classList.remove('recording');
+    recordBtn.querySelector('.record-icon').hidden = false;
+    recordBtn.querySelector('.stop-icon').hidden = true;
+    recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+  }
+  
+  if (playbackBtn) playbackBtn.hidden = false;
+  if (analyzeBtn) analyzeBtn.hidden = false;
+  if (clearBtn) clearBtn.hidden = false;
+  if (visualizer) visualizer.hidden = true;
+  if (timer) timer.hidden = true;
 }
 
 function setupVisualizer(id) {
@@ -1582,7 +1664,14 @@ function clearRecording(id) {
 async function convertWebMToWav(webmBlob) {
   const arrayBuffer = await webmBlob.arrayBuffer();
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  let audioBuffer;
+  try {
+    audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  } catch (decodeErr) {
+    console.warn('Audio decode failed:', decodeErr);
+    await audioContext.close();
+    throw new Error(lang === 'vi' ? 'Không thể giải mã âm thanh. Vui lòng dùng trình duyệt khác.' : 'Cannot decode audio. Please try a different browser.');
+  }
   
   // Create WAV file from audio buffer
   const numChannels = audioBuffer.numberOfChannels;
@@ -1628,7 +1717,7 @@ async function convertWebMToWav(webmBlob) {
     }
   }
   
-  audioContext.close();
+  await audioContext.close();
   return new Blob([wavBuffer], { type: 'audio/wav' });
 }
 
@@ -1676,15 +1765,21 @@ async function analyzeUserRecording(id) {
 
     const data = await response.json();
     
+    // Map nested backend response to flat display fields
+    const genreLabel = data.genre?.label || data.genre || 'unknown';
+    const genreVi = GENRE_VI_MAP[genreLabel] || genreLabel;
+    const instruments = data.instruments?.detected || data.instruments || [];
+    const techniques = data.techniques?.detected || data.techniques || [];
+
     // Update results
     document.getElementById(`analysis-genre-${id}`).textContent = 
-      lang === 'vi' ? (data.genre_vi || data.genre) : data.genre;
-    document.getElementById(`analysis-confidence-${id}`).textContent = 
-      (data.confidence * 100).toFixed(1) + '%';
+      lang === 'vi' ? genreVi : genreLabel;
+     document.getElementById(`analysis-confidence-${id}`).textContent = 
+       ((data.genre?.confidence || data.confidence || 0) * 100).toFixed(1) + '%';
     document.getElementById(`analysis-instruments-${id}`).textContent = 
-      (data.instruments || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+      instruments.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
     document.getElementById(`analysis-techniques-${id}`).textContent = 
-      (data.techniques || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+      techniques.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
 
     loading.hidden = true;
     results.hidden = false;
@@ -1693,107 +1788,20 @@ async function analyzeUserRecording(id) {
     console.error('Analysis failed:', err);
     loading.hidden = true;
     error.hidden = false;
+    const errMsg = err instanceof Error ? err.message : String(err);
     document.getElementById(`audio-analysis-error-msg-${id}`).textContent = 
-      lang === 'vi' ? 'Phân tích thất bại. Vui lòng thử lại.' : 'Analysis failed. Please try again.';
+      lang === 'vi' ? `Phân tích thất bại: ${errMsg}` : `Analysis failed: ${errMsg}`;
   } finally {
     analyzeBtn.disabled = false;
   }
 }
 
 /**
- * Map heritage ID to sample audio file
+ * Hide the audio analysis results section
  */
-function getSampleAudioPath(id) {
-  const genre = getGenre(TREASURES.find(t => t.id === id));
-  const map = {
-    'court_music': 'nhuanhac-preview.wav',
-    'singings': 'quanho-preview.wav',  // quan họ, ca trù, đờn ca tài tử, ví giặm, bài chòi, xòan, then
-    'belief': 'ho-preview.wav',       // gióng festival, hùng kings, mother goddesses, tugging
-    'festival': 'ho-preview.wav',
-    'craft': 'donca-preview.wav',
-    'instrumental': 'nhuanhac-preview.wav',
-  };
-  return `audio/${map[genre] || 'quanho-preview.wav'}`;
-}
-
-/**
- * Test analysis with a reference sample audio file
- */
-async function testWithSample(id) {
-  const btn = document.getElementById(`sample-btn-${id}`);
-  const audioEl = document.getElementById(`sample-audio-${id}`);
-  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
-  const loading = document.getElementById(`audio-analysis-loading-${id}`);
-  const results = document.getElementById(`audio-analysis-results-${id}`);
-  const error = document.getElementById(`audio-analysis-error-${id}`);
+function hideAudioAnalysis(id) {
   const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
-
-  if (!audioEl) return;
-
-  const samplePath = getSampleAudioPath(id);
-  
-  // Show analysis section
-  analysisSection.hidden = false;
-  loading.hidden = false;
-  results.hidden = true;
-  error.hidden = true;
-  analyzeBtn.disabled = true;
-  btn.disabled = true;
-  btn.textContent = lang === 'vi' ? 'Đang tải mẫu...' : 'Loading sample...';
-
-  try {
-    // Fetch the sample audio file
-    const response = await fetch(samplePath);
-    if (!response.ok) throw new Error(`Failed to load sample: ${response.status}`);
-    const blob = await response.blob();
-    
-        // Create object URL for playback
-        const audioUrl = URL.createObjectURL(blob);
-        audioEl.src = audioUrl;
-        audioEl.classList.add('sample-audio-player', 'visible');
-        audioEl.hidden = false;
-    
-    // Send to analysis endpoint
-    const formData = new FormData();
-    formData.append('file', blob, `sample_${id}.wav`);
-    
-    const analyzeResponse = await fetch('/api/v1/audio/analyze', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!analyzeResponse.ok) {
-      throw new Error(`HTTP ${analyzeResponse.status}`);
-    }
-
-    const data = await analyzeResponse.json();
-    
-    // Update results
-    document.getElementById(`analysis-genre-${id}`).textContent = 
-      lang === 'vi' ? (data.genre_vi || data.genre) : data.genre;
-    document.getElementById(`analysis-confidence-${id}`).textContent = 
-      (data.confidence * 100).toFixed(1) + '%';
-    document.getElementById(`analysis-instruments-${id}`).textContent = 
-      (data.instruments || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
-    document.getElementById(`analysis-techniques-${id}`).textContent = 
-      (data.techniques || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
-
-    loading.hidden = true;
-    results.hidden = false;
-    btn.textContent = lang === 'vi' ? '✓ Đã phân tích mẫu' : '✓ Sample analyzed';
-    btn.style.background = 'var(--green)';
-    
-  } catch (err) {
-    console.error('Sample analysis failed:', err);
-    loading.hidden = true;
-    error.hidden = false;
-    document.getElementById(`audio-analysis-error-msg-${id}`).textContent = 
-      lang === 'vi' ? 'Phân tích mẫu thất bại. Vui lòng thử lại.' : 'Sample analysis failed. Please try again.';
-    btn.textContent = lang === 'vi' ? 'Thử lại' : 'Retry';
-  } finally {
-    analyzeBtn.disabled = false;
-    btn.disabled = false;
-  }
+  if (analysisSection) analysisSection.hidden = true;
 }
 
 // Expose globally for onclick handlers
@@ -1803,7 +1811,6 @@ window.clearRecording = clearRecording;
 window.analyzeUserRecording = analyzeUserRecording;
 window.hideAudioAnalysis = hideAudioAnalysis;
 window.stopAllRecordings = stopAllRecordings;
-window.testWithSample = testWithSample;
 
 /* ═══════════════════════════════════════
    INIT

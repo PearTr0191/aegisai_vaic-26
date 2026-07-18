@@ -1,10 +1,11 @@
-:root {
+    :root {
       --bg:         #0a0900;
       --surface:    #110f04;
       --card:       #181500;
       --border:     #2c2507;
       --gold:       #c9a84c;
       --gold-light: #e8c96a;
+      --green:      #4caf84;
       --red:        #8b1c1c;
       --red-bright: #c42b2b;
       --text:       #e8dfc8;
@@ -435,6 +436,19 @@
       margin-bottom: 10px;
       letter-spacing: 0.02em;
     }
+    .audio-sample-item {
+      margin-bottom: 12px;
+    }
+    .audio-sample-item:last-child {
+      margin-bottom: 0;
+    }
+    .audio-sample-label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
     .modal-audio-player {
       width: 100%;
       height: 36px;
@@ -685,58 +699,4 @@
     .retry-btn:hover {
       border-color: var(--gold);
       background: rgba(201,168,76,0.08);
-    }
-
-    /* ── Sample Audio Test Button ── */
-    .modal-sample-section {
-      margin-bottom: 14px;
-      padding: 12px 16px;
-      background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, rgba(76,175,132,0.05) 100%);
-      border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 8px;
-      text-align: center;
-    }
-    .sample-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: var(--card);
-      border: 2px solid var(--gold);
-      border-radius: 24px;
-      color: var(--gold);
-      font-family: var(--font-body);
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .sample-btn:hover:not(:disabled) {
-      background: var(--gold);
-      color: var(--bg);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(201,168,76,0.3);
-    }
-    .sample-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .sample-btn.success {
-      background: var(--green, #4caf84) !important;
-      border-color: var(--green, #4caf84) !important;
-      color: var(--white) !important;
-    }
-    .modal-sample-hint {
-      margin-top: 8px !important;
-      font-size: 10.5px;
-      color: var(--muted);
-      font-style: italic;
-    }
-    .sample-audio-player {
-      display: none;
-      width: 100%;
-      margin-top: 8px;
-    }
-    .sample-audio-player.visible {
-      display: block;
     }
