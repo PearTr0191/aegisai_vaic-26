@@ -304,9 +304,10 @@
         <label class="search-label" id="lbl-status">Trạng thái</label>
         <select class="search-select" id="q-status">
           <option value="">-- Tất cả --</option>
-          <option value="representative" id="opt-representative">Danh sách đại diện</option>
+          <option value="inscribed" id="opt-inscribed">Danh sách đại diện</option>
           <option value="urgent"    id="opt-urgent">Cấp thiết</option>
           <option value="national"  id="opt-national">Quốc gia</option>
+          <option value="tentative" id="opt-tentative">Đề cử</option>
         </select>
       </div>
 
@@ -389,8 +390,8 @@ const DB_STRINGS = {
     optInstr:'Âm nhạc · Nhạc cụ', optSingings:'Hát · Dân ca',
     optBelief:'Tín ngưỡng · Lễ nghi', optFest:'Lễ hội dân gian',
     optCraft:'Nghề thủ công',
-    optRepresentative:'Danh sách đại diện', optUrgent:'Cấp thiết',
-    optNational:'Quốc gia',
+    optInscribed:'Danh sách đại diện', optUrgent:'Cấp thiết',
+    optNational:'Quốc gia', optTentative:'Đề cử',
     btnSearch:'Tìm kiếm', btnReset:'Đặt lại',
     resultSummary: n => `Hiển thị <strong>${n}</strong> di sản`,
     thNo:'STT', thName:'Tên Di Sản', thYear:'Năm công nhận', thLoc:'Địa Điểm',
@@ -409,8 +410,8 @@ const DB_STRINGS = {
     optInstr:'Instrumental Music', optSingings:'Singing · Folk Songs',
     optBelief:'Belief & Ritual', optFest:'Folk Festival',
     optCraft:'Traditional Craft',
-    optRepresentative:'Representative List', optUrgent:'Urgent Safeguarding',
-    optNational:'National',
+    optInscribed:'Representative List', optUrgent:'Urgent Safeguarding',
+    optNational:'National', optTentative:'Tentative',
     btnSearch:'Search', btnReset:'Reset',
     resultSummary: n => `Showing <strong>${n}</strong> heritage items`,
     thNo:'No.', thName:'Heritage Name', thYear:'Year', thLoc:'Location',
@@ -458,9 +459,10 @@ function applyLang() {
   document.getElementById('opt-craft').text     = s.optCraft;
   const selStatus = document.getElementById('q-status');
   selStatus.options[0].text = s.optAll;
-  document.getElementById('opt-representative').text = s.optRepresentative;
+  document.getElementById('opt-inscribed').text = s.optInscribed;
   document.getElementById('opt-urgent').text    = s.optUrgent;
   document.getElementById('opt-national').text  = s.optNational;
+  document.getElementById('opt-tentative').text = s.optTentative;
   document.querySelectorAll('.lang-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.lang === lang)
   );

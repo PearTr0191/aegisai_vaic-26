@@ -1,277 +1,177 @@
 import io
-import base64
-import json
-from typing import List, Dict, cast
+import time
+from typing import Dict, Tuple
+from pathlib import Path
 import numpy as np
-import torch
-import onnxruntime as ort
 import librosa
-
-from app.schemas.audio import (
-    AudioAnalysisResponse,
-    GenreScore,
-    InstrumentScore,
-    TechniqueScore,
-    OrnamentEvent,
-)
+from scipy.spatial.distance import cosine
+from app.schemas.audio import AudioScoreResponse
 
 
-class AudioPreprocessor:
-    """Preprocess audio to mel-spectrogram for model input"""
-
-    def __init__(
-        self,
-        sample_rate: int = 22050,
-        n_mels: int = 128,
-        n_fft: int = 2048,
-        hop_length: int = 512,
-        max_duration: float = 30.0,
-    ):
-        self.sample_rate = sample_rate
-        self.n_mels = n_mels
-        self.n_fft = n_fft
-        self.hop_length = hop_length
-        self.max_samples = int(max_duration * sample_rate)
-
-    def process(self, waveform: torch.Tensor, sr: int) -> torch.Tensor:
-        """
-        Convert waveform to mel-spectrogram
-        Input: (channels, samples)
-        Output: (1, 1, n_mels, time) - batch format for ONNX
-        """
-        # Resample if needed using librosa
-        if sr != self.sample_rate:
-            y = waveform.squeeze(0).numpy()
-            y = librosa.resample(y, orig_sr=sr, target_sr=self.sample_rate)
-            waveform = torch.from_numpy(y).unsqueeze(0)
-            sr = self.sample_rate
-
-        # Convert to mono if stereo
-        if waveform.shape[0] > 1:
-            waveform = waveform.mean(dim=0, keepdim=True)
-
-        # Trim or pad to max duration
-        if waveform.shape[1] > self.max_samples:
-            waveform = waveform[:, : self.max_samples]
-        elif waveform.shape[1] < self.max_samples:
-            pad_len = self.max_samples - waveform.shape[1]
-            waveform = torch.nn.functional.pad(waveform, (0, pad_len))
-
-        # Compute mel spectrogram using librosa
-        y = waveform.squeeze(0).numpy()
-        mel = librosa.feature.melspectrogram(
-            y=y, sr=self.sample_rate, n_mels=self.n_mels, n_fft=self.n_fft, hop_length=self.hop_length, power=2.0
-        )
-        log_mel = librosa.power_to_db(mel, ref=np.max)
-
-        # Normalize
-        log_mel = (log_mel - log_mel.mean()) / (log_mel.std() + 1e-8)
-
-        # Convert to tensor and add batch/channel dims: (1, 1, n_mels, time)
-        mel_tensor = torch.from_numpy(log_mel.astype(np.float32)).unsqueeze(0).unsqueeze(0)
-
-        return mel_tensor
-
-    def generate_waveform_peaks(self, waveform: torch.Tensor, n_peaks: int = 100) -> List[float]:
-        """Generate downsampled waveform peaks for visualization"""
-        # Convert to mono
-        if waveform.shape[0] > 1:
-            waveform = waveform.mean(dim=0, keepdim=True)
-
-        # Downsample to n_peaks
-        samples = waveform.shape[1]
-        step = max(1, samples // n_peaks)
-        peaks = []
-        for i in range(0, samples, step):
-            chunk = waveform[0, i : i + step]
-            if chunk.numel() > 0:
-                peaks.append(float(chunk.abs().max()))
-        
-        # Ensure exactly n_peaks
-        if len(peaks) > n_peaks:
-            peaks = peaks[:n_peaks]
-        elif len(peaks) < n_peaks:
-            peaks.extend([0.0] * (n_peaks - len(peaks)))
-        
-        return peaks
+# Reference audio paths mapping - maps heritage item IDs to reference vocal audio files
+REFERENCE_AUDIO_PATHS: Dict[int, Path] = {
+    3: Path(__file__).resolve().parents[3] / "Project" / "audio" / "quanho-embed.wav",
+    17: Path(__file__).resolve().parents[3] / "Project" / "audio" / "ho-embed.wav",
+}
 
 
-class EthnoMusicAnalyzer:
+class VocalSimilarityAnalyzer:
     """
-    ONNX Runtime inference for EthnoMusicNet
-    Multi-task: genre (2), instruments (12 multi-label), techniques (10 multi-label), confidence (1)
+    Compare user's singing against reference vocal samples using MFCC similarity.
+    Returns a 0-100 score indicating how close the user's voice matches the reference style.
+    Includes vocal activity detection to filter out non-vocal audio.
     """
 
-    GENRE_LABELS = [
-        "quan_ho", "ho"
-    ]
+    def __init__(self, reference_dir: str = "Project/audio"):
+        self.reference_dir = Path(reference_dir)
 
-    INSTRUMENT_LABELS = [
-        "dan_bau", "dan_tranh", "dan_nhi", "dan_ty_ba", "sao",
-        "ken", "tieu", "phach", "trong_de", "trong_chat", "mo", "voice"
-    ]
+    def _extract_mfcc(self, y: np.ndarray, sr: int, n_mfcc: int = 13) -> np.ndarray:
+        """Extract MFCC features from audio signal."""
+        mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc)
+        return np.mean(mfccs, axis=1)
 
-    TECHNIQUE_LABELS = [
-        "nay_hat", "run_hat", "lay_hat", "so_hat", "nhap_hat",
-        "chuyen_hat", "vuot_hat", "dam_hat", "roi_hat", "kep_hat"
-    ]
+    def _compute_vocal_confidence(self, y: np.ndarray, sr: int) -> Tuple[float, str]:
+        """
+        Compute confidence that the audio contains sung vocals.
+        Uses multiple acoustic features with strict thresholds.
+        Returns (confidence_score, reason).
+        """
+        # Use librosa's harmonic/percussive source separation
+        y_harmonic, y_percussive = librosa.effects.hpss(y)
+        
+        # 1. Harmonic-to-percussive ratio - vocals are primarily harmonic
+        harmonic_energy = np.mean(y_harmonic ** 2)
+        percussive_energy = np.mean(y_percussive ** 2)
+        hpss_ratio = harmonic_energy / (percussive_energy + 1e-10)
+        
+        # 2. Pitch activity using pyin
+        f0, voiced_flag, _ = librosa.pyin(y, fmin=80, fmax=400, sr=sr)
+        pitches = f0[~np.isnan(f0)]
+        pitch_activity = len(pitches) / len(f0) if len(f0) > 0 else 0
+        
+        # 3. Spectral flatness - vocals are more tonal (lower flatness)
+        spectral_flatness = librosa.feature.spectral_flatness(y=y)
+        mean_flatness = np.mean(spectral_flatness)
+        
+        # 4. Zero crossing rate - vocals have low-mid ZCR
+        zcr = librosa.feature.zero_crossing_rate(y)
+        mean_zcr = np.mean(zcr)
+        
+        # 5. RMS energy variance - vocals have stable energy
+        rms = librosa.feature.rms(y=y)
+        rms_var = np.var(rms)
+        rms_mean = np.mean(rms)
+        
+        # Strict vocal detection: ANY check failing = non-vocal
+        # HPSS check: vocals should be mostly harmonic
+        if hpss_ratio < 5.0:
+            return 1.0, "percussive"
+        
+        # Pitch activity check: sustained pitch
+        if pitch_activity < 0.7:
+            return 1.0, "low_pitch"
+        
+        # Spectral flatness check: not noise-like
+        if mean_flatness > 0.2:
+            return 1.0, "noise_like"
+        
+        # ZCR check: percussive sounds have high ZCR
+        if mean_zcr > 0.15:
+            return 1.0, "percussive"
+        
+        # Energy variance check: vocals have stable energy
+        if rms_var / (rms_mean + 1e-6) > 1.5:
+            return 1.0, "percussive"
+        
+        # All checks passed - likely vocals
+        return 100.0, "vocal_detected"
 
-    def __init__(self, model_path: str):
-        self.session = ort.InferenceSession(
-            model_path, providers=["CPUExecutionProvider"]
-        )
-        self.preprocessor = AudioPreprocessor()
-        self.input_name = self.session.get_inputs()[0].name
-        self.output_names = [o.name for o in self.session.get_outputs()]
+    def _compute_similarity(self, user_mfcc: np.ndarray, ref_mfcc: np.ndarray, 
+                          vocal_confidence: float) -> float:
+        """
+        Compute spectral similarity using MFCC cosine similarity.
+        Returns 0-100 similarity score.
+        """
+        # Cosine similarity on MFCC means
+        cosine_sim = max(0, 1 - cosine(user_mfcc, ref_mfcc)) * 100
+        
+        # Apply vocal confidence penalty
+        # Very low confidence for non-vocal = very low scores
+        if vocal_confidence < 10:
+            confidence_penalty = vocal_confidence / 100  # e.g., 1.0 -> 0.01
+        elif vocal_confidence < 50:
+            confidence_penalty = vocal_confidence / 50   # e.g., 25 -> 0.5
+        else:
+            confidence_penalty = 1.0
+        
+        # Final score
+        final_score = cosine_sim * confidence_penalty
+        return round(final_score, 1)
 
-    async def analyze(
+    def _get_feedback(self, score: float, item_id: int, vocal_reason: str) -> str:
+        """Generate human-readable feedback based on score."""
+        if vocal_reason != "vocal_detected":
+            return "No clear vocal detected. Please sing or hum into the microphone more clearly."
+        
+        if score >= 80:
+            return "Excellent! Your singing closely matches the traditional style's fluidity and character."
+        elif score >= 65:
+            return "Good! Your voice shows strong resemblance to the traditional style."
+        elif score >= 50:
+            return "Fair. Try matching the melodic contour and rhythm more closely."
+        elif score >= 30:
+            return "Needs improvement. Listen carefully to the reference and try to emulate the vocal style."
+        else:
+            return "Keep practicing! Focus on the phrasing and tonal characteristics of the tradition."
+
+    def analyze(
         self,
-        audio_bytes: bytes,
-        filename: str,
-        audio_loader = None,
-    ) -> AudioAnalysisResponse:
-        """Main analysis pipeline"""
-        import time
+        user_audio_bytes: bytes,
+        item_id: int,
+    ) -> AudioScoreResponse:
+        """
+        Analyze user recording against reference.
+        
+        Args:
+            user_audio_bytes: Raw audio bytes from user recording
+            item_id: Heritage item ID to identify which reference to use
+            
+        Returns:
+            AudioScoreResponse with similarity score
+        """
         start_time = time.time()
 
-        # 1. Load audio using librosa
-        y, sr = librosa.load(io.BytesIO(audio_bytes), sr=None, mono=True)
-        waveform = torch.from_numpy(y).unsqueeze(0)
+        # Load user audio
+        try:
+            user_y, user_sr = librosa.load(io.BytesIO(user_audio_bytes), sr=22050, mono=True)
+        except Exception as e:
+            raise ValueError(f"Failed to load user audio: {e}")
 
-        # 2. Preprocess
-        mel_spec = self.preprocessor.process(waveform, sr)
+        # Check for vocal activity
+        vocal_confidence, vocal_reason = self._compute_vocal_confidence(user_y, user_sr)
 
-        # 3. Inference
-        inputs = {self.input_name: mel_spec.numpy()}
-        outputs = self.session.run(self.output_names, inputs)
+        # Get reference path
+        ref_path = REFERENCE_AUDIO_PATHS.get(item_id)
+        if not ref_path:
+            raise ValueError(f"No reference audio available for item ID {item_id}")
 
-        # Parse outputs (assuming order: genre_logits, instrument_probs, technique_probs, confidence)
-        genre_logits = outputs[0]
-        instrument_probs = outputs[1]
-        technique_probs = outputs[2]
-        confidence = outputs[3]
+        # Load reference audio
+        try:
+            ref_y, ref_sr = librosa.load(ref_path, sr=22050, mono=True)
+        except Exception as e:
+            raise ValueError(f"Failed to load reference audio: {e}")
 
-        # 4. Post-process genre
-        genre_idx = int(np.argmax(genre_logits, axis=-1).item())
-        genre_probs = self._softmax(genre_logits[0])
-        genre_conf = float(genre_probs[genre_idx])
+        # Extract MFCC features
+        user_mfcc = self._extract_mfcc(user_y, user_sr)
+        ref_mfcc = self._extract_mfcc(ref_y, ref_sr)
 
-        # 5. Post-process instruments (multi-label, threshold 0.5)
-        instrument_scores = instrument_probs[0]
-        detected_instruments = [
-            self.INSTRUMENT_LABELS[i]
-            for i, score in enumerate(instrument_scores)
-            if score > 0.5
-        ]
-
-        # 6. Post-process techniques (multi-label, threshold 0.5)
-        technique_scores = technique_probs[0]
-        detected_techniques = [
-            self.TECHNIQUE_LABELS[i]
-            for i, score in enumerate(technique_scores)
-            if score > 0.5
-        ]
-
-        # 7. Ornament timeline (rule-based on pitch contour)
-        ornament_timeline = self._detect_ornaments(waveform, sr)
-
-        # 8. Waveform for visualization
-        waveform_peaks = self.preprocessor.generate_waveform_peaks(waveform)
+        # Compute similarity score
+        similarity = self._compute_similarity(user_mfcc, ref_mfcc, vocal_confidence)
 
         processing_time = int((time.time() - start_time) * 1000)
 
-        # 9. Build response
-        return AudioAnalysisResponse(
-            genre=GenreScore(
-                label=cast(str, self.GENRE_LABELS[genre_idx]),
-                confidence=genre_conf,
-                all_scores={label: float(score) for label, score in zip(self.GENRE_LABELS, genre_probs)},
-            ),
-            instruments=InstrumentScore(
-                detected=cast(List[str], detected_instruments),
-                all_scores={label: float(score) for label, score in zip(self.INSTRUMENT_LABELS, instrument_scores)},
-            ),
-            techniques=TechniqueScore(
-                detected=cast(List[str], detected_techniques),
-                all_scores={label: float(score) for label, score in zip(self.TECHNIQUE_LABELS, technique_scores)},
-                ornament_timeline=ornament_timeline,
-            ),
-            confidence=float(np.asarray(confidence).item()) if hasattr(confidence, "item") else float(confidence),
+        return AudioScoreResponse(
+            score=similarity,
+            feedback=self._get_feedback(similarity, item_id, vocal_reason),
             processing_time_ms=processing_time,
-            waveform_url=f"data:application/json;base64,{self._encode_waveform(waveform_peaks)}",
         )
-
-    def _softmax(self, x: np.ndarray) -> np.ndarray:
-        """Numerically stable softmax"""
-        e_x = np.exp(x - np.max(x))
-        return e_x / e_x.sum()
-
-    def _detect_ornaments(self, waveform: torch.Tensor, sr: int) -> List[OrnamentEvent]:
-        """
-        Rule-based ornament detection on pitch contour (using librosa.pyin)
-        - nẩy: sudden pitch jump > 3 semitones in < 100ms
-        - rung: periodic FM modulation 4-8 Hz, depth > 50 cents
-        - lay: smooth pitch glide > 2 semitones over 200-500ms
-        """
-        try:
-            # Convert to mono numpy
-            y = waveform.mean(dim=0).numpy() if waveform.shape[0] > 1 else waveform[0].numpy()
-            
-            # Pitch tracking with PYIN
-            f0, voiced_flag, voiced_probs = librosa.pyin(
-                y,
-                fmin=float(librosa.note_to_hz("C2")),
-                fmax=float(librosa.note_to_hz("C7")),
-                sr=sr,
-                hop_length=self.preprocessor.hop_length,
-            )
-
-            events = []
-            hop_time = self.preprocessor.hop_length / sr
-            semitone_ratio = 2 ** (1 / 12)
-
-            # Detect nẩy (sudden pitch jumps)
-            pitch_diff = np.diff(f0)
-            nay_threshold = 3 * semitone_ratio  # 3 semitones
-            nay_indices = np.where(
-                (np.abs(pitch_diff) > nay_threshold) & voiced_flag[:-1] & voiced_flag[1:]
-            )[0]
-            
-            for idx in nay_indices:
-                time_sec = idx * hop_time
-                confidence = min(1.0, abs(pitch_diff[idx]) / (5 * semitone_ratio))
-                events.append(OrnamentEvent(
-                    time_seconds=round(time_sec, 2),
-                    technique="nay_hat",
-                    confidence=round(confidence, 2),
-                ))
-
-            # Detect lay (portamento) - smooth pitch glides
-            window_size = int(0.3 / hop_time)  # 300ms window
-            for i in range(len(f0) - window_size):
-                segment = f0[i:i+window_size]
-                voiced_seg = voiced_flag[i:i+window_size]
-                if voiced_seg.sum() > window_size * 0.7:
-                    pitch_change = segment[-1] - segment[0]
-                    if abs(pitch_change) > 2 * semitone_ratio:  # > 2 semitones
-                        time_sec = i * hop_time
-                        confidence = min(1.0, abs(pitch_change) / (4 * semitone_ratio))
-                        events.append(OrnamentEvent(
-                            time_seconds=round(time_sec, 2),
-                            technique="lay_hat",
-                            confidence=round(confidence, 2),
-                        ))
-                        i += window_size  # Skip ahead
-
-            # Sort by time
-            events.sort(key=lambda e: e.time_seconds)
-            return events[:20]  # Limit to 20 events
-
-        except Exception:
-            # Fallback: return empty timeline
-            return []
-
-    def _encode_waveform(self, peaks: List[float]) -> str:
-        """Encode waveform peaks as base64 JSON"""
-        data = json.dumps(peaks).encode()
-        return base64.b64encode(data).decode()
