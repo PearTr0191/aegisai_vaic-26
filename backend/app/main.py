@@ -59,6 +59,14 @@ if PROJECT_DIR.exists():
         StaticFiles(directory=str(PROJECT_DIR), html=True),
         name="legacy-frontend",
     )
+    # Also mount audio files from Project/audio/ at /audio path
+    AUDIO_DIR = PROJECT_DIR / "audio"
+    if AUDIO_DIR.exists():
+        app.mount(
+            "/audio",
+            StaticFiles(directory=str(AUDIO_DIR), html=False),
+            name="project-audio",
+        )
 
 # Serve frontend/ public assets (audio, images)
 FRONTEND_PUBLIC = Path(__file__).resolve().parents[2] / "frontend" / "public"

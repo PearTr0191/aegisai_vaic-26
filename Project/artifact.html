@@ -705,6 +705,9 @@
       color: var(--muted);
       font-size: 12px;
     }
+    .audio-analysis-loading[hidden] {
+      display: none;
+    }
     .spinner {
       width: 18px;
       height: 18px;
@@ -715,34 +718,36 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .audio-analysis-results {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    /* ── Single Score Display ── */
+    .vocal-score-display {
+      text-align: center;
+      padding: 12px 0;
     }
-    .analysis-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+    .vocal-score-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 8px;
     }
-    .analysis-label {
+    .vocal-score-value.score-excellent { color: #4caf84; }
+    .vocal-score-value.score-good { color: var(--gold-light); }
+    .vocal-score-value.score-fair { color: #c9a84c; }
+    .vocal-score-value.score-poor { color: #d4524a; }
+    .vocal-score-label {
       font-size: 11px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      flex-shrink: 0;
+      margin-bottom: 12px;
     }
-    .analysis-value {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--gold-light);
-      text-align: right;
-      flex: 1;
-      margin-left: 12px;
+    .vocal-score-feedback {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      text-align: center;
+      padding: 0 8px;
     }
 
     /* ── Error State ── */
@@ -1281,24 +1286,19 @@ function renderAudioSection(t) {
   }
 
   const previewSrc = t.audio_preview;
-  const vocalSrc = t.audio_vocal_only || t.audio_preview;
+  const nameLabel = lang === 'vi' ? t.name : t.english;
   const audioSectionHTML = `
     <div class="modal-audio-section">
-      <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Samples'}</h4>
+      <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Sample'}</h4>
       <div class="audio-sample-item">
-        <span class="audio-sample-label">${lang === 'vi' ? 'Bản gốc' : 'Original'}:</span>
+        <span class="audio-sample-label">${lang === 'vi' ? 'Nghe tham khảo' : 'Reference'}:</span>
         <audio controls src="${previewSrc}" class="modal-audio-player"></audio>
-        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - bản gốc' : 'Quan họ Bắc Ninh - original version'}</p>
-      </div>
-      <div class="audio-sample-item">
-        <span class="audio-sample-label">${lang === 'vi' ? 'Chỉ giọng' : 'Vocals only'}:</span>
-        <audio controls src="${vocalSrc}" class="modal-audio-player"></audio>
-        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - phiên bản chỉ giọng hát' : 'Quan họ Bắc Ninh - vocals only version'}</p>
+        <p class="modal-audio-caption">${nameLabel}</p>
       </div>
     </div>
     <div class="modal-practice-section">
       <h4>${lang === 'vi' ? 'Thử hát & Phân tích' : 'Try Singing & Analyze'}</h4>
-      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích thể loại, nhạc cụ và kỹ thuật' : 'Record your singing for AI analysis of genre, instruments, and techniques'}</p>
+      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích độ tương đồng với phong cách truyền thống' : 'Record your singing for AI analysis of traditional style similarity'}</p>
       <div class="recorder-controls">
         <button class="record-btn" id="record-btn-${t.id}" onclick="toggleRecording(${t.id})">
           <svg class="record-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -1339,21 +1339,10 @@ function renderAudioSection(t) {
           <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
         </div>
         <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Thể loại' : 'Genre'}</span>
-            <span class="analysis-value" id="analysis-genre-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Độ tin cậy' : 'Confidence'}</span>
-            <span class="analysis-value" id="analysis-confidence-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Nhạc cụ' : 'Instruments'}</span>
-            <span class="analysis-value" id="analysis-instruments-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Kỹ thuật' : 'Techniques'}</span>
-            <span class="analysis-value" id="analysis-techniques-${t.id}">—</span>
+          <div class="vocal-score-display">
+            <div class="vocal-score-value" id="analysis-score-${t.id}">—</div>
+            <div class="vocal-score-label">${lang === 'vi' ? 'Độ tương đồng phong cách' : 'Style Similarity'}</div>
+            <div class="vocal-score-feedback" id="analysis-feedback-${t.id}"></div>
           </div>
         </div>
         <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
@@ -1634,6 +1623,8 @@ async function analyzeUserRecording(id) {
   const loading = document.getElementById(`audio-analysis-loading-${id}`);
   const results = document.getElementById(`audio-analysis-results-${id}`);
   const error = document.getElementById(`audio-analysis-error-${id}`);
+  const scoreEl = document.getElementById(`analysis-score-${id}`);
+  const feedbackEl = document.getElementById(`analysis-feedback-${id}`);
   const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
   analysisSection.hidden = false;
   loading.hidden = false;
@@ -1644,15 +1635,26 @@ async function analyzeUserRecording(id) {
     const wavBlob = await convertWebMToWav(state.audioBlob);
     const formData = new FormData();
     formData.append('file', wavBlob, `recording_${id}.wav`);
+    formData.append('reference_id', id);
     const response = await fetch('/api/v1/audio/analyze', { method: 'POST', body: formData });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    const GENRE_VI_MAP = { 'quan_ho': 'Quan họ', 'ca_tru': 'Ca trù', 'nha_nhac': 'Nhã nhạc', 'don_ca_tai_tu': 'Đờn ca tài tử', 'ho': 'Hò' };
-    const genreLabel = data.genre?.label || 'unknown';
-    document.getElementById(`analysis-genre-${id}`).textContent = lang === 'vi' ? (GENRE_VI_MAP[genreLabel] || genreLabel) : genreLabel;
-    document.getElementById(`analysis-confidence-${id}`).textContent = ((data.genre?.confidence || data.confidence || 0) * 100).toFixed(1) + '%';
-    document.getElementById(`analysis-instruments-${id}`).textContent = data.instruments?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
-    document.getElementById(`analysis-techniques-${id}`).textContent = data.techniques?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    const score = data.score || 0;
+    const feedback = data.feedback || '';
+    
+    // Set score color class based on value
+    scoreEl.textContent = score.toFixed(1);
+    scoreEl.className = 'vocal-score-value';
+    if (score >= 80) {
+      scoreEl.classList.add('score-excellent');
+    } else if (score >= 65) {
+      scoreEl.classList.add('score-good');
+    } else if (score >= 50) {
+      scoreEl.classList.add('score-fair');
+    } else {
+      scoreEl.classList.add('score-poor');
+    }
+    feedbackEl.textContent = feedback;
     loading.hidden = true;
     results.hidden = false;
   } catch (err) {
