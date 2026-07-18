@@ -42,14 +42,32 @@ app = FastAPI(
     redoc_url="/redoc" if settings.DEBUG else None,
 )
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS - allow all origins for production (set specific origins in CORS_ORIGINS env var)
+if "*" in settings.CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+# Serve React frontend from /static (built in Dockerfile)
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+if STATIC_DIR.exists():
+    app.mount(
+        "/",
+        StaticFiles(directory=str(STATIC_DIR), html=True),
+        name="react-frontend",
+    )
 
 # Serve legacy Project/ frontend for unified local origin
 PROJECT_DIR = Path(__file__).resolve().parents[2] / "Project"
@@ -58,23 +76,6 @@ if PROJECT_DIR.exists():
         "/legacy",
         StaticFiles(directory=str(PROJECT_DIR), html=True),
         name="legacy-frontend",
-    )
-    # Also mount audio files from Project/audio/ at /audio path
-    AUDIO_DIR = PROJECT_DIR / "audio"
-    if AUDIO_DIR.exists():
-        app.mount(
-            "/audio",
-            StaticFiles(directory=str(AUDIO_DIR), html=False),
-            name="project-audio",
-        )
-
-# Serve frontend/ public assets (audio, images)
-FRONTEND_PUBLIC = Path(__file__).resolve().parents[2] / "frontend" / "public"
-if FRONTEND_PUBLIC.exists():
-    app.mount(
-        "/static",
-        StaticFiles(directory=str(FRONTEND_PUBLIC), html=False),
-        name="frontend-public",
     )
 
 # Health check
