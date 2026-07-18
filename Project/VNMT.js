@@ -246,9 +246,9 @@ let lang = localStorage.getItem('vnmt_lang') || 'vi';
 const STRINGS = {
   vi: {
     headerEyebrow: 'Di Sản Phi Vật Thể Được UNESCO Công Nhận',
-    titleLine1: 'Di Sản',
-    titleEm: 'Phi Vật Thể',
-    titleLine2: 'Việt Nam',
+    titleLine1: 'VietHeritage',
+    titleEm: 'Map',
+    //titleLine2: 'Việt Nam',
     statShownLabel: 'Hiển thị',
     statTotalLabel: 'Tổng số',
     statLocsLabel: 'Tỉnh thành',
@@ -273,9 +273,9 @@ const STRINGS = {
   },
   en: {
     headerEyebrow: 'UNESCO-Recognized Intangible Cultural Heritage',
-    titleLine1: 'Intangible',
-    titleEm: 'Heritage',
-    titleLine2: 'Vietnam',
+    titleLine1: 'VietHeritage',
+    titleEm: 'Map',
+    //titleLine2: 'Vietnam',
     statShownLabel: 'Shown',
     statTotalLabel: 'Total',
     statLocsLabel: 'Provinces',
