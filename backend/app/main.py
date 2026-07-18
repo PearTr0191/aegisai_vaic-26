@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 import logging
 
 try:
@@ -48,6 +50,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve legacy Project/ frontend for unified local origin
+PROJECT_DIR = Path(__file__).resolve().parents[2] / "Project"
+if PROJECT_DIR.exists():
+    app.mount(
+        "/legacy",
+        StaticFiles(directory=str(PROJECT_DIR), html=True),
+        name="legacy-frontend",
+    )
+
+# Serve frontend/ public assets (audio, images)
+FRONTEND_PUBLIC = Path(__file__).resolve().parents[2] / "frontend" / "public"
+if FRONTEND_PUBLIC.exists():
+    app.mount(
+        "/static",
+        StaticFiles(directory=str(FRONTEND_PUBLIC), html=False),
+        name="frontend-public",
+    )
 
 # Health check
 @app.get("/health")

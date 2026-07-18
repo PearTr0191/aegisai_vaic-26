@@ -17,7 +17,7 @@ async def analyze_audio(
     Analyze Vietnamese traditional music audio.
     Returns genre, instruments, techniques (ornaments), confidence, and waveform.
     """
-    if file.content_type not in ["audio/wav", "audio/mpeg", "audio/mp4", "audio/m4a", "audio/x-m4a"]:
+    if file.content_type not in ["audio/wav", "audio/mpeg", "audio/mp4", "audio/m4a", "audio/x-m4a", "audio/webm"]:
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported file type: {file.content_type}",

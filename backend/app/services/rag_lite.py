@@ -1,7 +1,7 @@
 import re
 from typing import List, Optional, Literal, cast
 from uuid import UUID
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 import ollama
 import httpx
@@ -116,7 +116,7 @@ TRẢ LỜI:"""
 
         query = (
             select(KnowledgeChunk)
-            .where(func.or_(*conditions))
+            .where(or_(*conditions))
             .limit(limit)
         )
 

@@ -44,9 +44,12 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
+        "http://localhost:5500",   # VS Code Go Live
+        "http://127.0.0.1:5500",   # VS Code Go Live (alt)
         "https://vietheritage.netlify.app",
         "https://aegisai-vaic-26.onrender.com",
         "http://localhost:5000",  # Flask dev
+        "http://localhost:8000",  # FastAPI legacy frontend
     ]
 
     # Render / Production

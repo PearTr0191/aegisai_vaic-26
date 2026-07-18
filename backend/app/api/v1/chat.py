@@ -27,21 +27,21 @@ def _transcribe_audio_faster_whisper(audio_bytes: bytes) -> str:
     try:
         from faster_whisper import WhisperModel
         from app.core.config import settings
-        
+
         # Use cached model or download
         model_path = settings.WHISPER_MODEL_PATH
         if model_path.startswith("openai/"):
             model_name = model_path.replace("openai/", "")
         else:
             model_name = "base"
-        
+
         model = WhisperModel(model_name, device="cpu", compute_type="int8")
-        
+
         # Write to temp file for processing
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
-        
+
         try:
             segments, _ = model.transcribe(tmp_path, language="vi")
             transcript = " ".join([s.text for s in segments])
@@ -66,79 +66,53 @@ async def transcribe_and_chat(file: UploadFile = File(...)):
 
     # Transcribe with faster-whisper
     transcript = _transcribe_audio_faster_whisper(audio_bytes)
-    
+
     if transcript:
         # Forward to text chat endpoint
         return await chat(ChatRequest(message=transcript, lang="vi"))
-    
+
     # Fallback if transcription fails
     return ChatResponse(
-        response="Xin lỗi, tôi chưa thể xử lý âm thanh. Vui lòng viết tin nhắn.",
+        response="Xin lá»—i, tÃ´i chÆ°a thá»ƒ xá»­ lÃ½ Ã¢m thanh. Vui lÃ²ng viáº¿t tin nháº¯n.",
         confidence=0.0,
     )
 
 
-# Text chat using RAG-lite
+# Text chat using LocalChatService (no external LLM required)
 @router.post("", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     """
     Chat endpoint for heritage queries.
-    Uses RAG-lite for intangible heritage, searchable heritage sites.
+    Uses LocalChatService for intangible heritage (no external LLM required).
     """
     message = request.message.strip()
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
 
-    # Try heritage knowledge search via RAG-lite
+    # Use local chat service (no external LLM required)
     try:
-        from app.services.rag_lite import HeritageRAGLite
+        from app.services.local_chat import LocalChatService
         from app.core.database import async_session_maker
 
         async with async_session_maker() as db:
-            rag = HeritageRAGLite(db)
-            keywords = rag._extract_keywords(message)
-            chunks = await rag._keyword_search(keywords, persona_id=None, limit=3)
+            chat = LocalChatService(db)
+            result = await chat.ask(message, persona_id="e7ce269d-d116-5334-99b9-66062d5f55ed", lang=request.lang)
 
-            if chunks:
-                context = "\n\n".join([c.content_vi for c in chunks[:3]])
-                prompt = f"""Bạn là nghệ nhân gạo cội về di sản văn hóa Việt Nam.
-Trả lời ngắn gọn, tôn trọng, dựa trên ngữ cảnh sau:
-
-{context}
-
-CÂU HỎI: {message}
-TRẢ LỜI:"""
-
-                try:
-                    import httpx
-                    from app.core.config import settings
-
-                    async with httpx.AsyncClient() as client:
-                        response = await client.post(
-                            f"{settings.OLLAMA_HOST}/api/generate",
-                            json={
-                                "model": settings.OLLAMA_MODEL,
-                                "prompt": prompt,
-                                "stream": False,
-                            },
-                            timeout=30.0,
-                        )
-                        if response.status_code == 200:
-                            result = response.json()
-                            return ChatResponse(
-                                response=result.get("response", "").strip(),
-                                confidence=0.85,
-                                sources=[c.source_type for c in chunks[:3]],
-                            )
-                except Exception:
-                    pass
-    except Exception:
+            return ChatResponse(
+                response=result.get("text", ""),
+                confidence=result.get("confidence", 0.0),
+                sources=[c.get("source_type", "") for c in result.get("citations", [])],
+            )
+    except Exception as e:
+        # Log error
+        import logging
+        logging.error(f"Chat error: {e}")
         pass
 
     # Fallback response
     if request.lang == "vi":
         return ChatResponse(
-            response="Xin lỗi, tôi không có đủ thông tin để trả lời câu hỏi này.",
+            response="Xin lá»—i, tÃ´i khÃ´ng cÃ³ Ä‘á»§ thÃ´ng tin Ä‘á»ƒ tráº£ lá»i cÃ¢u há»i nÃ y.",
             confidence=0.0,
             sources=[],
         )
@@ -207,13 +181,13 @@ async def grade_voice_recording(
 
         # Simple feedback based on grade
         if grade > 0.7:
-            feedback_vi = "Giọng hát tốt! Bạn đã bắt đầu nắm bắt được bản sắc ca trù."
-            feedback_en = "Good singing! You're beginning to grasp the essence of ca trù."
+            feedback_vi = "Giá»ng hÃ¡t tá»‘t! Báº¡n Ä‘Ã£ báº¯t Ä‘áº§u náº¯m báº¯t Ä‘Æ°á»£c báº£n sáº¯c ca trÃ¹."
+            feedback_en = "Good singing! You're beginning to grasp the essence of ca trÃ¹."
         elif grade > 0.4:
-            feedback_vi = "Cần luyện tập thêm. Hãy chú ý vào hòa âm và ngữ cảnh."
+            feedback_vi = "Cáº§n luyá»‡n táº­p thÃªm. HÃ£y chÃº Ã½ vÃ o hÃ²a Ã¢m vÃ  ngá»¯ cáº£nh."
             feedback_en = "Needs practice. Pay attention to ornamentation and context."
         else:
-            feedback_vi = "Hãy học từ nghệ nhân và luyện tập kỹ hơn. Tôi có thể giúp gì?"
+            feedback_vi = "HÃ£y há»c tá»« nghá»‡ nhÃ¢n vÃ  luyá»‡n táº­p ká»¹ hÆ¡n. TÃ´i cÃ³ thá»ƒ giÃºp gÃ¬?"
             feedback_en = "Learn from the artisan and practice more. How can I help?"
 
         return VoiceGradeResponse(

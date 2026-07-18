@@ -334,6 +334,58 @@
     }
     footer em { color:var(--gold); font-style:normal; }
 
+    /* ── PROVINCE PIE-CHART MODAL ── */
+    .province-modal {
+      position:absolute; top:16px; left:16px; z-index:1500;
+      background:rgba(10,9,0,0.92); border:1px solid var(--gold);
+      border-radius:8px; backdrop-filter:blur(12px);
+      padding:18px 20px 16px; min-width:240px; max-width:300px;
+      box-shadow:0 12px 40px rgba(0,0,0,0.6);
+      display:none;
+      animation:fadeUp .25s ease both;
+    }
+    .province-modal.visible { display:block; }
+    .province-modal-close {
+      position:absolute; top:10px; right:10px;
+      width:24px; height:24px; border-radius:50%;
+      background:rgba(255,255,255,0.05); border:1px solid var(--border);
+      color:var(--muted); font-size:13px; line-height:1; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
+    }
+    .province-modal-close:hover { color:var(--gold); border-color:var(--gold); }
+    .province-modal-title {
+      font-family:'Playfair Display',serif; font-size:16px; color:var(--white);
+      margin-bottom:3px; padding-right:20px;
+    }
+    .province-modal-sub {
+      font-size:10.5px; color:var(--muted); letter-spacing:.04em;
+      margin-bottom:14px;
+    }
+    .province-pie-wrap {
+      display:flex; align-items:center; gap:14px; margin-bottom:12px;
+    }
+    .province-pie { flex-shrink:0; }
+    .province-pie-legend { flex:1; min-width:0; }
+    .province-pie-row {
+      display:flex; align-items:center; gap:7px; margin-bottom:5px;
+      font-size:11px; color:var(--text);
+    }
+    .province-pie-dot {
+      width:9px; height:9px; border-radius:50%; flex-shrink:0;
+    }
+    .province-pie-label { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .province-pie-count { color:var(--gold); font-weight:600; flex-shrink:0; }
+    .province-pie-total {
+      font-size:11px; color:var(--muted); border-top:1px solid var(--border);
+      padding-top:8px; margin-top:4px;
+    }
+    .province-pie-total strong { color:var(--gold-light); font-weight:600; }
+    .province-pie-empty {
+      font-size:12px; color:var(--muted); font-style:italic; text-align:center;
+      padding:20px 0;
+    }
+
     @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
     @media (max-width:768px) {
@@ -347,4 +399,329 @@
       .lang-toggle { top:14px; right:16px; }
       footer { padding:8px 16px; }
       .map-reset, .map-legend { display:none; }
+    }
+
+    /* ═══════════════════════════════════════
+       AUDIO RECORDING & ANALYSIS UI
+    ═══════════════════════════════════════ */
+
+    /* ── Audio Sample Section ── */
+    .modal-audio-section {
+      margin: 16px 0;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .modal-audio-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .modal-audio-player {
+      width: 100%;
+      height: 36px;
+      border-radius: 6px;
+      outline: none;
+    }
+    .modal-audio-caption {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Practice / Recording Section ── */
+    .modal-practice-section {
+      margin: 16px 0;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--card) 100%);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .modal-practice-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+    .modal-practice-hint {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    /* ── Recorder Controls ── */
+    .recorder-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .recorder-controls button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      background: var(--card);
+      color: var(--text);
+    }
+    .recorder-controls button:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+    .recorder-controls button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ── Record Button (special) ── */
+    .record-btn {
+      border-color: rgba(196,43,43,0.4) !important;
+      color: var(--red-bright) !important;
+    }
+    .record-btn:hover {
+      border-color: var(--red-bright) !important;
+      background: rgba(196,43,43,0.1) !important;
+    }
+    .record-btn.recording {
+      background: var(--red-bright) !important;
+      color: var(--white) !important;
+      border-color: var(--red-bright) !important;
+      animation: pulse-red 1.5s infinite;
+    }
+    .record-btn.recording .record-icon { display: none; }
+    .record-btn.recording .stop-icon { display: inline-block; }
+    .record-btn .stop-icon { display: none; }
+    .record-btn.recording svg { color: var(--white); }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(196,43,43,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(196,43,43,0); }
+    }
+
+    /* ── Playback / Analyze / Clear Buttons ── */
+    .playback-btn {
+      border-color: rgba(76,175,132,0.3) !important;
+      color: #4caf84 !important;
+    }
+    .playback-btn:hover {
+      border-color: #4caf84 !important;
+      background: rgba(76,175,132,0.08) !important;
+    }
+    .analyze-btn {
+      border-color: rgba(201,168,76,0.3) !important;
+      color: var(--gold) !important;
+    }
+    .analyze-btn:hover {
+      border-color: var(--gold) !important;
+      background: rgba(201,168,76,0.08) !important;
+    }
+    .clear-btn {
+      border-color: rgba(138,124,94,0.3) !important;
+      color: var(--muted) !important;
+    }
+    .clear-btn:hover {
+      border-color: var(--muted) !important;
+      background: rgba(138,124,94,0.08) !important;
+    }
+
+    /* ── Visualizer ── */
+    .recording-visualizer {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .recording-visualizer canvas {
+      width: 100%;
+      height: 60px;
+      display: block;
+      border-radius: 4px;
+    }
+
+    /* ── Timer ── */
+    .recording-timer {
+      font-family: 'DM Sans', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold-light);
+      text-align: center;
+      padding: 4px 0;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Audio Analysis Results ── */
+    .modal-audio-analysis {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .modal-audio-analysis-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .modal-audio-analysis-header h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      margin: 0;
+    }
+    .modal-audio-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color .2s;
+    }
+    .modal-audio-close:hover { color: var(--gold); }
+
+    /* ── Analysis Content ── */
+    .audio-analysis-content { min-height: 60px; }
+
+    .audio-analysis-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .audio-analysis-results {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .analysis-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .analysis-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .analysis-value {
+      font-size: 12.5px;
+      color: var(--gold-light);
+      font-weight: 500;
+      text-align: right;
+      flex: 1;
+      margin-left: 12px;
+    }
+
+    /* ── Error State ── */
+    .audio-analysis-error {
+      text-align: center;
+      padding: 12px 0;
+    }
+    .audio-analysis-error p {
+      font-size: 12px;
+      color: var(--red-bright);
+      margin-bottom: 10px;
+    }
+    .retry-btn {
+      padding: 6px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--gold);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .retry-btn:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+
+    /* ── Sample Audio Test Button ── */
+    .modal-sample-section {
+      margin-bottom: 14px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, rgba(76,175,132,0.05) 100%);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .sample-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--card);
+      border: 2px solid var(--gold);
+      border-radius: 24px;
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sample-btn:hover:not(:disabled) {
+      background: var(--gold);
+      color: var(--bg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+    }
+    .sample-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .sample-btn.success {
+      background: var(--green, #4caf84) !important;
+      border-color: var(--green, #4caf84) !important;
+      color: var(--white) !important;
+    }
+    .modal-sample-hint {
+      margin-top: 8px !important;
+      font-size: 10.5px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .sample-audio-player {
+      display: none;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .sample-audio-player.visible {
+      display: block;
     }

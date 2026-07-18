@@ -987,7 +987,7 @@ buildDrum();
    CHAT WIDGET
 ═══════════════════════════════════════ */
 (function() {
-  const API   = 'http://localhost:5001';
+  const API   = 'http://localhost:8000';
   const POLL  = 4000;   // health-check interval ms
 
   const fab    = document.getElementById('chat-fab');
@@ -1103,7 +1103,8 @@ buildDrum();
       .then(r => r.json())
       .then(data => {
         const s = cw();
-        if (data.status === 'online') {
+        /* Backend returns "healthy" — treat as online */
+        if (data.status === 'online' || data.status === 'healthy') {
           botStatus = 'online';
           dot.className = 'chat-status-dot online';
           stText.textContent = s.statusOnline;
@@ -1143,10 +1144,10 @@ buildDrum();
     pushTyping();
 
     try {
-      const res = await fetch(`${API}/chat`, {
+      const res = await fetch(`${API}/api/v1/chat`, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ message: text }),
+        body:JSON.stringify({ message: text, lang: typeof lang !== 'undefined' ? lang : 'vi' }),
         signal: AbortSignal.timeout(30000),
       });
       const data = await res.json();

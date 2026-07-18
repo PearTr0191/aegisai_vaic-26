@@ -1,7 +1,47 @@
+/* ═══════════════════════════════════════
+   UNESCO INTANGIBLE CULTURAL HERITAGE OF VIETNAM
+   Data covers entries inscribed on the UNESCO
+   Representative List, Urgent Safeguarding List,
+   and Vietnam national intangible heritage.
+
+   NOTE: There are NO individual markers and NO
+   clusters on the map. Heritage is discovered by
+   clicking a province, which opens a pie-chart
+   modal listing the heritage it contains.
+   Provinces are coloured by their heritage's
+   dominant colour (status or genre dimension).
+═══════════════════════════════════════ */
 const TREASURES = [
-  // ── BATCH 1 · Quyết định 1426/QĐ-TTg · 1/10/2012 ──────────────
   {
     id: 1,
+    name: 'Nhã nhạc cung đình Huế',
+    english: 'Huế Royal Court Music (Nhã nhạc)',
+    lat: 16.4637, lng: 107.5909,
+    location: 'Thừa Thiên Huế · Kinh đô Huế',
+    provinces: ['Thừa Thiên Huế'],
+    year: '2003',
+    status: 'inscribed',
+    genre: 'instrumental',
+    badge: 'UNESCO',
+    desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2003, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
+    desc: 'Nhã nhạc is Vietnamese court music performed at ceremonies of the Nguyễn dynasty in Huế. Inscribed on the UNESCO Representative List in 2003, it is among the most refined traditional musical art forms of Vietnam.',
+  },
+  {
+    id: 2,
+    name: 'Không gian văn hóa Cồng Chiêng Tây Nguyên',
+    english: 'Gong Culture of the Central Highlands',
+    lat: 12.7149, lng: 108.2436,
+    location: 'Đắk Lắk · Gia Lai · Kon Tum',
+    provinces: ['Đắk Lắk','Gia Lai','Quảng Ngãi'],
+    year: '2005',
+    status: 'inscribed',
+    genre: 'instrumental',
+    badge: 'UNESCO',
+    desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2005.',
+    desc: 'The Gong Culture of the Central Highlands is central to the spiritual life of the Ba Na, Xê Đăng, Cơ Ho, M\'Nông and Ê Đê peoples. Inscribed on the UNESCO Representative List in 2005.',
+  },
+  {
+    id: 3,
     name: 'Quan họ Bắc Ninh',
     english: 'Quan họ Folk Singing of Bắc Ninh',
     lat: 21.1861, lng: 106.0763,
@@ -15,7 +55,7 @@ const TREASURES = [
     desc: 'Quan họ is an antiphonal folk singing genre from the Kinh Bắc region, inscribed on the UNESCO Representative List in 2009. Performed during village festivals, its gracious melodies and ten-verse exchanges express hundred-year bonds of friendship and affection.',
   },
   {
-    id: 2,
+    id: 4,
     name: 'Ca trù',
     english: 'Ca trù (Hát Ả Đào) Chamber Singing',
     lat: 21.0285, lng: 105.8542,
@@ -29,77 +69,7 @@ const TREASURES = [
     desc: 'Ca trù is a complex form of sung chamber music with refined ornamentation, performed by a female singer (đào nương), lute player (kép đàn) and percussionist (quán viên). UNESCO inscribed it on the Urgent Safeguarding List in 2009.',
   },
   {
-    id: 3,
-    name: 'Nhã nhạc cung đình Huế',
-    english: 'Huế Royal Court Music (Nhã nhạc)',
-    lat: 16.4637, lng: 107.5909,
-    location: 'Thừa Thiên Huế · Kinh đô Huế',
-    provinces: ['Thừa Thiên Huế'],
-    year: '2008',
-    status: 'inscribed',
-    genre: 'instrumental',
-    badge: 'UNESCO',
-    desc_vi: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được biểu diễn trong các dịp lễ triều đình nhà Nguyễn tại Huế. Được UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008, là loại hình nghệ thuật âm nhạc truyền thống tinh tế bậc nhất.',
-    desc: 'Nhã nhạc is Vietnamese court music performed at ceremonies of the Nguyễn dynasty in Huế. Inscribed on the UNESCO Representative List in 2008, it is among the most refined traditional musical art forms of Vietnam.',
-  },
-  {
-    id: 4,
-    name: 'Đờn ca tài tử',
-    english: 'Đờn ca tài tử of Southern Vietnam',
-    lat: 10.0452, lng: 105.7469,
-    location: 'Cần Thơ · Đồng bằng sông Cửu Long',
-    provinces: ['Cần Thơ','Hậu Giang','Sóc Trăng','Bạc Liêu','Cà Mau'],
-    year: '2013',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
-    desc: 'Đờn ca tài tử is a traditional musical art of southern Vietnam, originating from ritual music and cải lương theatre of the 19th century. Inscribed on the UNESCO Representative List in 2013.',
-  },
-  {
     id: 5,
-    name: 'Hát Xoan Phú Thọ',
-    english: 'Xoan Singing of Phú Thọ',
-    lat: 21.4092, lng: 105.4012,
-    location: 'Phú Thọ · Đền Hùng',
-    provinces: ['Phú Thọ'],
-    year: '2017',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
-    desc: 'Xoan singing is a ritual performance art from the Hùng Kings\' ancestral land, associated with worship at the Hùng temples. UNESCO inscribed it on the Urgent Safeguarding List in 2011 and moved it to the Representative List in 2017.',
-  },
-  {
-    id: 6,
-    name: 'Dân ca Ví, Giặm Nghệ Tĩnh',
-    english: 'Ví & Giặm Folk Songs of Nghệ Tĩnh',
-    lat: 18.6796, lng: 105.6927,
-    location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
-    provinces: ['Nghệ An','Hà Tĩnh'],
-    year: '2014',
-    status: 'inscribed',
-    genre: 'singings',
-    badge: 'UNESCO',
-    desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
-    desc: 'Ví and Giặm are two distinctive folk song genres of the Nghệ Tĩnh region, performed during labour and daily life to express emotion and community bonds. Inscribed on the UNESCO Representative List in 2014.',
-  },
-  {
-    id: 7,
-    name: 'Tín ngưỡng thờ cúng Hùng Vương',
-    english: 'Worship of the Hùng Kings in Phú Thọ',
-    lat: 21.3254, lng: 105.2116,
-    location: 'Phú Thọ · Đền Hùng',
-    provinces: ['Phú Thọ'],
-    year: '2012',
-    status: 'inscribed',
-    genre: 'belief',
-    badge: 'UNESCO',
-    desc_vi: 'Tín ngưỡng thờ cúng Hùng Vương là tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2012.',
-    desc: 'The worship of the Hùng Kings is the most profound ancestor-veneration practice of the Vietnamese, rooted in the legend of the Hùng Kings who founded the nation. Inscribed on the UNESCO Representative List in 2012.',
-  },
-  {
-    id: 8,
     name: 'Hội Gióng Phù Đổng',
     english: 'Gióng Festival of Phù Đổng & Sóc Sơn',
     lat: 21.2766, lng: 105.8461,
@@ -113,26 +83,68 @@ const TREASURES = [
     desc: 'The Gióng Festival commemorates Saint Gióng, who defeated the Ân invaders according to Vietnamese legend. Inscribed on the UNESCO Representative List in 2010.',
   },
   {
-    id: 9,
-    name: 'Không gian văn hóa Cồng Chiêng Tây Nguyên',
-    english: 'Gong Culture of the Central Highlands',
-    lat: 12.7149, lng: 108.2436,
-    location: 'Đắk Lắk · Gia Lai · Kon Tum',
-    provinces: ['Đắk Lắk','Gia Lai','Kon Tum','Đắk Nông','Lâm Đồng'],
-    year: '2008',
+    id: 6,
+    name: 'Tín ngưỡng thờ cúng Hùng Vương',
+    english: 'Worship of the Hùng Kings in Phú Thọ',
+    lat: 21.3254, lng: 105.2116,
+    location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
+    year: '2012',
     status: 'inscribed',
-    genre: 'instrumental',
+    genre: 'belief',
     badge: 'UNESCO',
-    desc_vi: 'Không gian văn hóa Cồng Chiêng Tây Nguyên gắn liền với đời sống tinh thần của các dân tộc Ba Na, Xê Đăng, Cơ Ho, M\'Nông, Ê Đê. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2008.',
-    desc: 'The Gong Culture of the Central Highlands is central to the spiritual life of the Ba Na, Xê Đăng, Cơ Ho, M\'Nông and Ê Đê peoples. Inscribed on the UNESCO Representative List in 2008.',
+    desc_vi: 'Tín ngưỡng thờ cúng Hùng Vương là tục thờ tổ tiên sâu sắc nhất của người Việt, gắn với tín niệm các vua Hùng sáng lập nước. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2012.',
+    desc: 'The worship of the Hùng Kings is the most profound ancestor-veneration practice of the Vietnamese, rooted in the legend of the Hùng Kings who founded the nation. Inscribed on the UNESCO Representative List in 2012.',
+  },
+  {
+    id: 7,
+    name: 'Đờn ca tài tử',
+    english: 'Đờn ca tài tử of Southern Vietnam',
+    lat: 10.0452, lng: 105.7469,
+    location: 'Cần Thơ · Đồng bằng sông Cửu Long',
+    provinces: ['Cần Thơ','An Giang','Vĩnh Long','Đồng Tháp','Cà Mau', 'Tây Ninh'],
+    year: '2013',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Đờn ca tài tử là nghệ thuật âm nhạc truyền thống của người Nam Bộ, bắt nguồn từ nhạc lễ và nhạc sân khấu cải lương thế kỷ XIX. UNESCO công nhận Di sản văn hóa phi vật thể đại diện nhân loại năm 2013.',
+    desc: 'Đờn ca tài tử is a traditional musical art of southern Vietnam, originating from ritual music and cải lương theatre of the 19th century. Inscribed on the UNESCO Representative List in 2013.',
+  },
+  {
+    id: 8,
+    name: 'Dân ca Ví, Giặm Nghệ Tĩnh',
+    english: 'Ví & Giặm Folk Songs of Nghệ Tĩnh',
+    lat: 18.6796, lng: 105.6927,
+    location: 'Nghệ An · Hà Tĩnh · Vùng Nghệ Tĩnh',
+    provinces: ['Nghệ An','Hà Tĩnh'],
+    year: '2014',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Ví và Giặm là hai thể loại dân ca đặc trưng của người dân xứ Nghệ, được sử dụng trong lao động, sinh hoạt và bộc lộ tình cảm. UNESCO công nhận Di sản văn hóa phi vật thể đại diện năm 2014.',
+    desc: 'Ví and Giặm are two distinctive folk song genres of the Nghệ Tĩnh region, performed during labour and daily life to express emotion and community bonds. Inscribed on the UNESCO Representative List in 2014.',
+  },
+  {
+    id: 9,
+    name: 'Nghi lễ và trò chơi kéo co',
+    english: 'Tugging Rituals and Games',
+    lat: 21.3200, lng: 105.5200,
+    location: 'Hà Nội · Lào Cai · Vĩnh Phúc · Bắc Ninh',
+    provinces: ['Hà Nội','Lào Cai','Phú Thọ','Bắc Ninh'],
+    year: '2015',
+    status: 'inscribed',
+    genre: 'festival',
+    badge: 'UNESCO',
+    desc_vi: 'Nghi lễ và trò chơi kéo co là tập tục văn hóa dân gian phổ biến ở nhiều địa phương, cầu mong mùa màng tươi tốt, thịnh vượng. UNESCO công nhận là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2015.',
+    desc: 'Tugging rituals and games are a widespread folk cultural practice in many localities, praying for bountiful harvests and prosperity. Inscribed on the UNESCO Representative List in 2015.',
   },
   {
     id: 10,
     name: 'Tín ngưỡng thờ Mẫu tam tòa',
     english: 'Viet Belief in Mother Goddesses of Three Realms',
     lat: 20.4195, lng: 106.1667,
-    location: 'Nam Định · Đền Bà Chúa Xứ',
-    provinces: ['Nam Định'],
+    location: 'Nam Định · Phủ Dày',
+    provinces: ['Ninh Bình'],
     year: '2016',
     status: 'inscribed',
     genre: 'belief',
@@ -146,7 +158,7 @@ const TREASURES = [
     english: 'Bài Chòi Art of Central Vietnam',
     lat: 15.8801, lng: 108.3380,
     location: 'Quảng Nam · Quảng Ngãi · Bình Định',
-    provinces: ['Quảng Nam','Quảng Ngãi','Bình Định','Phú Yên','Khánh Hòa'],
+    provinces: ['Đà Nẵng','Quảng Ngãi','Gia Lai'],
     year: '2017',
     status: 'inscribed',
     genre: 'singings',
@@ -156,17 +168,73 @@ const TREASURES = [
   },
   {
     id: 12,
-    name: 'Hát Then người Tày, Nùng',
-    english: 'Then Singing of the Tày & Nùng',
+    name: 'Hát Xoan Phú Thọ',
+    english: 'Xoan Singing of Phú Thọ',
+    lat: 21.4092, lng: 105.4012,
+    location: 'Phú Thọ · Đền Hùng',
+    provinces: ['Phú Thọ'],
+    year: '2017',
+    status: 'inscribed',
+    genre: 'singings',
+    badge: 'UNESCO',
+    desc_vi: 'Hát Xoan (hát Cửa đình) là loại hình nghệ thuật diễn xướng nghi lễ cổ của vùng đất tổ Hùng Vương, gắn với thờ cúng các vua Hùng. UNESCO ghi danh khẩn cấp năm 2011, chuyển sang Danh sách đại diện năm 2017.',
+    desc: 'Xoan singing is a ritual performance art from the Hùng Kings\' ancestral land, associated with worship at the Hùng temples. UNESCO inscribed it on the Urgent Safeguarding List in 2011 and moved it to the Representative List in 2017.',
+  },
+  {
+    id: 13,
+    name: 'Thực hành Then của người Tày, Nùng, Thái',
+    english: 'Then Practice of the Tày, Nùng & Thái',
     lat: 22.6607, lng: 106.2520,
     location: 'Cao Bằng · Hà Giang · Lạng Sơn',
-    provinces: ['Cao Bằng','Hà Giang','Lạng Sơn','Tuyên Quang','Thái Nguyên','Bắc Kạn'],
+    provinces: ['Cao Bằng','Lạng Sơn','Tuyên Quang'],
     year: '2019',
-    status: 'national',
+    status: 'inscribed',
     genre: 'singings',
-    badge: 'Quốc gia',
-    desc_vi: 'Hát Then là thể loại dân ca nghi lễ của người Tày, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. Được đưa vào Danh mục di sản văn hóa phi vật thể quốc gia và đang đề cử UNESCO.',
-    desc: 'Then singing is a ritual folk music genre of the Tày, Nùng and Thái peoples of the northeast, accompanied by the tính lute. Listed as Vietnamese national intangible heritage; under UNESCO tentative nomination.',
+    badge: 'UNESCO',
+    desc_vi: 'Thực hành Then là loại hình dân ca nghi lễ của người Tày, Nùng, Thái ở vùng Đông Bắc, gắn liền với đàn tính. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2019.',
+    desc: 'Then practice is a ritual folk music genre of the Tày, Nùng and Thái peoples of the northeast, accompanied by the tính lute. Inscribed on the UNESCO Representative List in 2019.',
+  },
+  {
+    id: 14,
+    name: 'Nghệ thuật Xòe Thái',
+    english: 'Xòe Dance Art of the Thái People',
+    lat: 21.4500, lng: 103.9000,
+    location: 'Yên Bái · Sơn La · Lai Châu · Điện Biên',
+    provinces: ['Lào Cai','Sơn La','Lai Châu','Điện Biên'],
+    year: '2021',
+    status: 'inscribed',
+    genre: 'festival',
+    badge: 'UNESCO',
+    desc_vi: 'Xòe Thái là điệu múa truyền thống đặc sắc của người Thái ở Tây Bắc, thể hiện tinh thần cộng đồng, tình yêu quê hương. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2021.',
+    desc: 'Xòe is a distinctive traditional dance of the Thái people in the Northwest, expressing community spirit and love of homeland. Inscribed on the UNESCO Representative List in 2021.',
+  },
+  {
+    id: 15,
+    name: 'Nghệ thuật làm gốm của người Chăm',
+    english: 'Cham Pottery Making Art',
+    lat: 11.5800, lng: 108.9500,
+    location: 'Ninh Thuận · Bình Thuận',
+    provinces: ['Lâm Đồng','Khánh Hòa'],
+    year: '2022',
+    status: 'inscribed',
+    genre: 'craft',
+    badge: 'UNESCO',
+    desc_vi: 'Nghệ thuật làm gốm của người Chăm là kỹ thuật làm gốm thủ công truyền thống độc đáo, không dùng bàn xoay, được truyền qua nhiều thế hệ. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2022.',
+    desc: 'Cham pottery making is a unique traditional handcraft technique without a potter\'s wheel, passed down through generations. Inscribed on the UNESCO Representative List in 2022.',
+  },
+  {
+    id: 16,
+    name: 'Lễ hội Vía Bà Chúa Xứ Núi Sam',
+    english: 'Festival of the Bà Chúa Xứ Goddess of Núi Sam',
+    lat: 10.6950, lng: 105.1100,
+    location: 'An Giang · Núi Sam · Châu Đốc',
+    provinces: ['An Giang'],
+    year: '2024',
+    status: 'inscribed',
+    genre: 'belief',
+    badge: 'UNESCO',
+    desc_vi: 'Lễ hội Vía Bà Chúa Xứ Núi Sam là lễ hội dân gian lớn ở miền Tây Nam Bộ, tôn vinh nữ thần bảo hộ vùng đất Châu Đốc. UNESCO công nhận Di sản văn hóa phi vật thể đại diện của nhân loại năm 2024.',
+    desc: 'The Festival of the Bà Chúa Xứ Goddess of Núi Sam is a major folk festival in the Mekong Delta, honoring the protective goddess of the Châu Đốc region. Inscribed on the UNESCO Representative List in 2024.',
   },
 ];
 
@@ -177,110 +245,118 @@ let lang = localStorage.getItem('vnmt_lang') || 'vi';
 
 const STRINGS = {
   vi: {
-    headerEyebrow: 'Hiện Vật Được Công Nhận',
-    titleLine1: 'Bảo Vật',
-    titleEm: 'Quốc Gia',
+    headerEyebrow: 'Di Sản Phi Vật Thể Được UNESCO Công Nhận',
+    titleLine1: 'Di Sản',
+    titleEm: 'Phi Vật Thể',
     titleLine2: 'Việt Nam',
     statShownLabel: 'Hiển thị',
     statTotalLabel: 'Tổng số',
-    statLocsLabel: 'Địa điểm',
+    statLocsLabel: 'Tỉnh thành',
     searchPlaceholder: 'Tìm theo tên hoặc địa điểm…',
-    allEras: 'Tất cả thời kỳ',
-    allTypes: 'Tất cả loại hình',
+    allStatuses: 'Tất cả trạng thái',
+    allGenres: 'Tất cả thể loại',
     mapReset: '⟳ Đặt lại',
     homeLink: '← Trang chủ',
     dbLink: 'Kho lưu trữ',
     viewToggleLabel: 'Xem theo',
-    viewEra: 'Thời kỳ',
-    viewType: 'Phân loại',
+    viewStatus: 'Trạng thái',
+    viewGenre: 'Thể loại',
     tileStyleLabel: 'Kiểu bản đồ',
     tileOsm: 'Bản đồ đường phố',
-    footerCopyright: '© 2026 Bảo vật Quốc gia Việt Nam',
-    footerCredit: 'Bản đồ: <em>CartoDB / OpenStreetMap</em> · Phân cụm: <em>Leaflet.MarkerCluster</em>',
-    legendEra: 'Thời kỳ',
-    legendType: 'Phân loại',
+    footerCopyright: '© 2026 Di sản văn hóa phi vật thể Việt Nam',
+    footerCredit: 'Bản đồ: <em>CartoDB / OpenStreetMap</em> · Ranh giới tỉnh: <em>vn_geo.json</em>',
+    legendStatus: 'Trạng thái UNESCO',
+    legendGenre: 'Thể loại di sản',
+    resultCountUnit: 'điều di sản',
+    provinceHover: 'điều di sản',
+    pieCta: 'Xem chi tiết →',
   },
   en: {
-    headerEyebrow: 'Nationally Recognized Artifacts',
-    titleLine1: "Vietnam's",
-    titleEm: 'National',
-    titleLine2: 'Treasures',
+    headerEyebrow: 'UNESCO-Recognized Intangible Cultural Heritage',
+    titleLine1: 'Intangible',
+    titleEm: 'Heritage',
+    titleLine2: 'Vietnam',
     statShownLabel: 'Shown',
     statTotalLabel: 'Total',
-    statLocsLabel: 'Locations',
+    statLocsLabel: 'Provinces',
     searchPlaceholder: 'Search by name or location…',
-    allEras: 'All Eras',
-    allTypes: 'All Types',
+    allStatuses: 'All Statuses',
+    allGenres: 'All Genres',
     mapReset: '⟳ Reset view',
     homeLink: '← Home',
     dbLink: 'Database',
     viewToggleLabel: 'View by',
-    viewEra: 'Era',
-    viewType: 'Category',
+    viewStatus: 'Status',
+    viewGenre: 'Genre',
     tileStyleLabel: 'Map Style',
     tileOsm: 'Street Map',
-    footerCopyright: '© 2026 Vietnam National Treasures',
-    footerCredit: 'Map: <em>CartoDB / OpenStreetMap</em> · Clustering: <em>Leaflet.MarkerCluster</em>',
-    legendEra: 'Era',
-    legendType: 'Category',
+    footerCopyright: '© 2026 Vietnam Intangible Cultural Heritage',
+    footerCredit: 'Map: <em>CartoDB / OpenStreetMap</em> · Province borders: <em>vn_geo.json</em>',
+    legendStatus: 'UNESCO Status',
+    legendGenre: 'Heritage Genre',
+    resultCountUnit: 'heritage items',
+    provinceHover: 'heritage items',
+    pieCta: 'View details →',
   },
 };
 
 function t(key) { return STRINGS[lang][key]; }
 
 function resultCountText(shown, total) {
-  return lang === 'vi' ? `${shown} trên ${total} hiện vật` : `${shown} of ${total} artifacts`;
+  return lang === 'vi'
+    ? `${shown} trên ${total} ${t('resultCountUnit')}`
+    : `${shown} of ${total} ${t('resultCountUnit')}`;
 }
-function clusterHoverText(n) {
-  return lang === 'vi' ? `${n} hiện vật trong cụm này` : `${n} artifacts in this cluster`;
+function provinceHoverText(n) {
+  return lang === 'vi' ? `${n} ${t('provinceHover')}` : `${n} ${t('provinceHover')}`;
 }
 
 /* ═══════════════════════════════════════
-   ERA & TYPE CONFIGURATION  (bilingual)
+   UNESCO STATUS & GENRE CONFIGURATION  (bilingual)
 ═══════════════════════════════════════ */
-const ERA_CONFIG = {
-  prehistoric: {
-    color:'#c9943a',
-    vi: { label:'Tiền sử · Sơ sử',  short:'Tiền sử' },
-    en: { label:'Prehistoric · Protohistoric', short:'Prehistoric' },
+const STATUS_CONFIG = {
+  urgent: {
+    color:'#d4524a',
+    vi: { label:'Danh sách cần bảo vệ khẩn cấp', short:'Cấp thiết' },
+    en: { label:'Urgent Safeguarding List', short:'Urgent' },
   },
-  century_1_10: {
-    color:'#c47c5a',
-    vi: { label:'Thế kỷ I – X',  short:'TK I–X' },
-    en: { label:'1st–10th Century', short:'1st–10th c.' },
+  inscribed: {
+    color:'#c9a84c',
+    vi: { label:'Danh sách đại diện của nhân loại', short:'Đại diện' },
+    en: { label:'Representative List of Humanity', short:'Representative' },
   },
-  century_10_20: {
-    color:'#4caf84',
-    vi: { label:'Thế kỷ X – XIX', short:'TK X–XIX' },
-    en: { label:'10th–19th Century', short:'10th–19th c.' },
-  },
-  modern_1945: {
+  national: {
     color:'#5a8a9f',
-    vi: { label:'1900 – Nay', short:'1900–Nay' },
-    en: { label:'1900–Present', short:'1900–Now' },
+    vi: { label:'Di sản văn hóa phi vật thể quốc gia', short:'Quốc gia' },
+    en: { label:'National Intangible Heritage', short:'National' },
+  },
+  tentative: {
+    color:'#8a7c5e',
+    vi: { label:'Đề cử UNESCO', short:'Đề cử' },
+    en: { label:'Tentative UNESCO List', short:'Tentative' },
   },
 };
 
-const TYPE_CONFIG = {
-  tools: {
-    color:'#d4524a',
-    vi: { label:'Công cụ & Vũ khí', short:'Công cụ' },
-    en: { label:'Tools & Weapons', short:'Tools' },
+const GENRE_CONFIG = {
+  instrumental: {
+    color:'#4caf84',
+    vi: { label:'Âm nhạc · Nhạc cụ', short:'Âm nhạc' },
+    en: { label:'Instrumental Music', short:'Instrumental' },
   },
-  religious: {
-    color:'#9b7bdf',
-    vi: { label:'Tôn giáo', short:'Tôn giáo' },
-    en: { label:'Religious', short:'Religious' },
+  singings: {
+    color:'#c9943a',
+    vi: { label:'Hát · Dân ca', short:'Hát' },
+    en: { label:'Singing · Folk Songs', short:'Singings' },
   },
-  art: {
-    color:'#e8a83c',
-    vi: { label:'Nghệ thuật & Trang trí', short:'Nghệ thuật' },
-    en: { label:'Art & Decoration', short:'Art' },
+  belief: {
+    color:'#9b6fbf',
+    vi: { label:'Tín ngưỡng · Lễ nghi', short:'Tín ngưỡng' },
+    en: { label:'Belief & Ritual', short:'Belief' },
   },
-  academic: {
-    color:'#4a9e8a',
-    vi: { label:'Học thuật & Văn bản', short:'Học thuật' },
-    en: { label:'Academic & Documents', short:'Academic' },
+  festival: {
+    color:'#c45c4a',
+    vi: { label:'Lễ hội dân gian', short:'Lễ hội' },
+    en: { label:'Folk Festival', short:'Festival' },
   },
   craft: {
     color:'#e88d4a',
@@ -290,52 +366,38 @@ const TYPE_CONFIG = {
 };
 
 /* bilingual label readers — form is 'label' or 'short' */
-function eraLabel(key, form='label')  { return ERA_CONFIG[key]?.[lang]?.[form]  || ''; }
-function typeLabel(key, form='label') { return TYPE_CONFIG[key]?.[lang]?.[form] || ''; }
+function statusLabel(key, form='label') { return STATUS_CONFIG[key]?.[lang]?.[form] || ''; }
+function genreLabel(key, form='label') { return GENRE_CONFIG[key]?.[lang]?.[form] || ''; }
 
 /* — manual status overrides for entries whose status is ambiguous — */
 const STATUS_OVERRIDES = {
-  5: 'inscribed',  // Hát Xoan — moved from Urgent (2011) to Representative (2017)
+  12: 'inscribed',  // Hát Xoan — moved from Urgent (2011) to Representative (2017)
 };
 
-/* — manual type overrides for items that keyword-matching can't handle — */
-/* ── TYPE reader — type is now a direct field on each artifact ── */
-function getType(t) {
-  return t.type || 'religious';
+/* ── STATUS reader — status is a direct field on each heritage item ── */
+function getStatus(t) {
+  if (t && STATUS_OVERRIDES[t.id]) return STATUS_OVERRIDES[t.id];
+  return t.status || 'national';
 }
 
-
-function getEra(t) {
-  const id   = (t && t.id   !== undefined) ? t.id   : null;
-  const year = (t && t.year !== undefined) ? t.year : String(t);
-
-  if (id !== null && ERA_OVERRIDES[id]) return ERA_OVERRIDES[id];
-
-  const y = String(year || '');
-  if (['Đông Sơn','Phùng Nguyên','Đồng Nai'].some(k => y.includes(k))) return 'prehistoric';
-  if (['Óc Eo','Chăm Pa'].some(k => y.includes(k)))                     return 'century_1_10';
-  if (/20th|19\d{2}/.test(y))                                            return 'modern_1945';
-
-  const yr = parseInt((y.match(/\d{3,4}/) || [])[0]);
-  if (!isNaN(yr)) {
-    if (yr >= 1900) return 'modern_1945';
-    if (yr < 939)   return 'century_1_10';   // pre-independence Vietnam
-  }
-  return 'century_10_20';
+/* ── GENRE reader — genre is a direct field on each heritage item ── */
+function getGenre(t) {
+  return t.genre || 'ho';
 }
 
 /* ── Convenience wrappers: colour lookups ── */
-function eraColor(t)  { return ERA_CONFIG[getEra(t)]?.color  || '#8a7c5e'; }
-function typeColor(t) { return TYPE_CONFIG[getType(t)]?.color || '#8a7c5e'; }
-function activeColor(t) { return viewMode === 'era' ? eraColor(t) : typeColor(t); }
+function statusColor(t) { return STATUS_CONFIG[getStatus(t)]?.color || '#8a7c5e'; }
+function genreColor(t)  { return GENRE_CONFIG[getGenre(t)]?.color   || '#8a7c5e'; }
+function activeColor(t) { return viewMode === 'status' ? statusColor(t) : genreColor(t); }
 
 /* ═══════════════════════════════════════
    STATE
 ═══════════════════════════════════════ */
-let viewMode     = 'era';   // 'era' | 'type'
-let activeFilter = 'all';   // era key, type key, or 'all'
+let viewMode     = 'status';   // 'status' | 'genre'
+let activeFilter = 'all';      // status key, genre key, or 'all'
 let searchQuery  = '';
 let activeItemId = null;
+let activeProvince = null;     // name of province currently highlighted from a card click
 
 /* ═══════════════════════════════════════
    MAP INIT
@@ -343,9 +405,8 @@ let activeItemId = null;
 const map = L.map('map', {
   center:[16.0, 107.8], zoom:5.4, zoomControl:false, preferCanvas:true
 });
-/* Zoom control removed — scroll-wheel zoom, double-click zoom, and
-   click-to-zoom on clusters remain fully functional without it.
-   This also frees up the bottom-right corner for the Map Style box. */
+/* No zoom control — scroll-wheel & double-click zoom remain functional.
+   Bottom-right corner is reserved for the Map Style box. */
 
 const TILES = {
   positron:{ url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
@@ -369,51 +430,254 @@ document.querySelectorAll('.tile-option').forEach(btn => {
 });
 
 /* ═══════════════════════════════════════
-   CLUSTER PIE CHART ICON
+   PROVINCE BORDERS (vn_geo.json)
+   — NO markers / NO clusters on the map.
+   Provinces are coloured by heritage.
 ═══════════════════════════════════════ */
-function clusterIcon(cluster) {
-  const n  = cluster.getChildCount();
-  const sz = n < 5 ? 38 : n < 10 ? 50 : n < 20 ? 62 : 76;
-  const cx = sz / 2;
-  const r  = cx - 3;
-  const ir = cx * 0.38;
-  const fs = n >= 100 ? 11 : n >= 10 ? 13 : 14;
+const NEUTRAL_FILL   = '#1a1400';
+const NEUTRAL_FILLOP = 0.04;
+const NEUTRAL_BORDER = '#3a2f10';
+const NEUTRAL_WEIGHT = 1;
 
-  const CONFIG = viewMode === 'era' ? ERA_CONFIG : TYPE_CONFIG;
+const provinceLayers = {};   // name -> Leaflet layer
 
-  /* tally the active dimension from each child marker */
-  const counts = {};
-  cluster.getAllChildMarkers().forEach(m => {
-    const key = viewMode === 'era' ? (m._era || 'century_10_20')
-                                   : (m._type || 'religious');
-    counts[key] = (counts[key] || 0) + 1;
+const borderLayer = L.geoJSON(null, {
+  style: () => ({
+    color: NEUTRAL_BORDER,
+    weight: NEUTRAL_WEIGHT,
+    opacity: 0.9,
+    fillColor: NEUTRAL_FILL,
+    fillOpacity: NEUTRAL_FILLOP,
+    smoothFactor: 1,
+  }),
+  onEachFeature: (feature, layer) => {
+    const name = feature.properties?.name || 'Unknown';
+    provinceLayers[name] = layer;
+
+    /* tooltip: province name (+ count once index is built) */
+    const items = provinceIndex[name] || [];
+    const tip = items.length
+      ? `<div class="tt-title">${name}</div>
+         <div class="tt-meta"><span class="tt-dot" style="background:${provinceDominantColor(name)}"></span>${provinceHoverText(items.length)}</div>`
+      : `<div class="tt-title">${name}</div>`;
+    layer.bindTooltip(tip, {
+      sticky: true,
+      direction: 'top',
+      className: 'artifact-tooltip',
+    });
+
+    layer.on('mouseover', () => {
+      if (activeProvince !== name) {
+        layer.setStyle({
+          weight: 2.6,
+          color: '#fff200',
+          fillOpacity: Math.min(0.55, (layer.options.fillOpacity || NEUTRAL_FILLOP) + 0.18),
+        });
+        layer.bringToFront();
+      }
+    });
+    layer.on('mouseout', () => {
+      if (activeProvince !== name) recolorProvince(name);
+    });
+    layer.on('click', () => {
+      showProvinceModal(name);
+    });
+  },
+}).addTo(map);
+
+fetch('vn_geo.json')
+  .then(r => r.json())
+  .then(geo => {
+    borderLayer.addData(geo);
+    buildProvinceIndex(geo);
+    /* attach tooltips (now that provinceIndex is built) + apply heritage colours */
+    Object.keys(provinceLayers).forEach(name => {
+      const layer = provinceLayers[name];
+      const items = provinceIndex[name] || [];
+      const tip = items.length
+        ? `<div class="tt-title">${name}</div>
+           <div class="tt-meta"><span class="tt-dot" style="background:${provinceDominantColor(name)}"></span>${provinceHoverText(items.length)}</div>`
+        : `<div class="tt-title">${name}</div>`;
+      layer.setTooltipContent(tip);
+      recolorProvince(name);
+    });
+    renderCards();   // refresh province-count stat now that index is built
+  })
+  .catch(err => console.warn('vn_geo.json load failed:', err));
+
+/* ═══════════════════════════════════════
+   PROVINCE CLICK → PIE CHART MODAL
+═══════════════════════════════════════ */
+/* Point-in-polygon test (ray-casting) */
+function pointInPolygon(lng, lat, coords) {
+  let inside = false;
+  for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+    const xi = coords[i][0], yi = coords[i][1];
+    const xj = coords[j][0], yj = coords[j][1];
+    const intersect = ((yi > lat) !== (yj > lat)) &&
+      (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/* Check if a point is inside a MultiPolygon geometry */
+function pointInMultiPolygon(lng, lat, coordinates) {
+  for (const polygon of coordinates) {
+    for (const ring of polygon) {
+      if (pointInPolygon(lng, lat, ring)) return true;
+    }
+  }
+  return false;
+}
+
+/* Province → heritage index
+   Attribution uses the explicit `provinces` array on each heritage item when
+   available, guaranteeing correct province assignment regardless of how the
+   province polygons are drawn. For items lacking a `provinces` array, we fall
+   back to a geometric point-in-polygon test. */
+let provinceIndex = {};
+
+function buildProvinceIndex(geo) {
+  provinceIndex = {};
+  geo.features.forEach(feature => {
+    const name = feature.properties?.name || 'Unknown';
+    if (!provinceIndex[name]) provinceIndex[name] = [];
   });
 
-  const slices = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  /* Precompute the polygon geometry for each province name for fallback. */
+  const geoByName = {};
+  geo.features.forEach(feature => {
+    const name = feature.properties?.name || 'Unknown';
+    geoByName[name] = feature.geometry;
+  });
 
-  /* SVG pie slices */
-  let paths    = '';
-  let dividers = '';
-  let angle    = -90;
+  TREASURES.forEach(t => {
+    if (Array.isArray(t.provinces) && t.provinces.length) {
+      /* explicit mapping — preferred */
+      t.provinces.forEach(name => {
+        if (provinceIndex[name]) {
+          if (!provinceIndex[name].some(h => h.id === t.id)) {
+            provinceIndex[name].push(t);
+          }
+        }
+      });
+    } else {
+      /* geometric fallback */
+      for (const name in geoByName) {
+        const geom = geoByName[name];
+        if (geom.type === 'MultiPolygon' &&
+            pointInMultiPolygon(t.lng, t.lat, geom.coordinates)) {
+          provinceIndex[name].push(t);
+          break;
+        }
+      }
+    }
+  });
+}
 
+/* ═══════════════════════════════════════
+   PROVINCE COLOURING  (by heritage uniqueness)
+═══════════════════════════════════════ */
+/* Returns the heritage items of a province that also satisfy the
+   active filter (status/genre). If activeFilter === 'all', all items. */
+function visibleHeritageInProvince(name) {
+  const items = provinceIndex[name] || [];
+  if (activeFilter === 'all') return items;
+  return items.filter(t => viewMode === 'status'
+    ? getStatus(t) === activeFilter
+    : getGenre(t)  === activeFilter);
+}
+
+/* Dominant dimension-key (status or genre) for a province, among the
+   visible (filter-passing) items. Returns null if none. */
+function provinceDominantKey(name) {
+  const items = visibleHeritageInProvince(name);
+  if (!items.length) return null;
+  const counts = {};
+  items.forEach(t => {
+    const key = viewMode === 'status' ? getStatus(t) : getGenre(t);
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  return Object.entries(counts).sort((a,b) => b[1] - a[1])[0][0];
+}
+
+/* Dominant colour for a province (used in tooltips). Falls back to neutral. */
+function provinceDominantColor(name) {
+  const key = provinceDominantKey(name);
+  if (!key) return NEUTRAL_BORDER;
+  const CONFIG = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+  return CONFIG[key]?.color || '#8a7c5e';
+}
+
+/* Apply a Leaflet style to a province layer based on its heritage.
+   Honours the active viewMode and filter; respects the active highlight. */
+function recolorProvince(name) {
+  const layer = provinceLayers[name];
+  if (!layer) return;
+  if (activeProvince === name) return;  // don't override active highlight
+
+  const visible = visibleHeritageInProvince(name);
+  const total   = (provinceIndex[name] || []).length;
+
+  if (!visible.length) {
+    /* Province has no (matching) heritage → neutral. If it has heritage but
+       none pass the filter, keep a faint tint so it doesn't vanish entirely. */
+    const tinted = total > 0;
+    layer.setStyle({
+      color: tinted ? '#5a4a1a' : NEUTRAL_BORDER,
+      weight: tinted ? 1.2 : NEUTRAL_WEIGHT,
+      fillColor: tinted ? '#2a1f0a' : NEUTRAL_FILL,
+      fillOpacity: tinted ? 0.10 : NEUTRAL_FILLOP,
+    });
+    return;
+  }
+
+  const key = provinceDominantKey(name);
+  const CONFIG = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+  const color = CONFIG[key]?.color || '#8a7c5e';
+  /* Saturation grows with heritage count, capped so labels stay readable. */
+  const fillOpacity = Math.min(0.42, 0.20 + visible.length * 0.06);
+
+  layer.setStyle({
+    color: color,
+    weight: 1.6,
+    fillColor: color,
+    fillOpacity: fillOpacity,
+  });
+}
+
+/* Recolour every province — called on view-mode / filter / language change. */
+function recolorAllProvinces() {
+  Object.keys(provinceLayers).forEach(recolorProvince);
+}
+
+/* ═══════════════════════════════════════
+   PIE-CHART MODAL  (lists a province's heritage)
+═══════════════════════════════════════ */
+/* Generate SVG pie chart for a province's heritage items */
+function buildProvincePieSVG(counts, total) {
+  const sz = 100, cx = sz/2, r = cx - 6, ir = cx * 0.42;
+  const CONFIG = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+  const slices = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+
+  let paths = '', dividers = '', angle = -90;
   for (const [key, count] of slices) {
-    const color    = CONFIG[key]?.color || '#8a7c5e';
-    const sweepDeg = (count / n) * 360;
-
-    if (sweepDeg >= 359.9) {
+    const color = CONFIG[key]?.color || '#8a7c5e';
+    const sweep = (count / total) * 360;
+    if (sweep >= 359.9) {
       paths = `<circle cx="${cx}" cy="${cx}" r="${r}" fill="${color}"/>`;
       break;
     }
     const a1 = angle * Math.PI / 180;
-    const a2 = (angle + sweepDeg) * Math.PI / 180;
+    const a2 = (angle + sweep) * Math.PI / 180;
     const x1 = (cx + r * Math.cos(a1)).toFixed(2);
     const y1 = (cx + r * Math.sin(a1)).toFixed(2);
     const x2 = (cx + r * Math.cos(a2)).toFixed(2);
     const y2 = (cx + r * Math.sin(a2)).toFixed(2);
-
-    paths    += `<path d="M${cx},${cx} L${x1},${y1} A${r},${r} 0 ${sweepDeg>180?1:0},1 ${x2},${y2} Z" fill="${color}"/>`;
-    dividers += `<line x1="${cx}" y1="${cx}" x2="${x1}" y2="${y1}" stroke="white" stroke-width="1.5" stroke-linecap="round"/>`;
-    angle    += sweepDeg;
+    paths += `<path d="M${cx},${cx} L${x1},${y1} A${r},${r} 0 ${sweep>180?1:0},1 ${x2},${y2} Z" fill="${color}"/>`;
+    dividers += `<line x1="${cx}" y1="${cx}" x2="${x1}" y2="${y1}" stroke="rgba(10,9,0,0.5)" stroke-width="1"/>`;
+    angle += sweep;
   }
   return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg">
     <circle cx="${cx}" cy="${cx}" r="${r+1}" fill="rgba(10,9,0,0.3)"/>
@@ -451,21 +715,21 @@ function showProvinceModal(provinceName) {
   }).join('');
 
   /* List of heritage items — clicking a row opens its detail modal. */
-  const itemRows = artifacts.map(t => {
-    const status = getStatus(t);
-    const genre  = getGenre(t);
-    const color  = activeColor(t);
-    const title  = lang === 'vi' ? t.name : t.english;
-    const sub    = lang === 'vi' ? t.english : t.name;
+  const itemRows = artifacts.map(item => {
+    const status = getStatus(item);
+    const genre  = getGenre(item);
+    const color  = activeColor(item);
+    const title  = lang === 'vi' ? item.name : item.english;
+    const sub    = lang === 'vi' ? item.english : item.name;
     return `
-      <div class="province-item" data-id="${t.id}">
+      <div class="province-item" data-id="${item.id}">
         <span class="province-item-dot" style="background:${color}"></span>
         <div class="province-item-body">
           <div class="province-item-title">${title}</div>
           <div class="province-item-sub">${sub}</div>
           <div class="province-item-tags">
-            <span style="color:${statusColor(t)}">${statusLabel(status,'short')}</span>
-            <span style="color:${genreColor(t)}">${genreLabel(genre,'short')}</span>
+            <span style="color:${statusColor(item)}">${statusLabel(status,'short')}</span>
+            <span style="color:${genreColor(item)}">${genreLabel(genre,'short')}</span>
           </div>
         </div>
         <span class="province-item-cta">${t('pieCta')}</span>
@@ -497,59 +761,172 @@ function showProvinceModal(provinceName) {
       ${lang === 'vi' ? 'Chưa có di sản phi vật thể trong tỉnh này' : 'No intangible heritage in this province'}
     </div>
   `;
+
+  const modal = document.getElementById('province-modal');
+  document.getElementById('province-modal-content').innerHTML = html;
+  modal.classList.add('visible');
+
+  /* wire up item rows → open the detail modal */
+  modal.querySelectorAll('.province-item').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = parseInt(row.dataset.id, 10);
+      closeProvinceModal();
+      activateItem(id);
+    });
+  });
 }
 
-/* rebuilds every marker's tooltip content to match the current language */
-function refreshMarkerTooltips() {
-  TREASURES.forEach(t => ITEM_MARKERS[t.id]?.setTooltipContent(buildTooltipHTML(t)));
+function closeProvinceModal() {
+  document.getElementById('province-modal').classList.remove('visible');
 }
 
-/* builds the rich content shown inside the click-to-open detail modal */
+document.getElementById('province-modal-close').addEventListener('click', closeProvinceModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProvinceModal();
+});
+
+/* ═══════════════════════════════════════
+   DETAIL MODAL (opened from sidebar card or province modal row)
+═══════════════════════════════════════ */
 function buildModalHTML(t) {
   const title = lang === 'vi' ? t.name : t.english;
   const engTitle = lang === 'vi' ? t.english : '';
-  const era   = getEra(t);
-  const type  = getType(t);
-  const eraC  = ERA_CONFIG[era]?.color  || '#8a7c5e';
-  const typeC = TYPE_CONFIG[type]?.color || '#8a7c5e';
-  const desc  = lang === 'vi' ? (t.desc_vi || t.desc) : t.desc;
+  const status = getStatus(t);
+  const genre  = getGenre(t);
+  const stC    = STATUS_CONFIG[status]?.color || '#8a7c5e';
+  const gnC    = GENRE_CONFIG[genre]?.color   || '#8a7c5e';
+  const desc   = lang === 'vi' ? (t.desc_vi || t.desc) : t.desc;
   const pending = (lang === 'vi' && !t.desc_vi)
     ? ' <span class="desc-pending">(EN)</span>' : '';
   const imageUrl = t.image || `images/artifacts/${t.id}.jpg`;
+  const hasAudioPreview = t.audio_preview;
+  const isSingingType = ['singings', 'folk_singing', 'chamber_music', 'court_music', 'work_songs'].includes(genre);
+
+  const lblYear    = lang === 'vi' ? 'Năm công nhận' : 'Recognition year';
+  const lblGenre   = lang === 'vi' ? 'Thể loại'      : 'Genre';
+  const lblLoc     = lang === 'vi' ? 'Địa điểm'      : 'Location';
+  const lblCoord   = lang === 'vi' ? 'Tọa độ'        : 'Coordinates';
+  const lblStatus  = lang === 'vi' ? 'Trạng thái'     : 'Status';
+  const lblDesc    = lang === 'vi' ? 'Mô tả'          : 'Description';
+
+  // Audio analysis result state (will be populated after recording)
+  const audioAnalysisSection = `
+    <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
+      <div class="modal-audio-analysis-header">
+        <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
+        <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
+      </div>
+      <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
+        <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
+          <div class="spinner"></div>
+          <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
+        </div>
+        <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Thể loại' : 'Genre'}</span>
+            <span class="analysis-value" id="analysis-genre-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Độ tin cậy' : 'Confidence'}</span>
+            <span class="analysis-value" id="analysis-confidence-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Nhạc cụ' : 'Instruments'}</span>
+            <span class="analysis-value" id="analysis-instruments-${t.id}">—</span>
+          </div>
+          <div class="analysis-row">
+            <span class="analysis-label">${lang === 'vi' ? 'Kỹ thuật' : 'Techniques'}</span>
+            <span class="analysis-value" id="analysis-techniques-${t.id}">—</span>
+          </div>
+        </div>
+        <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
+          <p id="audio-analysis-error-msg-${t.id}"></p>
+          <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
+        </div>
+      </div>
+    </div>
+  `;
 
   return `
     <div class="modal-image-container">
       <img src="${imageUrl}" alt="${title}" class="modal-image" onerror="this.onerror=null; this.src='images/artifacts/placeholder.svg'" />
     </div>
     <div class="modal-badge-row">
-      <span class="modal-badge" style="color:${eraC};border-color:${eraC}55">${eraLabel(era)}</span>
-      <span class="modal-badge" style="color:${typeC};border-color:${typeC}55">${typeLabel(type)}</span>
-      <span class="modal-badge modal-badge-badge" style="color:${eraC};border-color:${eraC}55">${t.badge || 'Artifact'}</span>
+      <span class="modal-badge modal-badge-status" style="color:${stC};border-color:${stC}55">${statusLabel(status)}</span>
+      <span class="modal-badge" style="color:${gnC};border-color:${gnC}55">${genreLabel(genre)}</span>
+      <span class="modal-badge modal-badge-unesco" style="color:${stC};border-color:${stC}55">${t.badge || 'UNESCO'}</span>
     </div>
     <div class="modal-title">${title}</div>
     ${engTitle ? `<div class="modal-subtitle">${engTitle}</div>` : ''}
     <div class="modal-info-grid">
       <div class="modal-info-item">
-        <div class="modal-info-label">📅 Era/Year</div>
+        <div class="modal-info-label">📅 ${lblYear}</div>
         <div class="modal-info-value">${t.year}</div>
       </div>
       <div class="modal-info-item">
-        <div class="modal-info-label">🏷️ Category</div>
-        <div class="modal-info-value">${typeLabel(type)}</div>
+        <div class="modal-info-label">🏷️ ${lblGenre}</div>
+        <div class="modal-info-value">${genreLabel(genre)}</div>
       </div>
       <div class="modal-info-item">
-        <div class="modal-info-label">📍 Location</div>
+        <div class="modal-info-label">🏷️ ${lblStatus}</div>
+        <div class="modal-info-value">${statusLabel(status,'short')}</div>
+      </div>
+      <div class="modal-info-item">
+        <div class="modal-info-label">📍 ${lblLoc}</div>
         <div class="modal-info-value">${t.location}</div>
       </div>
       <div class="modal-info-item">
-        <div class="modal-info-label">🗺️ Coordinates</div>
+        <div class="modal-info-label">🗺️ ${lblCoord}</div>
         <div class="modal-info-value">${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}</div>
       </div>
     </div>
     <div class="modal-desc-section">
-      <div class="modal-desc-label">Description</div>
+      <div class="modal-desc-label">${lblDesc}</div>
       <div class="modal-desc">${desc}${pending}</div>
     </div>
+    
+    ${hasAudioPreview ? `
+    <div class="modal-audio-section">
+      <h4>${lang === 'vi' ? 'Nghe mẫu' : 'Audio Sample'}</h4>
+      <audio controls src="${t.audio_preview}" class="modal-audio-player"></audio>
+      <p class="modal-audio-caption">${lang === 'vi' ? 'Phiên bản tham khảo' : 'Reference version'}</p>
+    </div>
+    ` : ''}
+    
+    ${isSingingType ? `
+    <div class="modal-practice-section">
+      <h4>${lang === 'vi' ? 'Thử hát & Phân tích' : 'Try Singing & Analyze'}</h4>
+      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích thể loại, nhạc cụ và kỹ thuật' : 'Record your singing for AI analysis of genre, instruments, and techniques'}</p>
+      <div class="recorder-controls">
+        <button class="record-btn" id="record-btn-${t.id}" onclick="toggleRecording(${t.id})">
+          <svg class="record-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="8"></circle>
+          </svg>
+          <svg class="stop-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" hidden>
+            <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+          </svg>
+          <span class="record-text">${lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording'}</span>
+        </button>
+        <button class="playback-btn" id="playback-btn-${t.id}" onclick="playbackRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>${lang === 'vi' ? 'Nghe lại' : 'Playback'}</span>
+        </button>
+        <button class="analyze-btn" id="analyze-btn-${t.id}" onclick="analyzeUserRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+          <span>${lang === 'vi' ? 'Phân tích' : 'Analyze'}</span>
+        </button>
+        <button class="clear-btn" id="clear-btn-${t.id}" onclick="clearRecording(${t.id})" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>${lang === 'vi' ? 'Xóa' : 'Clear'}</span>
+        </button>
+      </div>
+      <div class="recording-visualizer" id="recording-visualizer-${t.id}" hidden>
+        <canvas id="waveform-canvas-${t.id}" width="400" height="80"></canvas>
+      </div>
+      <div class="recording-timer" id="recording-timer-${t.id}" hidden>00:00</div>
+    </div>
+    ${audioAnalysisSection}
+    ` : ''}
   `;
 }
 
@@ -560,9 +937,61 @@ function openArtifactModal(id) {
   document.getElementById('modal-overlay').classList.add('visible');
 }
 
+function stopAllRecordings() {
+  /* CRITICAL: Stop all active recordings, timers, and media streams */
+  Object.keys(recordingState).forEach(id => {
+    const state = recordingState[id];
+    if (!state) return;
+
+    /* Stop MediaRecorder if active */
+    if (mediaRecorders[id] && mediaRecorders[id].state !== 'inactive') {
+      try { mediaRecorders[id].stop(); } catch(e) { /* already stopped */ }
+    }
+
+    /* Stop all media stream tracks */
+    if (state.stream) {
+      state.stream.getTracks().forEach(track => {
+        try { track.stop(); } catch(e) { /* already stopped */ }
+      });
+      state.stream = null;
+    }
+
+    /* Cancel animation frame */
+    if (state.animationFrame) {
+      cancelAnimationFrame(state.animationFrame);
+      state.animationFrame = null;
+    }
+
+    /* Mark as not recording */
+    state.isRecording = false;
+
+    /* Close audio context if exists */
+    if (state.audioContext && state.audioContext.state !== 'closed') {
+      try { state.audioContext.close(); } catch(e) { /* ignore */ }
+    }
+  });
+
+  /* Clear all recording timers */
+  Object.keys(recordingTimers).forEach(id => {
+    if (recordingTimers[id]) {
+      clearInterval(recordingTimers[id]);
+      recordingTimers[id] = null;
+    }
+  });
+}
+
 function closeArtifactModal() {
+  /* CRITICAL: Stop all microphone recordings before closing */
+  stopAllRecordings();
+
   document.getElementById('modal-overlay').classList.remove('visible');
   activeItemId = null;
+  /* clear any active province highlight */
+  if (activeProvince) {
+    const prev = activeProvince;
+    activeProvince = null;
+    recolorProvince(prev);
+  }
   hideMapInfoBox();
   renderCards();
 }
@@ -575,32 +1004,17 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeArtifactModal();
 });
 
-TREASURES.forEach(t => {
-  const marker = L.marker([t.lat, t.lng], { icon: makeItemIcon(t) });
-  marker._era  = getEra(t);
-  marker._type = getType(t);
-
-  /* hover → small tooltip above the dot (individual markers only, not clusters) */
-  marker.bindTooltip(buildTooltipHTML(t), {
-    direction:'top', offset:[0,-12], opacity:1, className:'artifact-tooltip'
-  });
-
-  /* click → flies to the dot and opens the full detail modal */
-  marker.on('click', () => activateItem(t.id));
-  ITEM_MARKERS[t.id] = marker;
-});
-
 /* ═══════════════════════════════════════
-   FILTERING
+   FILTERING  (sidebar cards)
 ═══════════════════════════════════════ */
 function getFilteredItems() {
   let items = [...TREASURES];
 
   if (activeFilter !== 'all') {
-    if (viewMode === 'era')
-      items = items.filter(t => getEra(t)  === activeFilter);
+    if (viewMode === 'status')
+      items = items.filter(t => getStatus(t) === activeFilter);
     else
-      items = items.filter(t => getType(t) === activeFilter);
+      items = items.filter(t => getGenre(t)  === activeFilter);
   }
   if (searchQuery) {
     const q = searchQuery;
@@ -615,33 +1029,11 @@ function getFilteredItems() {
 }
 
 /* ═══════════════════════════════════════
-   MAP MARKERS — sorted so spider is ordered
-═══════════════════════════════════════ */
-function updateMapMarkers(items) {
-  clusterGroup.clearLayers();
-
-  const ORDER_ERA  = ['prehistoric','century_1_10','century_10_20','modern_1945'];
-  const ORDER_TYPE = ['tools','religious','art','academic'];
-
-  const sorted = [...items].sort((a, b) => {
-    if (viewMode === 'era') {
-      const d = ORDER_ERA.indexOf(getEra(a)) - ORDER_ERA.indexOf(getEra(b));
-      return d !== 0 ? d : a.name.localeCompare(b.name);
-    } else {
-      const d = ORDER_TYPE.indexOf(getType(a)) - ORDER_TYPE.indexOf(getType(b));
-      return d !== 0 ? d : a.name.localeCompare(b.name);
-    }
-  });
-
-  sorted.forEach(t => clusterGroup.addLayer(ITEM_MARKERS[t.id]));
-}
-
-/* ═══════════════════════════════════════
    RENDER FILTER BAR  (dynamic)
 ═══════════════════════════════════════ */
 function renderFilterBar() {
-  const CONFIG   = viewMode === 'era' ? ERA_CONFIG : TYPE_CONFIG;
-  const allLabel = viewMode === 'era' ? t('allEras') : t('allTypes');
+  const CONFIG    = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+  const allLabel  = viewMode === 'status' ? t('allStatuses') : t('allGenres');
 
   document.getElementById('filter-bar').innerHTML = `
     <button class="filter-btn ${activeFilter==='all'?'active':''}" data-filter="all">${allLabel}</button>
@@ -662,6 +1054,7 @@ function renderFilterBar() {
       activeFilter = btn.dataset.filter;
       activeItemId = null;
       renderFilterBar();
+      recolorAllProvinces();
       renderCards();
     });
   });
@@ -671,8 +1064,8 @@ function renderFilterBar() {
    RENDER MAP LEGEND  (dynamic)
 ═══════════════════════════════════════ */
 function renderLegend() {
-  const CONFIG = viewMode === 'era' ? ERA_CONFIG : TYPE_CONFIG;
-  const title  = viewMode === 'era' ? t('legendEra') : t('legendType');
+  const CONFIG = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+  const title  = viewMode === 'status' ? t('legendStatus') : t('legendGenre');
   document.getElementById('map-legend').innerHTML = `
     <div class="legend-title">${title}</div>
     ${Object.entries(CONFIG).map(([, cfg]) => `
@@ -684,27 +1077,31 @@ function renderLegend() {
 }
 
 /* ═══════════════════════════════════════
-   RENDER CARDS
+   RENDER CARDS  (sidebar list)
 ═══════════════════════════════════════ */
 function renderCards() {
   const items = getFilteredItems();
 
   document.getElementById('stat-shown').textContent = items.length;
   document.getElementById('stat-total').textContent = TREASURES.length;
-  document.getElementById('stat-locs').textContent  =
-    new Set(items.map(t => `${t.lat.toFixed(4)},${t.lng.toFixed(4)}`)).size;
+  /* Provinces-with-heritage count, respecting the active filter */
+  const provincesWithHeritage = new Set();
+  items.forEach(t => {
+    Object.keys(provinceIndex).forEach(name => {
+      if ((provinceIndex[name] || []).some(h => h.id === t.id)) provincesWithHeritage.add(name);
+    });
+  });
+  document.getElementById('stat-locs').textContent  = provincesWithHeritage.size;
   document.getElementById('result-count').textContent =
     resultCountText(items.length, TREASURES.length);
 
-  updateMapMarkers(items);
-
   document.getElementById('artifact-list').innerHTML = items.map((t, i) => {
-    const era   = getEra(t);
-    const type  = getType(t);
-    const color = activeColor(t);
-    const badge = viewMode === 'era'
-      ? eraLabel(era, 'short')
-      : typeLabel(type, 'short');
+    const status = getStatus(t);
+    const genre  = getGenre(t);
+    const color  = activeColor(t);
+    const badge  = viewMode === 'status'
+      ? statusLabel(status, 'short')
+      : genreLabel(genre, 'short');
     const title = lang === 'vi' ? t.name : t.english;
     return `
       <div class="a-card${activeItemId===t.id?' active':''}"
@@ -723,7 +1120,7 @@ function renderCards() {
 }
 
 /* ═══════════════════════════════════════
-   ACTIVATE ITEM
+   ACTIVATE ITEM  (from sidebar card or province modal row)
 ═══════════════════════════════════════ */
 function activateItem(id) {
   activeItemId = id;
@@ -733,8 +1130,36 @@ function activateItem(id) {
   renderActiveMapInfo();
   openArtifactModal(id);
 
-  const targetZoom = Math.max(map.getZoom(), 14);
-  map.flyTo([t.lat, t.lng], targetZoom, { duration:1.2, easeLinearity:0.25 });
+  /* Find the province containing this heritage and highlight it on the map. */
+  let owningProvince = null;
+  for (const [name, items] of Object.entries(provinceIndex)) {
+    if (items.some(h => h.id === id)) { owningProvince = name; break; }
+  }
+  if (owningProvince) {
+    /* clear previous highlight */
+    if (activeProvince && activeProvince !== owningProvince) {
+      const prev = activeProvince;
+      activeProvince = null;
+      recolorProvince(prev);
+    }
+    activeProvince = owningProvince;
+    const layer = provinceLayers[owningProvince];
+    if (layer) {
+      const key = provinceDominantKey(owningProvince);
+      const CONFIG = viewMode === 'status' ? STATUS_CONFIG : GENRE_CONFIG;
+      const color = key ? (CONFIG[key]?.color || '#8a7c5e') : '#e8c96a';
+      layer.setStyle({
+        color: '#fff200',
+        weight: 3,
+        fillColor: color,
+        fillOpacity: Math.min(0.6, 0.30 + (provinceIndex[owningProvince] || []).length * 0.05),
+      });
+      layer.bringToFront();
+      map.flyToBounds(layer.getBounds(), { duration: 1.0, padding: [40, 40] });
+    }
+  } else {
+    map.flyTo([t.lat, t.lng], 8, { duration: 1.0, easeLinearity: 0.25 });
+  }
 
   renderCards();
   setTimeout(() => {
@@ -742,9 +1167,10 @@ function activateItem(id) {
       ?.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }, 50);
 }
+window.activateItem = activateItem;
 
 /* ═══════════════════════════════════════
-   VIEW TOGGLE  (Era ↔ Category)
+   VIEW TOGGLE  (Status ↔ Genre)
 ═══════════════════════════════════════ */
 document.querySelectorAll('.view-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -753,24 +1179,11 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     activeItemId = null;
     document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    refreshMarkerIcons();
+    recolorAllProvinces();
     renderFilterBar();
     renderLegend();
-    clusterGroup.refreshClusters();
     renderCards();
   });
-});
-
-/* ═══════════════════════════════════════
-   CLUSTER HOVER HINT
-═══════════════════════════════════════ */
-clusterGroup.on('clustermouseover', e => {
-  showMapInfoBox(`
-    <div class="map-info-count" id="map-info-count">${clusterHoverText(e.layer.getChildCount())}</div>
-  `);
-});
-clusterGroup.on('clustermouseout', () => {
-  renderActiveMapInfo();
 });
 
 /* ═══════════════════════════════════════
@@ -787,6 +1200,11 @@ document.getElementById('search-input').addEventListener('input', e => {
 document.getElementById('map-reset').addEventListener('click', () => {
   map.flyTo([16.0, 107.8], 5.4, { duration:1.0 });
   activeItemId = null;
+  if (activeProvince) {
+    const prev = activeProvince;
+    activeProvince = null;
+    recolorProvince(prev);
+  }
   hideMapInfoBox();
   renderCards();
 });
@@ -804,7 +1222,7 @@ function hideMapInfoBox() {
   document.getElementById('map-info').classList.remove('visible');
 }
 
-/* shows the currently selected artifact's info, or hides the box if none is selected */
+/* shows the currently selected heritage's info, or hides the box if none is selected */
 function renderActiveMapInfo() {
   if (activeItemId === null) { hideMapInfoBox(); return; }
   const t = TREASURES.find(x => x.id === activeItemId);
@@ -839,8 +1257,8 @@ function applyStaticI18n() {
   if (dl) dl.textContent = t('dbLink');
 
   document.getElementById('view-toggle-label').textContent = t('viewToggleLabel');
-  document.querySelector('.view-btn[data-view="era"]').textContent  = t('viewEra');
-  document.querySelector('.view-btn[data-view="type"]').textContent = t('viewType');
+  document.querySelector('.view-btn[data-view="status"]').textContent = t('viewStatus');
+  document.querySelector('.view-btn[data-view="genre"]').textContent  = t('viewGenre');
 
   document.getElementById('tile-switcher-label').textContent = t('tileStyleLabel');
   document.getElementById('tile-osm-label').textContent      = t('tileOsm');
@@ -852,7 +1270,6 @@ function applyStaticI18n() {
     b.classList.toggle('active', b.dataset.lang === lang)
   );
 
-  /* re-render whatever the map-info box should currently show, in the new language */
   renderActiveMapInfo();
 }
 
@@ -866,7 +1283,16 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     localStorage.setItem('vnmt_lang', lang);
 
     applyStaticI18n();
-    refreshMarkerTooltips();
+    /* refresh tooltips + province colours in the new language */
+    Object.keys(provinceLayers).forEach(name => {
+      const layer = provinceLayers[name];
+      const items = provinceIndex[name] || [];
+      const tip = items.length
+        ? `<div class="tt-title">${name}</div>
+           <div class="tt-meta"><span class="tt-dot" style="background:${provinceDominantColor(name)}"></span>${provinceHoverText(items.length)}</div>`
+        : `<div class="tt-title">${name}</div>`;
+      layer.setTooltipContent(tip);
+    });
     renderFilterBar();
     renderLegend();
     renderCards();
@@ -878,146 +1304,492 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 /* ═══════════════════════════════════════
-   URL PARAMETER — era/type deep-link
-   e.g. VNMT.html?era=prehistoric
-        VNMT.html?type=religious
+   URL PARAMETER — status/genre deep-link
+   e.g. VNMT.html?status=inscribed
+        VNMT.html?genre=quan_ho
 ═══════════════════════════════════════ */
 (function readURLParams() {
   const p = new URLSearchParams(window.location.search);
-  const urlEra  = p.get('era');
-  const urlType = p.get('type');
-  if (urlEra && ERA_CONFIG[urlEra]) {
-    viewMode     = 'era';
-    activeFilter = urlEra;
-    document.querySelector('.view-btn[data-view="era"]')?.classList.add('active');
-    document.querySelector('.view-btn[data-view="type"]')?.classList.remove('active');
-  } else if (urlType && TYPE_CONFIG[urlType]) {
-    viewMode     = 'type';
-    activeFilter = urlType;
-    document.querySelector('.view-btn[data-view="era"]')?.classList.remove('active');
-    document.querySelector('.view-btn[data-view="type"]')?.classList.add('active');
+  const urlStatus = p.get('status');
+  const urlGenre  = p.get('genre');
+  if (urlStatus && STATUS_CONFIG[urlStatus]) {
+    viewMode     = 'status';
+    activeFilter = urlStatus;
+    document.querySelector('.view-btn[data-view="status"]')?.classList.add('active');
+    document.querySelector('.view-btn[data-view="genre"]')?.classList.remove('active');
+  } else if (urlGenre && GENRE_CONFIG[urlGenre]) {
+    viewMode     = 'genre';
+    activeFilter = urlGenre;
+    document.querySelector('.view-btn[data-view="status"]')?.classList.remove('active');
+    document.querySelector('.view-btn[data-view="genre"]')?.classList.add('active');
   }
 })();
 
-  /* ═══════════════════════════════════════
-     INTANGIBLE HERITAGE INTEGRATION
-   ═══════════════════════════════════════ */
-  const INTANGIBLE_HERITAGE = [
-    {
-      id: "int-001",
-      name: "Lễ hội Quan họ Bắc Ninh",
-      english: "Quan Ho Bac Ninh Festival",
-      location: "Bắc Ninh",
-      lat: 21.1861, lng: 106.0763,
-      category: "intangible",
-      badge: "UNESCO",
-      type: "folk_singing",
-      year: "2009",
-      desc: "Traditional folk singing with call-and-response between male and female singers.",
-      desc_vi: "Quan họ là dân ca đối đáp truyền thống của Bắc Ninh.",
-      audio_preview: "/audio/quanho-preview.mp3"
-    },
-    {
-      id: "int-002",
-      name: "Ca trù Hà Nội",
-      english: "Traditional Ca tru Music",
-      location: "Hà Nội",
-      lat: 21.0285, lng: 105.8542,
-      category: "intangible",
-      badge: "UNESCO",
-      type: "chamber_music",
-      year: "2009",
-      desc: "Vietnamese chamber music with traditional instruments.",
-      desc_vi: "Ca trù là nghệ thuật diễn xướng truyền thống kết hợp ca nhảy và nhạc cụ.",
-      audio_preview: "/audio/catru-preview.mp3"
-    },
-    {
-      id: "int-003",
-      name: "Nhã nhạc cung đình Huế",
-      english: "Hue Royal Court Music",
-      location: "Thừa Thiên Huế",
-      lat: 16.4637, lng: 107.5909,
-      category: "intangible",
-      badge: "UNESCO",
-      type: "court_music",
-      year: "2003",
-      desc: "Musical traditions of the Nguyen Dynasty court.",
-      desc_vi: "Nhã nhạc cung đình Huế là di sản tinh túy của triều đại nhà Nguyễn.",
-      audio_preview: "/audio/nhuanhac-preview.mp3"
-    },
-    {
-      id: "int-004",
-      name: "Đờn ca tài tử Nam Bộ",
-      english: "Southern Don Ca Tai Tu Music",
-      location: "Cần Thơ",
-      lat: 10.0452, lng: 105.7469,
-      category: "intangible",
-      badge: "UNESCO",
-      type: "chamber_music",
-      year: "2014",
-      desc: "Traditional music form of southern Vietnam.",
-      desc_vi: "Đờn ca tài tử là nghệ thuật âm nhạc truyền thống miền Tây Nam Bộ.",
-      audio_preview: "/audio/donantutu-preview.mp3"
-    },
-    {
-      id: "int-005",
-      name: "Hò ca Nghệ An",
-      english: "Nghe An Work Songs",
-      location: "Nghệ An",
-      lat: 18.6796, lng: 105.6927,
-      category: "intangible",
-      badge: "National",
-      type: "work_songs",
-      year: "2015",
-      desc: "Traditional work songs sung by farmers.",
-      desc_vi: "Hò làng là dân ca lao động truyền thống của người nông dân.",
-      audio_preview: "/audio/ho-nghean-preview.mp3"
+/* ═══════════════════════════════════════
+   AUDIO RECORDING & ANALYSIS
+═══════════════════════════════════════ */
+
+// Audio recording state per artifact
+const recordingState = {};
+const mediaRecorders = {};
+const recordedChunks = {};
+const recordingTimers = {};
+let recordingStartTime = {};
+
+/* ═══════════════════════════════════════
+   AUDIO CONTEXT INITIALIZATION
+═══════════════════════════════════════ */
+async function initAudioContext(id) {
+  if (!recordingState[id]) {
+    recordingState[id] = {
+      isRecording: false,
+      audioBlob: null,
+      audioContext: null,
+      analyser: null,
+      stream: null,
+      animationFrame: null
+    };
+  }
+  const state = recordingState[id];
+  if (!state.audioContext) {
+    state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return state;
+}
+
+/* ═══════════════════════════════════════
+   RECORDING TOGGLE
+═══════════════════════════════════════ */
+async function toggleRecording(id) {
+  const state = await initAudioContext(id);
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+
+  if (state.isRecording) {
+    // Stop recording
+    stopRecording(id);
+    recordBtn.classList.remove('recording');
+    recordBtn.querySelector('.record-icon').hidden = false;
+    recordBtn.querySelector('.stop-icon').hidden = true;
+    recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+    
+    // Show playback and analyze buttons
+    playbackBtn.hidden = false;
+    analyzeBtn.hidden = false;
+    clearBtn.hidden = false;
+    visualizer.hidden = true;
+    timer.hidden = true;
+    
+    if (recordingTimers[id]) {
+      clearInterval(recordingTimers[id]);
+      recordingTimers[id] = null;
     }
-  ];
-
-  // Merge tangible and intangible data
-  const ALL_TREASURES = [...TREASURES, ...INTANGIBLE_HERITAGE];
-
-  // Add intangible to type config for filtering
-  const INTANGIBLE_TYPE_CONFIG = {
-    ...TYPE_CONFIG,
-    intangible: { label_vi: "Di sản vô hình", label_en: "Intangible Heritage", icon: "🎵" },
-    folk_singing: { label_vi: "Hát dân ca", label_en: "Folk Singing", icon: "🎤" },
-    chamber_music: { label_vi: "Nhạc cung đình", label_en: "Chamber Music", icon: "🎼" },
-    court_music: { label_vi: "Nhạc triều đại", label_en: "Court Music", icon: "👑" },
-    work_songs: { label_vi: "Hò ca", label_en: "Work Songs", icon: "🌾" }
-  };
-
-  /* ═══════════════════════════════════════
-     CHAT API INTEGRATION
-   ═══════════════════════════════════════ */
-  async function callArtisanAPI(message, lang = "vi") {
+  } else {
+    // Start recording
     try {
-      const resp = await fetch("/api/v1/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, lang })
+      state.stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { 
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          sampleRate: 22050
+        } 
       });
-      if (resp.ok) {
-        const data = await resp.json();
-        return data.response || "Xin lỗi, tôi chưa có câu trả lời.";
-      }
-    } catch (e) {
-      console.error("Chat API error:", e);
+
+      const mediaRecorder = new MediaRecorder(state.stream, {
+        mimeType: 'audio/webm;codecs=opus'
+      });
+      
+      mediaRecorders[id] = mediaRecorder;
+      recordedChunks[id] = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunks[id].push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        state.audioBlob = new Blob(recordedChunks[id], { type: 'audio/webm' });
+        state.stream.getTracks().forEach(track => track.stop());
+        
+        // Create object URL for playback
+        if (state.audioBlob) {
+          state.audioUrl = URL.createObjectURL(state.audioBlob);
+        }
+      };
+
+      mediaRecorder.start(100); // Collect data every 100ms
+      state.isRecording = true;
+      
+      // Update UI
+      recordBtn.classList.add('recording');
+      recordBtn.querySelector('.record-icon').hidden = true;
+      recordBtn.querySelector('.stop-icon').hidden = false;
+      recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Dừng ghi âm' : 'Stop Recording';
+      
+      playbackBtn.hidden = true;
+      analyzeBtn.hidden = true;
+      clearBtn.hidden = true;
+      visualizer.hidden = false;
+      timer.hidden = false;
+      
+      // Setup visualizer
+      setupVisualizer(id);
+      
+      // Start timer
+      let seconds = 0;
+      recordingTimers[id] = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        timer.textContent = `${mins}:${secs}`;
+        
+        // Auto-stop at 30 seconds
+        if (seconds >= 30) {
+          toggleRecording(id);
+        }
+      }, 1000);
+      
+    } catch (err) {
+      console.error('Recording failed:', err);
+      alert(lang === 'vi' ? 'Không thể truy cập micro. Vui lòng cho phép quyền truy cập.' : 'Cannot access microphone. Please allow permission.');
     }
-    return "Xin lỗi, dịch vụ đang tạm ngưng. Vui lòng thử lại sau.";
+  }
+}
+
+function stopRecording(id) {
+  if (mediaRecorders[id] && mediaRecorders[id].state !== 'inactive') {
+    mediaRecorders[id].stop();
+  }
+  if (recordingState[id]) {
+    recordingState[id].isRecording = false;
+  }
+}
+
+function setupVisualizer(id) {
+  const state = recordingState[id];
+  const canvas = document.getElementById(`waveform-canvas-${id}`);
+  if (!canvas || !state.stream) return;
+
+  const ctx = canvas.getContext('2d');
+  const analyser = state.audioContext.createAnalyser();
+  analyser.fftSize = 256;
+  
+  const source = state.audioContext.createMediaStreamSource(state.stream);
+  source.connect(analyser);
+  state.analyser = analyser;
+
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+
+  const draw = () => {
+    if (!state.isRecording) return;
+    
+    state.animationFrame = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let x = 0;
+    
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
+      const hue = 45 + (dataArray[i] / 255) * 30; // Gold to orange
+      ctx.fillStyle = `hsl(${hue}, 80%, 50%)`;
+      ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 1;
+    }
+  };
+  
+  draw();
+}
+
+function playbackRecording(id) {
+  const state = recordingState[id];
+  if (state.audioUrl) {
+    const audio = new Audio(state.audioUrl);
+    audio.play();
+  }
+}
+
+function clearRecording(id) {
+  const state = recordingState[id];
+  const recordBtn = document.getElementById(`record-btn-${id}`);
+  const playbackBtn = document.getElementById(`playback-btn-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const clearBtn = document.getElementById(`clear-btn-${id}`);
+  const visualizer = document.getElementById(`recording-visualizer-${id}`);
+  const timer = document.getElementById(`recording-timer-${id}`);
+
+  // Revoke object URL
+  if (state.audioUrl) {
+    URL.revokeObjectURL(state.audioUrl);
+    state.audioUrl = null;
+  }
+  state.audioBlob = null;
+  
+  // Reset UI
+  recordBtn.classList.remove('recording');
+  recordBtn.querySelector('.record-icon').hidden = false;
+  recordBtn.querySelector('.stop-icon').hidden = true;
+  recordBtn.querySelector('.record-text').textContent = lang === 'vi' ? 'Bắt đầu ghi âm' : 'Start Recording';
+  
+  playbackBtn.hidden = true;
+  analyzeBtn.hidden = true;
+  clearBtn.hidden = true;
+  visualizer.hidden = true;
+  timer.hidden = true;
+  timer.textContent = '00:00';
+  
+  // Clear canvas
+  const canvas = document.getElementById(`waveform-canvas-${id}`);
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+/**
+ * Convert WebM/Opus audio blob to WAV/PCM for backend compatibility
+ * Uses Web Audio API to decode and re-encode
+ */
+async function convertWebMToWav(webmBlob) {
+  const arrayBuffer = await webmBlob.arrayBuffer();
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  
+  // Create WAV file from audio buffer
+  const numChannels = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+  const length = audioBuffer.length;
+  const bytesPerSample = 2; // 16-bit
+  const blockAlign = numChannels * bytesPerSample;
+  const byteRate = sampleRate * blockAlign;
+  const dataSize = length * blockAlign;
+  const headerSize = 44;
+  const totalSize = headerSize + dataSize;
+  
+  // Create WAV header
+  const wavBuffer = new ArrayBuffer(totalSize);
+  const view = new DataView(wavBuffer);
+  
+  // RIFF header
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, totalSize - 8, true);
+  writeString(view, 8, 'WAVE');
+  
+  // fmt chunk
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true); // PCM format chunk size
+  view.setUint16(20, 1, true); // PCM format
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, 16, true); // bits per sample
+  
+  // data chunk
+  writeString(view, 36, 'data');
+  view.setUint32(40, dataSize, true);
+  
+  // Write audio data (interleaved channels, 16-bit PCM)
+  let offset = headerSize;
+  for (let i = 0; i < length; i++) {
+    for (let ch = 0; ch < numChannels; ch++) {
+      const sample = Math.max(-1, Math.min(1, audioBuffer.getChannelData(ch)[i]));
+      view.setInt16(offset, sample * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  
+  audioContext.close();
+  return new Blob([wavBuffer], { type: 'audio/wav' });
+}
+
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+async function analyzeUserRecording(id) {
+  const state = recordingState[id];
+  if (!state.audioBlob) {
+    alert(lang === 'vi' ? 'Chưa có file ghi âm' : 'No recording available');
+    return;
   }
 
-  // Expose for global use
-  window.INTANGIBLE_HERITAGE = INTANGIBLE_HERITAGE;
-  window.ALL_TREASURES = ALL_TREASURES;
-  window.callArtisanAPI = callArtisanAPI;
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const loading = document.getElementById(`audio-analysis-loading-${id}`);
+  const results = document.getElementById(`audio-analysis-results-${id}`);
+  const error = document.getElementById(`audio-analysis-error-${id}`);
+  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
 
-  /* ═══════════════════════════════════════
+  // Show analysis section
+  analysisSection.hidden = false;
+  loading.hidden = false;
+  results.hidden = true;
+  error.hidden = true;
+  analyzeBtn.disabled = true;
+
+  try {
+    // Convert WebM to WAV for backend compatibility
+    const wavBlob = await convertWebMToWav(state.audioBlob);
+    
+    const formData = new FormData();
+    formData.append('file', wavBlob, `recording_${id}.wav`);
+    
+    const response = await fetch('/api/v1/audio/analyze', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Update results
+    document.getElementById(`analysis-genre-${id}`).textContent = 
+      lang === 'vi' ? (data.genre_vi || data.genre) : data.genre;
+    document.getElementById(`analysis-confidence-${id}`).textContent = 
+      (data.confidence * 100).toFixed(1) + '%';
+    document.getElementById(`analysis-instruments-${id}`).textContent = 
+      (data.instruments || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    document.getElementById(`analysis-techniques-${id}`).textContent = 
+      (data.techniques || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+
+    loading.hidden = true;
+    results.hidden = false;
+    
+  } catch (err) {
+    console.error('Analysis failed:', err);
+    loading.hidden = true;
+    error.hidden = false;
+    document.getElementById(`audio-analysis-error-msg-${id}`).textContent = 
+      lang === 'vi' ? 'Phân tích thất bại. Vui lòng thử lại.' : 'Analysis failed. Please try again.';
+  } finally {
+    analyzeBtn.disabled = false;
+  }
+}
+
+/**
+ * Map heritage ID to sample audio file
+ */
+function getSampleAudioPath(id) {
+  const genre = getGenre(TREASURES.find(t => t.id === id));
+  const map = {
+    'court_music': 'nhuanhac-preview.wav',
+    'singings': 'quanho-preview.wav',  // quan họ, ca trù, đờn ca tài tử, ví giặm, bài chòi, xòan, then
+    'belief': 'ho-preview.wav',       // gióng festival, hùng kings, mother goddesses, tugging
+    'festival': 'ho-preview.wav',
+    'craft': 'donca-preview.wav',
+    'instrumental': 'nhuanhac-preview.wav',
+  };
+  return `audio/${map[genre] || 'quanho-preview.wav'}`;
+}
+
+/**
+ * Test analysis with a reference sample audio file
+ */
+async function testWithSample(id) {
+  const btn = document.getElementById(`sample-btn-${id}`);
+  const audioEl = document.getElementById(`sample-audio-${id}`);
+  const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
+  const loading = document.getElementById(`audio-analysis-loading-${id}`);
+  const results = document.getElementById(`audio-analysis-results-${id}`);
+  const error = document.getElementById(`audio-analysis-error-${id}`);
+  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
+
+  if (!audioEl) return;
+
+  const samplePath = getSampleAudioPath(id);
+  
+  // Show analysis section
+  analysisSection.hidden = false;
+  loading.hidden = false;
+  results.hidden = true;
+  error.hidden = true;
+  analyzeBtn.disabled = true;
+  btn.disabled = true;
+  btn.textContent = lang === 'vi' ? 'Đang tải mẫu...' : 'Loading sample...';
+
+  try {
+    // Fetch the sample audio file
+    const response = await fetch(samplePath);
+    if (!response.ok) throw new Error(`Failed to load sample: ${response.status}`);
+    const blob = await response.blob();
+    
+        // Create object URL for playback
+        const audioUrl = URL.createObjectURL(blob);
+        audioEl.src = audioUrl;
+        audioEl.classList.add('sample-audio-player', 'visible');
+        audioEl.hidden = false;
+    
+    // Send to analysis endpoint
+    const formData = new FormData();
+    formData.append('file', blob, `sample_${id}.wav`);
+    
+    const analyzeResponse = await fetch('/api/v1/audio/analyze', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!analyzeResponse.ok) {
+      throw new Error(`HTTP ${analyzeResponse.status}`);
+    }
+
+    const data = await analyzeResponse.json();
+    
+    // Update results
+    document.getElementById(`analysis-genre-${id}`).textContent = 
+      lang === 'vi' ? (data.genre_vi || data.genre) : data.genre;
+    document.getElementById(`analysis-confidence-${id}`).textContent = 
+      (data.confidence * 100).toFixed(1) + '%';
+    document.getElementById(`analysis-instruments-${id}`).textContent = 
+      (data.instruments || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    document.getElementById(`analysis-techniques-${id}`).textContent = 
+      (data.techniques || []).join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+
+    loading.hidden = true;
+    results.hidden = false;
+    btn.textContent = lang === 'vi' ? '✓ Đã phân tích mẫu' : '✓ Sample analyzed';
+    btn.style.background = 'var(--green)';
+    
+  } catch (err) {
+    console.error('Sample analysis failed:', err);
+    loading.hidden = true;
+    error.hidden = false;
+    document.getElementById(`audio-analysis-error-msg-${id}`).textContent = 
+      lang === 'vi' ? 'Phân tích mẫu thất bại. Vui lòng thử lại.' : 'Sample analysis failed. Please try again.';
+    btn.textContent = lang === 'vi' ? 'Thử lại' : 'Retry';
+  } finally {
+    analyzeBtn.disabled = false;
+    btn.disabled = false;
+  }
+}
+
+// Expose globally for onclick handlers
+window.toggleRecording = toggleRecording;
+window.playbackRecording = playbackRecording;
+window.clearRecording = clearRecording;
+window.analyzeUserRecording = analyzeUserRecording;
+window.hideAudioAnalysis = hideAudioAnalysis;
+window.stopAllRecordings = stopAllRecordings;
+window.testWithSample = testWithSample;
+
+/* ═══════════════════════════════════════
    INIT
-   ═══════════════════════════════════════ */
-  applyStaticI18n();
-  renderFilterBar();
-  renderLegend();
-  renderCards();
-  setTimeout(() => map.invalidateSize(), 50);
+═══════════════════════════════════════ */
+applyStaticI18n();
+renderFilterBar();
+renderLegend();
+renderCards();
+setTimeout(() => map.invalidateSize(), 50);

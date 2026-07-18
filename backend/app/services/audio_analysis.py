@@ -4,7 +4,6 @@ import json
 from typing import List, Dict, cast
 import numpy as np
 import torch
-import torchaudio
 import onnxruntime as ort
 import librosa
 
@@ -40,10 +39,12 @@ class AudioPreprocessor:
         Input: (channels, samples)
         Output: (1, 1, n_mels, time) - batch format for ONNX
         """
-        # Resample if needed
+        # Resample if needed using librosa
         if sr != self.sample_rate:
-            resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
-            waveform = resampler(waveform)
+            y = waveform.squeeze(0).numpy()
+            y = librosa.resample(y, orig_sr=sr, target_sr=self.sample_rate)
+            waveform = torch.from_numpy(y).unsqueeze(0)
+            sr = self.sample_rate
 
         # Convert to mono if stereo
         if waveform.shape[0] > 1:
@@ -56,27 +57,20 @@ class AudioPreprocessor:
             pad_len = self.max_samples - waveform.shape[1]
             waveform = torch.nn.functional.pad(waveform, (0, pad_len))
 
-        # Compute mel spectrogram
-        mel_transform = torchaudio.transforms.MelSpectrogram(
-            sample_rate=self.sample_rate,
-            n_fft=self.n_fft,
-            hop_length=self.hop_length,
-            n_mels=self.n_mels,
-            power=2.0,
+        # Compute mel spectrogram using librosa
+        y = waveform.squeeze(0).numpy()
+        mel = librosa.feature.melspectrogram(
+            y=y, sr=self.sample_rate, n_mels=self.n_mels, n_fft=self.n_fft, hop_length=self.hop_length, power=2.0
         )
-        mel_spec = mel_transform(waveform)  # (1, n_mels, time)
+        log_mel = librosa.power_to_db(mel, ref=np.max)
 
-        # Log scale
-        mel_spec = torch.log(mel_spec + 1e-8)
+        # Normalize
+        log_mel = (log_mel - log_mel.mean()) / (log_mel.std() + 1e-8)
 
-        # Normalize (per-channel)
-        mel_spec = (mel_spec - mel_spec.mean()) / (mel_spec.std() + 1e-8)
+        # Convert to tensor and add batch/channel dims: (1, 1, n_mels, time)
+        mel_tensor = torch.from_numpy(log_mel.astype(np.float32)).unsqueeze(0).unsqueeze(0)
 
-        # Add batch and channel dims: (1, 1, n_mels, time)
-        # mel_spec is (1, n_mels, time) after transform
-        mel_spec = mel_spec.unsqueeze(0)
-
-        return mel_spec
+        return mel_tensor
 
     def generate_waveform_peaks(self, waveform: torch.Tensor, n_peaks: int = 100) -> List[float]:
         """Generate downsampled waveform peaks for visualization"""
@@ -105,11 +99,11 @@ class AudioPreprocessor:
 class EthnoMusicAnalyzer:
     """
     ONNX Runtime inference for EthnoMusicNet
-    Multi-task: genre (5), instruments (12 multi-label), techniques (10 multi-label), confidence (1)
+    Multi-task: genre (2), instruments (12 multi-label), techniques (10 multi-label), confidence (1)
     """
 
     GENRE_LABELS = [
-        "quan_ho", "ca_tru", "nha_nhac", "don_ca_tai_tu", "ho"
+        "quan_ho", "ho"
     ]
 
     INSTRUMENT_LABELS = [
@@ -140,9 +134,9 @@ class EthnoMusicAnalyzer:
         import time
         start_time = time.time()
 
-        # 1. Load audio
-        loader = audio_loader or torchaudio.load
-        waveform, sr = loader(io.BytesIO(audio_bytes))
+        # 1. Load audio using librosa
+        y, sr = librosa.load(io.BytesIO(audio_bytes), sr=None, mono=True)
+        waveform = torch.from_numpy(y).unsqueeze(0)
 
         # 2. Preprocess
         mel_spec = self.preprocessor.process(waveform, sr)
