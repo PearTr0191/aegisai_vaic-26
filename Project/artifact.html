@@ -882,29 +882,37 @@
       flex-direction: column;
       gap: 8px;
     }
-    .analysis-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+
+    /* ── Single Score Display ── */
+    .vocal-score-display {
+      text-align: center;
+      padding: 12px 0;
     }
-    .analysis-label {
+    .vocal-score-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .vocal-score-value.score-excellent { color: #4caf84; }
+    .vocal-score-value.score-good { color: var(--gold-light); }
+    .vocal-score-value.score-fair { color: #c9a84c; }
+    .vocal-score-value.score-poor { color: #d4524a; }
+    .vocal-score-label {
       font-size: 11px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      flex-shrink: 0;
+      margin-bottom: 12px;
     }
-    .analysis-value {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--gold-light);
-      text-align: right;
-      flex: 1;
-      margin-left: 12px;
+    .vocal-score-feedback {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      text-align: center;
+      padding: 0 8px;
     }
 
     /* ── Error State ── */
@@ -1090,20 +1098,6 @@
   <a href="database.html" id="err-back-link" style="color:#7a1f1f; font-size:13px;">← Back to database</a>
 </div>
 
-<!-- 3D Model Viewer section (existing) -->
-<div class="model-section" id="model-section">
-  <div class="model-viewer">
-    <iframe id="model-iframe" src="about:blank" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
-  </div>
-  <div class="model-close-bar">
-    <button class="model-close-btn" id="model-close-btn">
-      <span id="lbl-close-3d">Close model</span>
-    </button>
-  </div>
-  <div class="model-attribution" id="model-attribution"></div>
-</div>
-
-<!-- ── INTERACTIVE IMAGE OVERLAY ── -->
 <div class="exp-overlay" id="exp-overlay">
   <div class="exp-container">
     <div class="exp-header">
@@ -1745,25 +1739,52 @@ function renderAudioSection(t) {
     return;
   }
 
-  const previewSrc = t.audio_preview;
-  const vocalSrc = t.audio_vocal_only || t.audio_preview;
-  const audioSectionHTML = `
+  const audioPrefix = window.location.pathname.includes('/legacy/') ? '/legacy/' : '';
+  const previewSrc = hasAudioPreview ? audioPrefix + t.audio_preview : '';
+  const nameLabel = lang === 'vi' ? t.name : t.english;
+
+  const audioSamplesSection = hasAudioPreview ? `
     <div class="modal-audio-section">
-      <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Samples'}</h4>
+      <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Sample'}</h4>
       <div class="audio-sample-item">
-        <span class="audio-sample-label">${lang === 'vi' ? 'Bản gốc' : 'Original'}:</span>
+        <span class="audio-sample-label">${lang === 'vi' ? 'Nghe tham khảo' : 'Reference'}:</span>
         <audio controls src="${previewSrc}" class="modal-audio-player"></audio>
-        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - bản gốc' : 'Quan họ Bắc Ninh - original version'}</p>
-      </div>
-      <div class="audio-sample-item">
-        <span class="audio-sample-label">${lang === 'vi' ? 'Chỉ giọng' : 'Vocals only'}:</span>
-        <audio controls src="${vocalSrc}" class="modal-audio-player"></audio>
-        <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - phiên bản chỉ giọng hát' : 'Quan họ Bắc Ninh - vocals only version'}</p>
+        <p class="modal-audio-caption">${nameLabel}</p>
       </div>
     </div>
+  ` : '';
+
+  const audioAnalysisSection = `
+    <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
+      <div class="modal-audio-analysis-header">
+        <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
+        <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
+      </div>
+      <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
+        <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
+          <div class="spinner"></div>
+          <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
+        </div>
+        <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
+          <div class="vocal-score-display">
+            <div class="vocal-score-value" id="analysis-score-${t.id}">—</div>
+            <div class="vocal-score-label">${lang === 'vi' ? 'Độ tương đồng phong cách' : 'Style Similarity'}</div>
+            <div class="vocal-score-feedback" id="analysis-feedback-${t.id}"></div>
+          </div>
+        </div>
+        <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
+          <p id="audio-analysis-error-msg-${t.id}"></p>
+          <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const audioSectionHTML = `
+    ${audioSamplesSection}
     <div class="modal-practice-section">
       <h4>${lang === 'vi' ? 'Thử hát & Phân tích' : 'Try Singing & Analyze'}</h4>
-      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích thể loại, nhạc cụ và kỹ thuật' : 'Record your singing for AI analysis of genre, instruments, and techniques'}</p>
+      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích độ tương đồng với phong cách truyền thống' : 'Record your singing for AI analysis of traditional style similarity'}</p>
       <div class="recorder-controls">
         <button class="record-btn" id="record-btn-${t.id}" onclick="toggleRecording(${t.id})">
           <svg class="record-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -1792,41 +1813,7 @@ function renderAudioSection(t) {
       </div>
       <div class="recording-timer" id="recording-timer-${t.id}" hidden>00:00</div>
     </div>
-
-    <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
-      <div class="modal-audio-analysis-header">
-        <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
-        <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
-      </div>
-      <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
-        <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
-          <div class="spinner"></div>
-          <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
-        </div>
-        <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Thể loại' : 'Genre'}</span>
-            <span class="analysis-value" id="analysis-genre-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Độ tin cậy' : 'Confidence'}</span>
-            <span class="analysis-value" id="analysis-confidence-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Nhạc cụ' : 'Instruments'}</span>
-            <span class="analysis-value" id="analysis-instruments-${t.id}">—</span>
-          </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Kỹ thuật' : 'Techniques'}</span>
-            <span class="analysis-value" id="analysis-techniques-${t.id}">—</span>
-          </div>
-        </div>
-        <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
-          <p id="audio-analysis-error-msg-${t.id}"></p>
-          <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
-        </div>
-      </div>
-    </div>
+    ${audioAnalysisSection}
   `;
 
   container.innerHTML = audioSectionHTML;
@@ -2094,50 +2081,85 @@ function writeString(view, offset, string) {
 
 async function analyzeUserRecording(id) {
   const state = recordingState[id];
-  if (!state.audioBlob) { alert(lang === 'vi' ? 'Chưa có file ghi âm' : 'No recording available'); return; }
+  if (!state.audioBlob) {
+    alert(lang === 'vi' ? 'Chưa có file ghi âm' : 'No recording available');
+    return;
+  }
+
   const analyzeBtn = document.getElementById(`analyze-btn-${id}`);
   const loading = document.getElementById(`audio-analysis-loading-${id}`);
   const results = document.getElementById(`audio-analysis-results-${id}`);
   const error = document.getElementById(`audio-analysis-error-${id}`);
+  const scoreEl = document.getElementById(`analysis-score-${id}`);
+  const feedbackEl = document.getElementById(`analysis-feedback-${id}`);
   const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
+
+  // Show analysis section
   analysisSection.hidden = false;
   loading.hidden = false;
   results.hidden = true;
   error.hidden = true;
   analyzeBtn.disabled = true;
+
   try {
+    // Convert WebM to WAV for backend compatibility
     const wavBlob = await convertWebMToWav(state.audioBlob);
+
     const formData = new FormData();
     formData.append('file', wavBlob, `recording_${id}.wav`);
-    const response = await fetch('/api/v1/audio/analyze', { method: 'POST', body: formData });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    formData.append('reference_id', id);
+
+    const response = await fetch('/api/v1/audio/analyze', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
     const data = await response.json();
-    const GENRE_VI_MAP = { 'quan_ho': 'Quan họ', 'ca_tru': 'Ca trù', 'nha_nhac': 'Nhã nhạc', 'don_ca_tai_tu': 'Đờn ca tài tử', 'ho': 'Hò' };
-    const genreLabel = data.genre?.label || 'unknown';
-    document.getElementById(`analysis-genre-${id}`).textContent = lang === 'vi' ? (GENRE_VI_MAP[genreLabel] || genreLabel) : genreLabel;
-    document.getElementById(`analysis-confidence-${id}`).textContent = ((data.genre?.confidence || data.confidence || 0) * 100).toFixed(1) + '%';
-    document.getElementById(`analysis-instruments-${id}`).textContent = data.instruments?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
-    document.getElementById(`analysis-techniques-${id}`).textContent = data.techniques?.detected?.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    const score = data.score || 0;
+    const feedback = data.feedback || '';
+
+    // Set score display with color coding
+    scoreEl.textContent = score.toFixed(1);
+    scoreEl.className = 'vocal-score-value';
+    if (score >= 80) {
+      scoreEl.classList.add('score-excellent');
+    } else if (score >= 65) {
+      scoreEl.classList.add('score-good');
+    } else if (score >= 50) {
+      scoreEl.classList.add('score-fair');
+    } else {
+      scoreEl.classList.add('score-poor');
+    }
+    feedbackEl.textContent = feedback;
+
     loading.hidden = true;
     results.hidden = false;
+
   } catch (err) {
+    console.error('Analysis failed:', err);
     loading.hidden = true;
     error.hidden = false;
-    document.getElementById(`audio-analysis-error-msg-${id}`).textContent = lang === 'vi' ? `Phân tích thất bại: ${err.message}` : `Analysis failed: ${err.message}`;
+    const errMsg = err instanceof Error ? err.message : String(err);
+    document.getElementById(`audio-analysis-error-msg-${id}`).textContent =
+      lang === 'vi' ? `Phân tích thất bại: ${errMsg}` : `Analysis failed: ${errMsg}`;
   } finally {
     analyzeBtn.disabled = false;
   }
-}
-
-function hideAudioAnalysis(id) {
-  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
-  if (analysisSection) analysisSection.hidden = true;
 }
 
 window.toggleRecording = toggleRecording;
 window.playbackRecording = playbackRecording;
 window.clearRecording = clearRecording;
 window.analyzeUserRecording = analyzeUserRecording;
+
+function hideAudioAnalysis(id) {
+  const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
+  if (analysisSection) analysisSection.hidden = true;
+}
 window.hideAudioAnalysis = hideAudioAnalysis;
 
 /* ═══════════════════════════════════════

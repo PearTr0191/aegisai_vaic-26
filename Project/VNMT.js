@@ -801,61 +801,45 @@ function buildModalHTML(t) {
   const lblStatus  = lang === 'vi' ? 'Trạng thái'     : 'Status';
   const lblDesc    = lang === 'vi' ? 'Mô tả'          : 'Description';
 
-  // Audio analysis result state (will be populated after recording)
-  const audioAnalysisSection = `
-    <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
-      <div class="modal-audio-analysis-header">
-        <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
-        <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
-      </div>
-      <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
-        <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
-          <div class="spinner"></div>
-          <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
+    // Audio analysis result state (will be populated after recording)
+    const audioAnalysisSection = `
+      <div class="modal-audio-analysis" id="modal-audio-analysis-${t.id}" hidden>
+        <div class="modal-audio-analysis-header">
+          <h4>${lang === 'vi' ? 'Kết quả phân tích' : 'Analysis Results'}</h4>
+          <button class="modal-audio-close" onclick="hideAudioAnalysis(${t.id})">✕</button>
         </div>
-        <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Thể loại' : 'Genre'}</span>
-            <span class="analysis-value" id="analysis-genre-${t.id}">—</span>
+        <div class="audio-analysis-content" id="audio-analysis-content-${t.id}">
+          <div class="audio-analysis-loading" id="audio-analysis-loading-${t.id}" hidden>
+            <div class="spinner"></div>
+            <span>${lang === 'vi' ? 'Đang phân tích...' : 'Analyzing...'}</span>
           </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Độ tin cậy' : 'Confidence'}</span>
-            <span class="analysis-value" id="analysis-confidence-${t.id}">—</span>
+          <div class="audio-analysis-results" id="audio-analysis-results-${t.id}" hidden>
+            <div class="vocal-score-display">
+              <div class="vocal-score-value" id="analysis-score-${t.id}">—</div>
+              <div class="vocal-score-label">${lang === 'vi' ? 'Độ tương đồng phong cách' : 'Style Similarity'}</div>
+              <div class="vocal-score-feedback" id="analysis-feedback-${t.id}"></div>
+            </div>
           </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Nhạc cụ' : 'Instruments'}</span>
-            <span class="analysis-value" id="analysis-instruments-${t.id}">—</span>
+          <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
+            <p id="audio-analysis-error-msg-${t.id}"></p>
+            <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
           </div>
-          <div class="analysis-row">
-            <span class="analysis-label">${lang === 'vi' ? 'Kỹ thuật' : 'Techniques'}</span>
-            <span class="analysis-value" id="analysis-techniques-${t.id}">—</span>
-          </div>
-        </div>
-        <div class="audio-analysis-error" id="audio-analysis-error-${t.id}" hidden>
-          <p id="audio-analysis-error-msg-${t.id}"></p>
-          <button class="retry-btn" onclick="analyzeUserRecording(${t.id})">${lang === 'vi' ? 'Thử lại' : 'Retry'}</button>
         </div>
       </div>
-    </div>
-  `;
+    `;
 
-    // Build audio samples section (preview only - vocal-only is for backend training)
+    // Build audio samples section (single reference only)
     const audioPrefix = window.location.pathname.includes('/legacy/') ? '/legacy/' : '';
     const previewSrc = hasAudioPreview ? audioPrefix + t.audio_preview : '';
-    const vocalSrc = hasAudioPreview && t.audio_vocal_only ? audioPrefix + t.audio_vocal_only : previewSrc;
+    const nameLabel = lang === 'vi' ? t.name : t.english;
 
     const audioSamplesSection = hasAudioPreview ? `
       <div class="modal-audio-section">
-        <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Samples'}</h4>
+        <h4>${lang === 'vi' ? 'Mẫu âm thanh' : 'Audio Sample'}</h4>
         <div class="audio-sample-item">
-          <span class="audio-sample-label">${lang === 'vi' ? 'Bản gốc' : 'Original'}:</span>
+          <span class="audio-sample-label">${lang === 'vi' ? 'Nghe tham khảo' : 'Reference'}:</span>
           <audio controls src="${previewSrc}" class="modal-audio-player"></audio>
-          <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - bản gốc' : 'Quan họ Bắc Ninh - original version'}</p>
-        </div>
-        <div class="audio-sample-item">
-          <span class="audio-sample-label">${lang === 'vi' ? 'Chỉ giọng' : 'Vocals only'}:</span>
-          <audio controls src="${vocalSrc}" class="modal-audio-player"></audio>
-          <p class="modal-audio-caption">${lang === 'vi' ? 'Quan họ Bắc Ninh - phiên bản chỉ giọng hát' : 'Quan họ Bắc Ninh - vocals only version'}</p>
+          <p class="modal-audio-caption">${nameLabel}</p>
         </div>
       </div>
       ` : '';
@@ -903,7 +887,7 @@ function buildModalHTML(t) {
     ${isSingingType ? `
     <div class="modal-practice-section">
       <h4>${lang === 'vi' ? 'Thử hát & Phân tích' : 'Try Singing & Analyze'}</h4>
-      <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích thể loại, nhạc cụ và kỹ thuật' : 'Record your singing for AI analysis of genre, instruments, and techniques'}</p>
+    <p class="modal-practice-hint">${lang === 'vi' ? 'Ghi âm giọng hát của bạn để AI phân tích độ tương đồng với phong cách truyền thống' : 'Record your singing for AI analysis of traditional style similarity'}</p>
       <div class="recorder-controls">
         <button class="record-btn" id="record-btn-${t.id}" onclick="toggleRecording(${t.id})">
           <svg class="record-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -1728,6 +1712,8 @@ async function analyzeUserRecording(id) {
   const loading = document.getElementById(`audio-analysis-loading-${id}`);
   const results = document.getElementById(`audio-analysis-results-${id}`);
   const error = document.getElementById(`audio-analysis-error-${id}`);
+  const scoreEl = document.getElementById(`analysis-score-${id}`);
+  const feedbackEl = document.getElementById(`analysis-feedback-${id}`);
   const analysisSection = document.getElementById(`modal-audio-analysis-${id}`);
 
   // Show analysis section
@@ -1743,6 +1729,7 @@ async function analyzeUserRecording(id) {
     
     const formData = new FormData();
     formData.append('file', wavBlob, `recording_${id}.wav`);
+    formData.append('reference_id', id);
     
     const response = await fetch('/api/v1/audio/analyze', {
       method: 'POST',
@@ -1754,22 +1741,22 @@ async function analyzeUserRecording(id) {
     }
 
     const data = await response.json();
+    const score = data.score || 0;
+    const feedback = data.feedback || '';
     
-    // Map nested backend response to flat display fields
-    const genreLabel = data.genre?.label || data.genre || 'unknown';
-    const genreVi = GENRE_VI_MAP[genreLabel] || genreLabel;
-    const instruments = data.instruments?.detected || data.instruments || [];
-    const techniques = data.techniques?.detected || data.techniques || [];
-
-    // Update results
-    document.getElementById(`analysis-genre-${id}`).textContent = 
-      lang === 'vi' ? genreVi : genreLabel;
-     document.getElementById(`analysis-confidence-${id}`).textContent = 
-       ((data.genre?.confidence || data.confidence || 0) * 100).toFixed(1) + '%';
-    document.getElementById(`analysis-instruments-${id}`).textContent = 
-      instruments.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
-    document.getElementById(`analysis-techniques-${id}`).textContent = 
-      techniques.join(', ') || (lang === 'vi' ? 'Không phát hiện' : 'None detected');
+    // Set score display with color coding
+    scoreEl.textContent = score.toFixed(1);
+    scoreEl.className = 'vocal-score-value';
+    if (score >= 80) {
+      scoreEl.classList.add('score-excellent');
+    } else if (score >= 65) {
+      scoreEl.classList.add('score-good');
+    } else if (score >= 50) {
+      scoreEl.classList.add('score-fair');
+    } else {
+      scoreEl.classList.add('score-poor');
+    }
+    feedbackEl.textContent = feedback;
 
     loading.hidden = true;
     results.hidden = false;
