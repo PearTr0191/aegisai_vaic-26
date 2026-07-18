@@ -35,9 +35,10 @@
         justify-content:space-between;padding:0 48px;
         background:var(--nav-bg);border-bottom:1px solid var(--nav-brd);}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;
-              color:var(--nav-text);font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;}
+              color:var(--nav-text);font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;
+              flex:0 0 auto;}
     .nav-logo svg{color:var(--nav-gold);}
-    .nav-links{display:flex;gap:32px;list-style:none;position:absolute;left:50%;transform:translateX(-50%);}
+    .nav-links{display:flex;gap:32px;list-style:none;flex:1;justify-content:center;}
     .nav-links a{text-decoration:none;font-size:11px;font-weight:500;letter-spacing:0.18em;
                  text-transform:uppercase;color:var(--nav-muted);transition:color .2s;}
     .nav-links a:hover,.nav-links a.active{color:var(--nav-gold);}
@@ -223,7 +224,6 @@
     <li><a href="index.html" id="nav-home">Trang chủ</a></li>
     <li><a href="VNMT.html" id="nav-map-link">Khám phá bản đồ</a></li>
     <li><a href="database.html" id="nav-db-link">Kho lưu trữ</a></li>
-    <li><a href="civilisations.html" id="nav-civs-link">Nền Văn Minh</a></li>
     <li><a href="about.html" class="active" id="nav-about">Giới thiệu</a></li>
   </ul>
 
@@ -231,6 +231,7 @@
     <div class="lang-toggle">
       <button class="lang-btn" data-lang="vi">VI</button>
       <button class="lang-btn" data-lang="en">EN</button>
+    </div>
   </div>
 </nav>
 
