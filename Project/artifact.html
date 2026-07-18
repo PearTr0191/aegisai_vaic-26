@@ -618,37 +618,6 @@
       .exp-dot::after { width:6px; height:6px; margin-left:-3px; margin-top:-3px; }
     }
 
-    /* Slider styles */
-    .slider-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-top: 24px;
-    }
-    .slider-slides {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-      will-change: transform;
-    }
-    .slider-slide {
-      min-width: 100%;
-      box-sizing: border-box;
-      padding: 10px;
-      text-align: center;
-    }
-    .slider-slide img,
-    .slider-slide video {
-      max-width: 100%;
-      height: auto;
-      border-radius: 4px;
-      display: block;
-    }
-    .slider-slide video {
-      width: 100%;
-      height: auto;
-    }
-
     /* ═══════════════════════════════════════
        AUDIO RECORDING & ANALYSIS UI
     ═══════════════════════════════════════ */
@@ -973,13 +942,6 @@
     <!-- Main description -->
     <div class="desc-body" id="desc-body"></div>
 
-    <!-- Slider for artifact media -->
-    <div class="slider-container" id="slider-container" style="margin-top:24px; display:none;">
-      <div class="slider-slides" id="slider-slides">
-        <!-- Slides will be injected by JS -->
-      </div>
-    </div>
-
     <!-- Audio & Recording Section for singing types -->
     <div id="audio-section-container" style="margin-top:24px; padding-top:18px; border-top:1px solid var(--border);"></div>
 
@@ -1246,42 +1208,47 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 ═══════════════════════════════════════ */
 const CA_TRU_DOTS = [
   {
-    pctX: 28, pctY: 32,
+    pctX: 50, pctY: 32,
     vi: { title: 'Đào nương', desc: 'Ca sĩ chính (đào nương) với phong cách nhả chữ rung luyến tinh tế, là linh hồn của nghệ thuật Ca trù.' },
     en: { title: 'Female Vocalist', desc: 'The lead singer (đào nương) delivers refined ornamentation and is the soul of Ca trù chamber music.' }
   },
   {
-    pctX: 48, pctY: 48,
+    pctX: 78, pctY: 27,
     vi: { title: 'Kép đàn', desc: 'Người chơi đàn đáy – nhạc cụ dây dài 3 dây, âm vang trầm bổng, tạo nên giai điệu nền cho ca nương.' },
     en: { title: 'Lute Player', desc: 'The male musician plays the đàn đáy – a 3-string long-necked lute providing the melodic accompaniment.' }
   },
   {
-    pctX: 68, pctY: 40,
+    pctX: 22, pctY: 27,
     vi: { title: 'Quan viên', desc: 'Người đánh trống chầu (phách), giữ nhịp và chấm điểm cho phần trình diễn của đào nương.' },
     en: { title: 'Percussionist', desc: 'The quan viên plays the praise drum (trống chầu), keeping rhythm and scoring the singer\'s performance.' }
   },
   {
-    pctX: 72, pctY: 62,
+    pctX: 30, pctY: 82,
     vi: { title: 'Trống chầu', desc: 'Nhạc cụ gõ được quan viên sử dụng để đệm nhịp, tạo điểm nhấn và biểu lộ cảm xúc.' },
     en: { title: 'Praise Drum', desc: 'A percussion instrument used by the quan viên to accentuate rhythm and express emotional nuances.' }
   },
   {
-    pctX: 18, pctY: 58,
+    pctX: 72, pctY: 78, 
+    vi: { title: 'Đàn đáy', desc: 'Nhạc cụ dây truyền thống với cần đàn dài và thùng đàn hình thang, giữ vai trò chủ đạo trong nghệ thuật Ca trù, dùng để đệm hát và tạo giai điệu.' },
+    en: { title: 'Đáy Lute', desc: 'A traditional Vietnamese long-necked lute with a trapezoidal body, serving as the principal melodic accompaniment in Ca trù performances.' }
+  },
+  {
+    pctX: 50, pctY: 20,
     vi: { title: 'Không gian diễn xướng', desc: 'Ca trù được trình diễn trong không gian phòng nhỏ ấm cúng, thường tại đình làng hoặc tư gia.' },
     en: { title: 'Performance Space', desc: 'Ca trù is performed in an intimate chamber setting, typically at communal houses or private homes.' }
   },
   {
-    pctX: 38, pctY: 68,
+    pctX: 50, pctY: 82,
     vi: { title: 'Phong cách truyền thống', desc: 'Ca trù kết hợp giữa thi ca hát nói và nhạc cụ truyền thống Việt Nam, thể hiện văn hóa bác học.' },
     en: { title: 'Traditional Style', desc: 'Ca trù combines sung poetry (hát nói) with traditional instruments, embodying Vietnam\'s scholarly culture.' }
   },
   {
-    pctX: 55, pctY: 24,
+    pctX: 5, pctY: 64,
     vi: { title: 'Di sản UNESCO', desc: 'Ca trù được UNESCO ghi danh vào Danh sách di sản cần bảo vệ khẩn cấp năm 2009.' },
     en: { title: 'UNESCO Heritage', desc: 'Ca trù was inscribed on UNESCO\'s Urgent Safeguarding List in 2009.' }
   },
   {
-    pctX: 85, pctY: 28,
+    pctX: 70, pctY: 52,
     vi: { title: 'Họa tiết trang phục', desc: 'Trang phục của đào nương và kép đàn mang họa tiết phong phú, thể hiện tính thẩm mỹ tinh tế.' },
     en: { title: 'Costume Patterns', desc: 'The costumes of performers feature rich ornamentation, reflecting refined aesthetic sensibilities.' }
   }
@@ -1324,6 +1291,31 @@ const CA_TRU_DOTS = [
 
   /* ── TOGGLE TAG ── */
   let activeTag = null;
+  let currentAudio = null;
+
+  function stopCurrentAudio() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
+  }
+
+  function playDanDayAudio() {
+    stopCurrentAudio();
+    const audio = new Audio('audio/danday.mp3');
+    audio.currentTime = 5;
+    audio.play().catch(e => console.warn('Audio play failed:', e));
+    /* Stop after 7 seconds (from 5s to 12s) */
+    setTimeout(() => {
+      if (currentAudio === audio) {
+        audio.pause();
+        audio.currentTime = 0;
+        currentAudio = null;
+      }
+    }, 7000);
+    currentAudio = audio;
+  }
 
   function toggleTag(idx, dotEl, dots) {
     /* Remove existing tag if same dot clicked */
@@ -1331,6 +1323,7 @@ const CA_TRU_DOTS = [
       activeTag.remove();
       activeTag = null;
       dotEl.classList.remove('active');
+      stopCurrentAudio();
       return;
     }
 
@@ -1339,6 +1332,7 @@ const CA_TRU_DOTS = [
       activeTag.remove();
       document.querySelectorAll('.exp-dot.active').forEach(d => d.classList.remove('active'));
     }
+    stopCurrentAudio();
 
     const d = dots[idx];
     const info = lang === 'vi' ? d.vi : d.en;
@@ -1375,6 +1369,11 @@ const CA_TRU_DOTS = [
     wrap.appendChild(tag);
     activeTag = tag;
     dotEl.classList.add('active');
+
+    /* Play audio for Đàn đáy dot (index 4) */
+    if (idx === 4) {
+      playDanDayAudio();
+    }
   }
 
   /* ── CLOSE ── */
@@ -1404,28 +1403,6 @@ const CA_TRU_DOTS = [
   window.openExpOverlay = openExpOverlay;
   window.closeExpOverlay = closeExpOverlay;
 })();
-
-/* ═══════════════════════════════════════
-   SLIDER FILES — actual filenames per artifact
-═══════════════════════════════════════ */
-const SLIDER_FILES = {
-  1: ['mua-nha-nhac-cungdinh-e1453101073276.jpg','múa-triều-nguyễn.jpg','nha-nhac-cung-dinh-co-tu-the-ky-13.jpg','nha-nhac-kiet-tac-phi-vat-the-cua-viet-nam.jpg','nha-nhac-thuong-bieu-dien-trong-cac-ngay-le-quan-trong_1.jpg'],
-  2: ['401-gia_lai-kyoflash@gmail_le_hoi_cong_chieng.jpg','521-kon_tum-phuocsonkt@gmailcom-le_hoi_mung_lua_moi.jpg','bsvh10.jpg','cong-chieng-tay-nguyen-1.jpg','images.jpg'],
-  3: ['16.jpg','1808.dancaquanho.jpg','2210.quan_ho_bac_ninh.jpg','images (1).jpg','images (2).jpg'],
-  4: ['images (3).jpg','images (4).jpg','images (5).jpg','images (6).jpg','images (7).jpg'],
-  5: ['images (8).jpg','images (9).jpg','images (10).jpg','images (11).jpg','images (12).jpg'],
-  6: ['images (13).jpg','images (14).jpg','images (15).jpg','images (16).jpg','images (17).jpg'],
-  7: ['images (18).jpg','images (19).jpg','images (20).jpg','images (21).jpg','images (22).jpg'],
-  8: ['images (23).jpg','images (24).jpg','images (25).jpg','images (26).jpg','images (27).jpg'],
-  9: ['images (27).jpg','images (28).jpg','images (29).jpg','images (30).jpg','images (31).jpg'],
-  10: ['images (32).jpg','images (33).jpg','images (34).jpg','images (35).jpg','images (36).jpg'],
-  11: ['images (37).jpg','images (38).jpg','images (39).jpg','images (40).jpg','images (41).jpg'],
-  12: ['images (42).jpg','images (43).jpg','images (44).jpg','images (45).jpg','images (46).jpg'],
-  13: ['images (47).jpg','images (48).jpg','images (49).jpg','images (50).jpg','images (51).jpg'],
-  14: ['images (52).jpg','images (53).jpg','images (54).jpg','images (55).jpg','images (56).jpg'],
-  15: ['images (57).jpg','images (58).jpg','images (59).jpg','images (60).jpg','proxy-image.png'],
-  16: ['images (61).jpg','images (62).jpg','images (63).jpg','images (64).jpg','images (65).jpg'],
-};
 
 /* ═══════════════════════════════════════
    RENDER
@@ -1674,24 +1651,6 @@ const mapsUrl = `https://www.google.com/maps?q=${t.lat},${t.lng}`;
 
   // Build audio section for singing types
   renderAudioSection(t);
-
-  // Slider for all artifacts
-  if (t.id) {
-    const sliderContainer = document.getElementById('slider-container');
-    const files = SLIDER_FILES && SLIDER_FILES[t.id];
-    if (sliderContainer && files && files.length) {
-      let slidesHTML = '';
-      files.forEach(function(fname, i) {
-        slidesHTML +=
-          '<div class="slider-slide">' +
-          '<img src="slider/' + t.id + '/' + fname + '" alt="Slider slide ' + (i + 1) + '" onerror="this.parentNode.style.display=\'none\'">' +
-          '</div>';
-      });
-      sliderContainer.querySelector('#slider-slides').innerHTML = slidesHTML;
-      sliderContainer.style.display = 'block';
-      initSlider(t.id);
-    }
-  }
 
   document.getElementById('content-section').style.display = 'grid';
 }
@@ -2103,39 +2062,6 @@ window.playbackRecording = playbackRecording;
 window.clearRecording = clearRecording;
 window.analyzeUserRecording = analyzeUserRecording;
 window.hideAudioAnalysis = hideAudioAnalysis;
-
-/* ═══════════════════════════════════════
-   SLIDER FUNCTIONALITY
-═══════════════════════════════════════ */
-function initSlider(artifactId) {
-  const sliderContainer = document.getElementById('slider-slides');
-  if (!sliderContainer) return;
-
-  const slides = sliderContainer.querySelectorAll('.slider-slide');
-  if (slides.length === 0) return;
-
-  let currentIndex = 0;
-
-  function showSlide(index) {
-    // Ensure index is within bounds
-    if (index >= slides.length) index = 0;
-    if (index < 0) index = slides.length - 1;
-    const offset = -index * 100; // each slide is 100% width
-    sliderContainer.style.transform = `translateX(${offset}%)`;
-    currentIndex = index;
-  }
-
-  function nextSlide() {
-    showSlide(currentIndex + 1);
-  }
-
-  // Start auto-advance every 2 seconds
-  let intervalId = setInterval(nextSlide, 2000);
-
-  // Optional: pause on hover? Not required by the task, but we can add for better UX.
-  // However, the task only says to auto-advance every 2 seconds to the right.
-  // We'll leave it as is.
-}
 
 /* ═══════════════════════════════════════
    INIT
