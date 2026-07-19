@@ -9,15 +9,15 @@ start "VietHeritage API" cmd /c "cd backend && uvicorn app.main:app --reload --h
 REM Wait for backend to start
 timeout /t 3 /nobreak >nul
 
-REM Open legacy frontend via FastAPI static mount
-echo Opening legacy frontend...
-start http://localhost:8000/legacy/index.html
+REM Open frontend via FastAPI static mount
+echo Opening frontend...
+start http://localhost:8000/index.html
 
 echo.
 echo ========================================
 echo Backend: http://localhost:8000
 echo API Docs: http://localhost:8000/docs
-echo Frontend: http://localhost:8000/legacy/index.html
+echo Frontend: http://localhost:8000/index.html
 echo ========================================
 echo.
 echo Press any key to stop all services...

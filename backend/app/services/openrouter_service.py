@@ -15,15 +15,21 @@ class OpenRouterService:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or settings.OPENROUTER_API_KEY
-        referer = settings.RENDER_EXTERNAL_URL or "https://aegisai-vaic-26.onrender.com"
-        self.client = httpx.AsyncClient(
-            base_url=self.API_BASE,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "HTTP-Referer": referer,
-                "X-Title": "VietHeritage Map",
-            },
-        )
+        self._client: Optional[httpx.AsyncClient] = None
+
+    async def _get_client(self) -> httpx.AsyncClient:
+        """Lazy-create the HTTP client to avoid DNS resolution at import time."""
+        if self._client is None:
+            referer = settings.RENDER_EXTERNAL_URL or "https://aegisai-vaic-26.onrender.com"
+            self._client = httpx.AsyncClient(
+                base_url=self.API_BASE,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "HTTP-Referer": referer,
+                    "X-Title": "VietHeritage Map",
+                },
+            )
+        return self._client
 
     async def generate(
         self,
@@ -37,8 +43,9 @@ class OpenRouterService:
             raise ValueError("OPENROUTER_API_KEY not configured")
 
         model_name = model or settings.OPENROUTER_MODEL
+        client = await self._get_client()
         
-        response = await self.client.post(
+        response = await client.post(
             "/chat/completions",
             json={
                 "model": model_name,
@@ -61,8 +68,9 @@ class OpenRouterService:
             raise ValueError("OPENROUTER_API_KEY not configured")
 
         model_name = model or settings.OPENROUTER_EMBED_MODEL
+        client = await self._get_client()
         
-        response = await self.client.post(
+        response = await client.post(
             "/embeddings",
             json={
                 "model": model_name,
@@ -74,7 +82,9 @@ class OpenRouterService:
         return data["data"][0]["embedding"]
 
     async def close(self):
-        await self.client.aclose()
+        if self._client:
+            await self._client.aclose()
+            self._client = None
 
 
 # Global instance for reuse

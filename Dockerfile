@@ -1,10 +1,9 @@
 # Production Dockerfile - VietHeritage Chatbot on Render
 # Uses OpenRouter for LLM inference, serves Project frontend
 
-# === Backend Build Stage ===
 FROM python:3.11-slim AS builder
 
-WORKDIR /app
+WORKDIR /build
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -12,16 +11,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv for fast package management
+# Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy dependency files
 COPY backend/pyproject.toml ./
 COPY backend/uv.lock* ./
-WORKDIR /app
 RUN uv sync --frozen --no-dev
 
-# === Production Runtime Stage ===
+# Production runtime
 FROM python:3.11-slim AS runtime
 
 WORKDIR /app
@@ -35,16 +33,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN useradd --create-home --shell /bin/bash appuser
 
 # Copy Python dependencies from builder
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /build/.venv /app/.venv
 
 # Copy backend application code
 COPY --chown=appuser:appuser backend/app /app/app
+COPY --chown=appuser:appuser backend/models /app/models
+COPY --chown=appuser:appuser backend/.env.example /app/.env.example
 
-# Copy Project frontend (chatbot at root)
-RUN mkdir -p /app/static
-COPY --chown=appuser:appuser Project/ /app/static/
-
-# Copy data files (already included in backend/app copy)
+# Copy Project frontend (served by FastAPI StaticFiles)
+COPY --chown=appuser:appuser Project /app/Project
 
 # Switch to non-root user
 USER appuser

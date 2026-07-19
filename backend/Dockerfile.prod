@@ -36,8 +36,13 @@ RUN useradd --create-home --shell /bin/bash appuser
 # Copy Python dependencies from builder
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy application code
-COPY --chown=appuser:appuser . .
+# Copy backend application code (entire backend directory)
+COPY --chown=appuser:appuser app /app/app
+COPY --chown=appuser:appuser models /app/models
+COPY --chown=appuser:appuser .env* /app/
+
+# Copy Project frontend to /app/Project (matches main.py's STATIC_DIR path)
+COPY --chown=appuser:appuser ../Project /app/Project
 
 # Switch to non-root user
 USER appuser

@@ -60,16 +60,7 @@ else:
         allow_headers=["*"],
     )
 
-# Serve Project frontend (with chatbot) from /static
-STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
-if STATIC_DIR.exists():
-    app.mount(
-        "/",
-        StaticFiles(directory=str(STATIC_DIR), html=True),
-        name="project-frontend",
-    )
-
-# Health check
+# Health check (MUST be before StaticFiles mount to avoid being shadowed)
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": settings.APP_VERSION}
@@ -86,13 +77,22 @@ async def cache_stats():
     return cache.stats()
 
 
-# API Routes
+# API Routes (MUST be before StaticFiles mount to avoid being shadowed)
 app.include_router(sites.router, prefix=settings.API_V1_PREFIX)
 app.include_router(artisan.router, prefix=settings.API_V1_PREFIX)
 app.include_router(audio.router, prefix=settings.API_V1_PREFIX)
 app.include_router(monitoring.router, prefix=settings.API_V1_PREFIX)
 app.include_router(chat.router, prefix=settings.API_V1_PREFIX)
 app.include_router(recommend.router, prefix=settings.API_V1_PREFIX)
+
+# Serve Project frontend from / (MUST be AFTER all routes to avoid shadowing API endpoints)
+STATIC_DIR = Path(__file__).resolve().parent.parent.parent / "Project"
+if STATIC_DIR.exists():
+    app.mount(
+        "/",
+        StaticFiles(directory=str(STATIC_DIR), html=True),
+        name="project-frontend",
+    )
 
 
 # --- Error Handlers ---
