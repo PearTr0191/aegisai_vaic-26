@@ -1,6 +1,6 @@
 from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+import os
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     SMALL_TALK_MODEL: str = "gemma3:270m"
 
     # OpenRouter (for $0-cost cloud LLM) - PRIMARY after Ollama removal
-    # OPENROUTER_API_KEY: str = ""
+    OPENROUTER_API_KEY: str = os.getenv('OPENROUTER_API_KEY')
     OPENROUTER_MODEL: str = "meta-llama/llama-3.2-3b-instruct:free"
     OPENROUTER_EMBED_MODEL: str = "nomic/nomic-embed-text-v1:0"
 
