@@ -110,8 +110,7 @@ The project was built for the **VAIC-26 AegisAI** effort to preserve and democra
 - **Icons:** lucide-react
 
 **Infrastructure**
-- Docker Compose (Postgres, Ollama, MinIO)
-- Render (backend), Netlify (frontend)
+- Docker Compose (Postgres, Ollama, MinIO) for local development
 
 ---
 
@@ -214,21 +213,18 @@ npm run dev
 
 ## Environment Variables
 
-Create `backend/.env` from `backend/.env.example`. Key variables:
+Create `backend/.env` from `backend/.env.example`. All necessary values are pre-filled for out-of-the-box functionality.
+
+> **Note:** The `OPENROUTER_API_KEY` in `.env.example` is a shared demo key. The chatbot works immediately without any additional setup. For production or heavy usage, [get your own free key](https://openrouter.ai) and replace the value.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `APP_NAME` | Public API name | `VietHeritage Map API` |
 | `DEBUG` | Enable docs/reload | `true` |
 | `API_V1_PREFIX` | API route prefix | `/api/v1` |
-| `DATABASE_URL` | Dev Postgres connection string | `postgresql+psycopg2://...localhost:5432/vietheritage` |
-| `DATABASE_URL_PROD` | Production SQLite connection | `sqlite+aiosqlite:///./vietheritage.db` |
-| `IS_PRODUCTION` | Toggle prod database | `false` |
-| `OLLAMA_HOST` | Ollama server URL | `http://localhost:11434` |
-| `OLLAMA_MODEL` | Chat model | `phi3.5:3.8b-mini-instruct-q4_k_m` |
-| `OLLAMA_EMBED_MODEL` | Embedding model | `nomic-embed-text:latest` |
-| `OPENROUTER_API_KEY` | Cloud LLM fallback (optional) | `""` |
-| `OPENROUTER_MODEL` | Cloud chat model | `microsoft/phi-3-mini-128k-instruct:free` |
+| `DATABASE_URL` | Dev Postgres/SQLite connection | `sqlite+aiosqlite:///./vietheritage.db` |
+| `OPENROUTER_API_KEY` | Cloud LLM key (works out of box) | `sk-or-v1-...` (demo key) |
+| `OPENROUTER_MODEL` | Cloud chat model | `meta-llama/llama-3.2-3b-instruct:free` |
 | `MINIO_ENDPOINT` | MinIO host:port | `localhost:9000` |
 | `MINIO_ACCESS_KEY` | MinIO user | `vietheritage` |
 | `MINIO_SECRET_KEY` | MinIO password | `vietheritage_dev` |
@@ -236,7 +232,6 @@ Create `backend/.env` from `backend/.env.example`. Key variables:
 | `ETHNOMUSIC_MODEL_PATH` | ONNX model path | `./models/ethnomusic_net_int8.onnx` |
 | `WHISPER_MODEL_PATH` | Whisper model id | `openai/whisper-base` |
 | `CORS_ORIGINS` | Allowed origins | `[http://localhost:5173, ...]` |
-| `SENTRY_DSN` | Sentry DSN (optional) | `""` |
 | `LOG_LEVEL` | Logging level | `INFO` |
 
 ---
@@ -361,14 +356,13 @@ Visit `http://localhost:5173/artisan/{personaId}`. The persona will respond in t
 
 ## Deployment
 
-This project uses a split-deployment model:
+The application is deployed as a single service on Render:
 
-- **Backend** → [Render](https://render.com) (`backend/render.yaml`, `backend/Dockerfile.prod`)
+- **Web** → [Render](https://aegisai-vaic-26.onrender.com) (`render.yaml`, `backend/Dockerfile.prod`)
+  - Full-stack deployment (FastAPI serves the React frontend build)
   - Production database: SQLite (`vietheritage.db`)
-  - Set `IS_PRODUCTION=true` and provide secrets via Render dashboard.
-- **Frontend** → [Netlify](https://netlify.com) (`frontend/netlify.toml`)
-  - Set `VITE_API_BASE` environment variable to the Render backend URL.
-  - Production URL: `https://vietheritage.netlify.app`
+  - Demo `OPENROUTER_API_KEY` pre-configured in `backend/render.yaml`
+  - No separate frontend deployment needed - API and static files served together
 
 ---
 

@@ -14,7 +14,7 @@ services:
           name: vietheritage-db
           property: connectionString
       - key: OPENROUTER_API_KEY
-        sync: false  # Set this in Render dashboard with your API key
+        value: "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"
       - key: OPENROUTER_MODEL
         value: "meta-llama/llama-3.2-3b-instruct:free"
       - key: OPENROUTER_EMBED_MODEL

@@ -14,13 +14,13 @@ services:
           name: vietheritage-db
           property: connectionString
       - key: OPENROUTER_API_KEY
-        sync: false  # Set this in Render dashboard
+        value: "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"
       - key: OPENROUTER_MODEL
         value: "meta-llama/llama-3.2-3b-instruct:free"
       - key: OPENROUTER_EMBED_MODEL
         value: "nomic/nomic-embed-text-v1:0"
       - key: CORS_ORIGINS
-        value: "https://vietheritage.netlify.app,https://vietheritage.vercel.app"
+        value: "*"
       - key: SENTRY_DSN
         sync: false
       - key: SENTRY_TRACES_SAMPLE_RATE
