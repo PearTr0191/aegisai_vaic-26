@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     SMALL_TALK_MODEL: str = "gemma3:270m"
 
     # OpenRouter (for $0-cost cloud LLM) - PRIMARY after Ollama removal
-    OPENROUTER_API_KEY: str = ""
+    # OPENROUTER_API_KEY: str = ""
     OPENROUTER_MODEL: str = "meta-llama/llama-3.2-3b-instruct:free"
     OPENROUTER_EMBED_MODEL: str = "nomic/nomic-embed-text-v1:0"
 
